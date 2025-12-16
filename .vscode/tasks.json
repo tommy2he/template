@@ -1,0 +1,55 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "make clean",
+            "group": "build"
+        },
+        {
+            "label": "Run Program",
+            "type": "shell",
+            "command": "make run",
+            "group": "test"
+        },
+        {
+            "label": "Compile Single File",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe",
+                "-Wall",
+                "-Wextra",
+                "-pedantic",
+                "-std=c17"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    // 工作区特定设置
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "build/": true,
+        "*.exe": true,
+        "*.o": true
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cpptools",
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.clearPreviousOutput": true,
+    "code-runner.executorMap": {
+        "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt.exe -Wall -Wextra -pedantic -std=c17 && $dir$fileNameWithoutExt.exe",
+        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt.exe -Wall -Wextra -pedantic -std=c++17 && $dir$fileNameWithoutExt.exe"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM, UseTab: Never, IndentWidth: 4, ColumnLimit: 100 }",
+    "files.associations": {
+        "*.h": "c"
+    },
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+}
