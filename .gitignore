@@ -1,0 +1,16 @@
+# 编译输出文件
+*.exe
+*.o
+*.obj
+
+# VS Code 配置文件夹
+.vscode/
+
+# 临时文件
+*.swp
+*~
+
+# 构建文件夹
+build/
+Debug/
+Release/
