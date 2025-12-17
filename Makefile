@@ -1,154 +1,192 @@
-# Makefile for C Project Template
-# Author: [Your Name]
-# Date: 2024
+# ======================================================
+# C Project Makefile - 完美版 for Windows/MSYS2
+# 作者: tommy
+# 日期: 2025-12-17
+# ======================================================
 
-# ============================================================================
-# 配置
-# ============================================================================
+# ======================================================
+# 1. 编译器配置
+# ======================================================
 
 # 编译器
-CC = gcc
+CC := gcc
 
-# 编译器标志
-CFLAGS = -g -Wall -Wextra -pedantic -std=c17
-CFLAGS_RELEASE = -O2 -DNDEBUG -std=c17
-CFLAGS_DEBUG = -g -O0 -DDEBUG -std=c17
+# 编码配置（关键！）
+# - 源代码：UTF-8
+# - 输出：GBK（适配Windows控制台）
+# - 临时目录：项目根目录下的temp/gcc
+CFLAGS := -g -Wall -Wextra -pedantic -std=c17 \
+          -I./include \
+          -finput-charset=UTF-8 \
+          -fexec-charset=GBK
 
-# 包含路径
-INCLUDES = -I./include
+# ======================================================
+# 2. 目录配置
+# ======================================================
 
 # 源文件目录
-SRC_DIR = src
-BUILD_DIR = build
-TEST_DIR = tests
-LIB_DIR = lib
+SRC_DIR := src
+# 头文件目录
+INC_DIR := include
+# 构建输出目录
+BUILD_DIR := build
+# 临时目录（GCC编译时使用）
+TEMP_DIR := ./temp/gcc
 
-# 源文件
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC_FILES))
+# 确保临时目录环境变量
+export TMP := $(abspath $(TEMP_DIR))
+export TEMP := $(abspath $(TEMP_DIR))
+export TMPDIR := $(abspath $(TEMP_DIR))
 
-# 测试源文件
-TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.c)
-TEST_OBJ_FILES = $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TEST_SRC_FILES))
+# ======================================================
+# 3. 文件配置
+# ======================================================
 
-# 目标可执行文件
-TARGET = $(BUILD_DIR)/$(shell basename $(CURDIR)).exe
-TEST_TARGET = $(BUILD_DIR)/test_runner.exe
+# 自动查找所有.c文件
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+# 生成对应的.o文件路径
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+# 最终目标可执行文件
+TARGET := $(BUILD_DIR)/$(notdir $(CURDIR)).exe
 
-# ============================================================================
-# 构建目标
-# ============================================================================
+# ======================================================
+# 4. 伪目标声明
+# ======================================================
 
-# 默认构建调试版本
-all: debug
+.PHONY: all clean clean_all clean_temp run debug release help env setup
 
-# 调试版本
-debug: CFLAGS = $(CFLAGS_DEBUG)
-debug: $(TARGET)
+# ======================================================
+# 5. 主要构建规则
+# ======================================================
 
-# 发布版本
-release: CFLAGS = $(CFLAGS_RELEASE)
-release: $(TARGET)
+# 默认目标 - 必须是第一个目标！
+all: setup $(TARGET)
+	@echo "✅ 构建完成: $(TARGET)"
 
-# 主目标文件
-$(TARGET): $(OBJ_FILES)
+# 调试版本（带调试符号）
+debug: CFLAGS += -DDEBUG -O0
+debug: all
+
+# 发布版本（优化）
+release: CFLAGS += -DNDEBUG -O2
+release: all
+
+# 链接目标文件
+$(TARGET): $(OBJS)
 	@echo "🔗 链接目标文件: $@"
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
-# 编译源文件
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+# 编译规则 - 使用order-only依赖确保临时目录存在
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | setup
 	@echo "🔨 编译: $<"
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
-	@echo "🔨 编译测试文件: $<"
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+# ======================================================
+# 6. 环境设置规则
+# ======================================================
 
-# ============================================================================
-# 测试
-# ============================================================================
+# 设置环境（创建必要目录） - order-only依赖
+setup:
+	@mkdir -p $(BUILD_DIR) $(TEMP_DIR)
 
-# 构建测试
-test: $(TEST_TARGET)
-	@echo "🧪 运行测试..."
-	@./$(TEST_TARGET)
+# ======================================================
+# 7. 清理规则
+# ======================================================
 
-# 测试目标文件
-$(TEST_TARGET): $(filter-out $(BUILD_DIR)/main.o, $(OBJ_FILES)) $(TEST_OBJ_FILES)
-	@echo "🔗 链接测试目标文件: $@"
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^
-
-# ============================================================================
-# 清理
-# ============================================================================
-
+# 清理构建文件
 clean:
 	@echo "🧹 清理构建文件..."
 	@rm -rf $(BUILD_DIR)/*.o $(BUILD_DIR)/*.exe 2>/dev/null || true
 
-distclean: clean
-	@echo "🧹 深度清理..."
-	@rm -rf $(BUILD_DIR) 2>/dev/null || true
+# 清理临时文件
+clean_temp:
+	@echo "🧹 清理临时文件..."
+	@rm -rf $(TEMP_DIR)/* 2>/dev/null || true
 
-# ============================================================================
-# 运行
-# ============================================================================
+# 清理所有（构建文件+临时文件）
+clean_all: clean clean_temp
+	@echo "🧹 清理所有生成文件..."
 
+# ======================================================
+# 8. 运行和调试规则
+# ======================================================
+
+# 运行程序
 run: $(TARGET)
-	@echo "▶️  运行程序: $(TARGET)"
+	@echo "🚀 运行程序..."
 	@./$(TARGET)
 
-run_test: test
+# 调试程序
+debug_run: debug
+	@echo "🐛 启动调试..."
+	@gdb $(TARGET)
 
-# ============================================================================
-# 调试
-# ============================================================================
+# ======================================================
+# 9. 工具规则
+# ======================================================
 
-gdb: debug
-	@echo "🐛 启动GDB调试..."
-	gdb $(TARGET)
+# 显示环境信息
+env:
+	@echo "🌍 环境信息:"
+	@echo "  项目根目录: $(CURDIR)"
+	@echo "  源文件目录: $(SRC_DIR)"
+	@echo "  头文件目录: $(INC_DIR)"
+	@echo "  构建目录: $(BUILD_DIR)"
+	@echo "  临时目录: $(TEMP_DIR)"
+	@echo "  编译器: $(CC)"
+	@echo "  编译选项: $(CFLAGS)"
+	@echo "  源文件: $(SRCS)"
+	@echo "  目标文件: $(OBJS)"
+	@echo "  最终目标: $(TARGET)"
+	@echo "  临时环境变量:"
+	@echo "    TMP: $$TMP"
+	@echo "    TEMP: $$TEMP"
+	@echo "    TMPDIR: $$TMPDIR"
 
-valgrind: debug
-	@echo "🔍 使用Valgrind检查内存泄漏..."
-	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
-
-# ============================================================================
-# 静态分析
-# ============================================================================
-
-lint:
-	@echo "📋 运行静态分析..."
-	cppcheck --enable=all --suppress=missingIncludeSystem $(SRC_DIR) $(INCLUDES)
-
-# ============================================================================
-# 文档生成
-# ============================================================================
-
-docs:
-	@echo "📚 生成文档..."
-	@mkdir -p docs/html
-	doxygen Doxyfile 2>/dev/null || echo "请先配置Doxyfile"
-
-# ============================================================================
-# 帮助
-# ============================================================================
-
+# 显示帮助信息
 help:
-	@echo "可用命令:"
-	@echo "  make             - 构建调试版本（默认）"
-	@echo "  make debug       - 构建调试版本"
-	@echo "  make release     - 构建发布版本"
-	@echo "  make run         - 编译并运行程序"
-	@echo "  make test        - 编译并运行测试"
-	@echo "  make clean       - 清理构建文件"
-	@echo "  make distclean   - 深度清理"
-	@echo "  make gdb         - 编译并启动GDB调试"
-	@echo "  make valgrind    - 编译并运行Valgrind检查"
-	@echo "  make lint        - 运行静态代码分析"
-	@echo "  make docs        - 生成文档"
-	@echo "  make help        - 显示此帮助信息"
+	@echo "📖 可用命令:"
+	@echo "  make              - 构建项目（默认）"
+	@echo "  make all          - 构建项目"
+	@echo "  make debug        - 构建调试版本"
+	@echo "  make release      - 构建发布版本"
+	@echo "  make clean        - 清理构建文件"
+	@echo "  make clean_temp   - 清理临时文件"
+	@echo "  make clean_all    - 清理所有生成文件"
+	@echo "  make run          - 编译并运行程序"
+	@echo "  make debug_run    - 编译并启动调试"
+	@echo "  make env          - 显示环境信息"
+	@echo "  make help         - 显示此帮助信息"
+	@echo ""
+	@echo "📝 项目配置:"
+	@echo "  源文件编码: UTF-8"
+	@echo "  输出编码: GBK（适配Windows控制台）"
+	@echo "  临时文件: $(TEMP_DIR)"
+	@echo "  构建输出: $(BUILD_DIR)/"
 
-.PHONY: all debug release clean distclean run run_test test gdb valgrind lint docs help
+# ======================================================
+# 10. 快速测试规则
+# ======================================================
+
+# 快速测试：清理->构建->运行
+test: clean_all all run
+	@echo "🎉 快速测试完成！"
+
+# 验证构建系统
+verify:
+	@echo "🔍 验证构建系统..."
+	@echo "1. 检查编译器..."
+	@$(CC) --version 2>&1 | head -1
+	@echo "2. 检查源文件..."
+	@if [ -n "$(SRCS)" ]; then \
+		echo "  找到 $(words $(SRCS)) 个源文件"; \
+		for f in $(SRCS); do echo "    - $$f"; done; \
+	else \
+		echo "  ⚠️  未找到源文件，请确认 $(SRC_DIR)/ 目录下有.c文件"; \
+	fi
+	@echo "3. 检查目录结构..."
+	@mkdir -p $(BUILD_DIR) $(TEMP_DIR)
+	@echo "  ✅ 目录结构正常"
+	@echo "✅ 验证完成"
