@@ -1,10 +1,3 @@
-/**
- * @file main.c
- * @brief 主程序文件
- * @author [Your Name]
- * @date 2024
- */
-
 #include "module.h"
 #include "utils.h"
 #include <stdio.h>
@@ -13,6 +6,8 @@
 int main(int argc, char *argv[]) {
     // 打印程序信息
     print_program_info("C Project Template");
+
+    printf("\n 程序特殊符号测试\n");
 
     // 演示工具函数
     printf("\n=== 工具函数演示 ===\n");
@@ -34,6 +29,6 @@ int main(int argc, char *argv[]) {
         printf("参数 %d: %s\n", i, argv[i]);
     }
 
-    printf("\n✅ 程序执行完成！\n");
+    printf("\n程序执行完成！\n");
     return EXIT_SUCCESS;
 }
