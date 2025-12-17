@@ -10,6 +10,20 @@
         "*.exe": true,
         "*.o": true
     },
+ 
+    // Makefile Tools配置
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "${workspaceFolder}",
+            "binaryPath": "${workspaceFolder}/build/${workspaceFolderBasename}.exe",
+            "binaryArgs": []
+        }
+    ],
+    "makefile.buildLog": "build.log",
+    "makefile.buildBeforeLaunch": true,
+    "makefile.clearOutputBeforeBuild": true,
+    "makefile.configureOnOpen": true,
+    
     "C_Cpp.default.configurationProvider": "ms-vscode.cpptools",
     "code-runner.runInTerminal": true,
     "code-runner.saveFileBeforeRun": true,

@@ -5,6 +5,13 @@
             "label": "Build Project",
             "type": "shell",
             "command": "make",
+            "options": {
+                "env": {
+                    "TMP": "${workspaceFolder}/temp",
+                    "TEMP": "${workspaceFolder}/temp",
+                    "TMPDIR": "${workspaceFolder}/temp"
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -25,31 +32,28 @@
             "group": "build"
         },
         {
+            "label": "Clean Temp",
+            "type": "shell",
+            "command": "make clean_temp",
+            "group": "build"
+        },
+        {
+            "label": "Clean All",
+            "type": "shell",
+            "command": "make clean_all",
+            "group": "build"
+        },
+        {
             "label": "Run Program",
             "type": "shell",
             "command": "make run",
             "group": "test"
         },
         {
-            "label": "Compile Single File",
+            "label": "Show Environment",
             "type": "shell",
-            "command": "gcc",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}.exe",
-                "-Wall",
-                "-Wextra",
-                "-pedantic",
-                "-std=c17"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "clear": true
-            },
-            "problemMatcher": ["$gcc"]
+            "command": "make env",
+            "group": "test"
         }
     ]
 }
