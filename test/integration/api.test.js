@@ -7,20 +7,41 @@ describe('API集成测试', () => {
   let baseUrl;
 
   // 启动测试服务器
-  beforeAll(done => {
+  // beforeAll(done => {
+  //   const app = require('../../src/app');
+  //   const PORT = process.env.TEST_PORT || 3001; // 使用不同端口避免冲突
+  //   server = app.listen(PORT, () => {
+  //     baseUrl = `http://localhost:${PORT}`;
+  //     console.log(`测试服务器运行在 ${baseUrl}`);
+  //     done();
+  //   });
+  // });
+
+  // 关闭测试服务器
+  // afterAll(done => {
+  //   if (server) {
+  //     server.close(done);
+  //   }
+  // });
+
+  // 启动测试服务器 - 改为异步版本
+  beforeAll(async () => {
     const app = require('../../src/app');
-    const PORT = process.env.TEST_PORT || 3001; // 使用不同端口避免冲突
-    server = app.listen(PORT, () => {
-      baseUrl = `http://localhost:${PORT}`;
-      console.log(`测试服务器运行在 ${baseUrl}`);
-      done();
+    const PORT = process.env.TEST_PORT || 3001;
+
+    await new Promise(resolve => {
+      server = app.listen(PORT, () => {
+        baseUrl = `http://localhost:${PORT}`;
+        console.log(`测试服务器运行在 ${baseUrl}`);
+        resolve();
+      });
     });
   });
 
-  // 关闭测试服务器
-  afterAll(done => {
+  // 关闭测试服务器 - 改为异步版本
+  afterAll(async () => {
     if (server) {
-      server.close(done);
+      await new Promise(resolve => server.close(resolve));
     }
   });
 
