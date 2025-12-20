@@ -1,5 +1,5 @@
 // 公共配置
-const API_BASE_URL = window.location.origin;
+// const API_BASE_URL = window.location.origin;
 
 // 统一的API请求函数
 async function makeAPIRequest(method, endpoint, body = null) {
