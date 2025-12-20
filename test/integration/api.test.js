@@ -106,6 +106,9 @@ describe('API集成测试', () => {
         .set('Content-Type', 'application/json');
 
       expect(response.status).toBe(400);
+
+      // 恢复原始的console.error
+      // consoleErrorSpy.mockRestore();
     });
   });
 });
