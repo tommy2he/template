@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Node.js 学习项目</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
       /* 重置样式 */
       * {
@@ -104,7 +107,7 @@
       }
 
       .card ul li:before {
-        content: "✓";
+        content: '✓';
         color: #10b981;
         font-weight: bold;
       }
@@ -250,9 +253,7 @@
           <li>前端-后端交互调试</li>
           <li>代码质量工具（ESLint + Prettier）</li>
         </ul>
-        <div class="debug-info">
-          服务器地址: <span id="serverUrl">http://localhost:3000</span>
-        </div>
+        <div class="debug-info">服务器地址: <span id="serverUrl">http://localhost:3000</span></div>
       </div>
 
       <div class="card">
@@ -271,9 +272,7 @@
           <button class="btn primary test-endpoint" data-endpoint="/api/example">
             <i class="fas fa-code"></i> 示例路由
           </button>
-          <button class="btn secondary" id="testAll">
-            <i class="fas fa-vial"></i> 测试所有
-          </button>
+          <button class="btn secondary" id="testAll"><i class="fas fa-vial"></i> 测试所有</button>
           <button class="btn secondary" id="clearConsole">
             <i class="fas fa-broom"></i> 清空控制台
           </button>
