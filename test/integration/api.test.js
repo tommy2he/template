@@ -70,10 +70,21 @@ describe('API集成测试', () => {
 
   describe('静态文件服务测试', () => {
     test('前端页面可访问', async () => {
+      // 如果没有 Accept 头，会重定向到 index.html
       const response = await request(baseUrl).get('/');
 
+      // 应该得到 302 重定向，而不是 200
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe('/index.html');
+    });
+
+    // 添加一个新测试来验证 API 响应
+    test('根路径返回 JSON 当 Accept 头包含 application/json', async () => {
+      const response = await request(baseUrl).get('/').set('Accept', 'application/json');
+
       expect(response.status).toBe(200);
-      expect(response.type).toBe('application/json'); // API根路径返回JSON
+      expect(response.type).toBe('application/json');
+      expect(response.body).toHaveProperty('message');
     });
 
     test('静态HTML文件', async () => {

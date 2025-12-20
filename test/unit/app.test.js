@@ -13,12 +13,12 @@ describe('基础功能测试', () => {
   });
 
   test('根路径返回欢迎信息', async () => {
-    const response = await request(app).get('/');
+    const response = await request(app).get('/').set('Accept', 'application/json'); // 添加 Accept 头
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('message');
     expect(response.body.message).toContain('欢迎');
-    expect(response.body).toHaveProperty('status', '运行中');
+    expect(response.body).toHaveProperty('version', '1.0.0');
   });
 
   test('API信息端点', async () => {
