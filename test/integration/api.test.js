@@ -97,6 +97,9 @@ describe('API集成测试', () => {
 
   describe('错误处理测试', () => {
     test('无效的POST请求体', async () => {
+      // 添加这行来静默console.error
+      // const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
       const response = await request(baseUrl)
         .post('/api/echo')
         .send('无效的JSON')
