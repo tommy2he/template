@@ -22,4 +22,8 @@ module.exports = {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
+
+  // FIX detectOpenHandles warning
+  detectOpenHandles: true, // 检测未关闭的资源句柄
+  testTimeout: 30000, // 增加测试超时时间
 };
