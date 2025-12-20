@@ -34,7 +34,8 @@ app.use(morgan('dev'));
 
 // 基本路由
 app.get('/', (req, res) => {
-  console.log('🔍 根路径路由被调用，Accept:', req.headers.accept);
+  // 这行代码仅用于调试版
+  // console.log('🔍 根路径路由被调用，Accept:', req.headers.accept);
 
   const accept = req.headers.accept || '';
 
