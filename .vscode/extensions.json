@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-vscode.powershell",
+    "eamodio.gitlens",
+    "codeium.codeium",
+    "usernamehw.errorlens",
+    "aaron-bond.better-comments"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.cpptools",
+    "ms-vscode.makefile-tools",
+    "ms-vscode.cpptools-themes"
+  ]
+}
