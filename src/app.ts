@@ -1,4 +1,3 @@
-// src/app.ts
 import Koa from 'koa';
 import { createServer } from 'http';
 import config from './config';

@@ -1,4 +1,3 @@
-// src/routes/index.ts
 import Koa from 'koa';
 import Router from 'koa-router';
 import apiRoutes from './api';

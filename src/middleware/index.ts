@@ -1,4 +1,3 @@
-// src/middleware/index.ts
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';

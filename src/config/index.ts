@@ -1,4 +1,3 @@
-// src/config/index.ts
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -9,12 +8,6 @@ interface Config {
   port: number;
   logLevel: string;
   apiPrefix: string;
-  // 数据库配置（为1.5版本预留）
-  db?: {
-    host: string;
-    port: number;
-    name: string;
-  };
 }
 
 const config: Config = {
