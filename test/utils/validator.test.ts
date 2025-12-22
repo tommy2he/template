@@ -1,4 +1,8 @@
-import { ValidationError, validateString, validateNumber } from './validator';
+import {
+  ValidationError,
+  validateString,
+  validateNumber,
+} from '../../src/utils/validator';
 
 describe('Validator Utils', () => {
   describe('ValidationError', () => {

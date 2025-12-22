@@ -24,6 +24,16 @@ export function randomString(length: number = 8): string {
  * 安全解析JSON
  */
 export function safeParseJSON<T = any>(str: string, fallback: T): T {
+  // 检查输入是否为字符串
+  if (typeof str !== 'string') {
+    return fallback;
+  }
+
+  // 如果是空字符串，也返回 fallback
+  if (str.trim() === '') {
+    return fallback;
+  }
+
   try {
     return JSON.parse(str);
   } catch {

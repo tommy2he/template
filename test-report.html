@@ -199,4 +199,781 @@ body {
     border: 1px solid #ddd;
   }
 }
-</style></head><body><main class="jesthtml-content"><header><h1 id="title">Koa Template App - Test Report</h1><img id="logo" src="./public/logo.svg"/></header><section id="metadata-container"><div id="timestamp">Started: 2025-12-22 20:33:22</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (2)</div><div class="summary-passed ">2 passed</div><div class="summary-failed  summary-empty">0 failed</div><div class="summary-pending  summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (6)</div><div class="summary-passed ">6 passed</div><div class="summary-failed  summary-empty">0 failed</div><div class="summary-pending  summary-empty">0 pending</div></div></div></section><details id="suite-1" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\app.test.ts</div><div class="suite-time">0.747s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该处理字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">异步测试</div><div class="test-title">应该处理异步操作</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该计算数字</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该通过基本测试</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div></div></details><details id="suite-2" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\middleware\logger.test.ts</div><div class="suite-time">0.739s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">测试套件</div><div class="test-title">应该通过</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename"> </div><div class="test-title">最简单的测试</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div></div></details></main></body></html>
+</style></head><body><main class="jesthtml-content"><header><h1 id="title">Koa Template App - Test Report</h1><img id="logo" src="./public/logo.svg"/></header><section id="metadata-container"><div id="timestamp">Started: 2025-12-22 23:25:21</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (13)</div><div class="summary-passed ">6 passed</div><div class="summary-failed ">7 failed</div><div class="summary-pending  summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (136)</div><div class="summary-passed ">117 passed</div><div class="summary-failed ">19 failed</div><div class="summary-pending  summary-empty">0 pending</div></div></div></section><details id="suite-1" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\app.test.ts</div><div class="suite-time">2.359s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">App 类测试 &gt; start 方法</div><div class="test-title">应该启动服务器</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">App 类测试</div><div class="test-title">应该成功创建 App 实例</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">App 类测试</div><div class="test-title">应该正确设置中间件和路由</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.require (D:\work\20251222\code_for_test\koa_template_app\src\app.ts:3:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\app.test.ts:1:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops</pre></div></div></details><details id="suite-2" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\basics.test.ts</div><div class="suite-time">1.782s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该处理字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">异步测试</div><div class="test-title">应该处理异步操作</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该计算数字</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Basic Test Suite</div><div class="test-title">应该通过基本测试</div><div class="test-status">passed</div><div class="test-duration">0.005s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details><details id="suite-3" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts</div><div class="suite-time">1.801s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该使用默认配置</div><div class="test-status">passed</div><div class="test-duration">0.072s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该加载测试环境配置</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该加载生产环境配置</div><div class="test-status">passed</div><div class="test-duration">0.005s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该在生产环境中警告本地MongoDB</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该在生产环境中验证JWT密钥</div><div class="test-status">passed</div><div class="test-duration">0.012s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该正确解析CORS配置</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Configuration Module</div><div class="test-title">应该正确解析数组配置</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:23:26)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (14) from .env -- tip: 👥 sync secrets across teammates &amp; machines: https://dotenvx.com/ops</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:38:26)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: ⚙️  suppress all logs with { quiet: true }</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:52:26)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (4) from .env.production -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:65:20)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (7) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:73:20)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:87:7
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\node_modules\expect\build\index.js:1824:9)
+    at Object.throwingMatcher [as toThrow] (D:\work\20251222\code_for_test\koa_template_app\node_modules\expect\build\index.js:2235:93)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:88:8)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (5) from .env.production -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\config\index.test.ts:97:5)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (4) from .env.production -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`</pre></div></div></details><details id="suite-4" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\integration\api.integration.test.ts</div><div class="suite-time">2.499s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; POST /api/echo</div><div class="test-title">应该为缺失的时间戳生成默认值</div><div class="test-status">passed</div><div class="test-duration">0.007s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api/echo/:message</div><div class="test-title">应该回显消息</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; 错误处理</div><div class="test-title">应该处理CORS预检请求</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "http://localhost:3000"
+Received: "http://localhost:3001"
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\api.integration.test.ts:160:63)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; POST /api/echo</div><div class="test-title">应该处理POST请求并返回数据</div><div class="test-status">passed</div><div class="test-duration">0.01s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; 错误处理</div><div class="test-title">应该处理不存在的路由</div><div class="test-status">failed</div><div class="test-duration">0.007s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 3
++ Received  + 1
+
+- Object {
+-   "message": "Not Found",
+- }
++ Object {}
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\api.integration.test.ts:150:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api/echo/:message</div><div class="test-title">应该处理无效重复参数</div><div class="test-status">passed</div><div class="test-duration">0.002s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api/echo/:message</div><div class="test-title">应该支持重复参数</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api</div><div class="test-title">应该返回API欢迎信息</div><div class="test-status">passed</div><div class="test-duration">0.022s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api/health</div><div class="test-title">应该返回健康检查信息</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Integration Tests &gt; GET /api/status</div><div class="test-title">应该返回应用状态信息</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.require (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:2:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\middleware\index.ts:6:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\api.integration.test.ts:4:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: ⚙️  enable debug logging with { debug: true }</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.725Z] GET /api - GREEN:200 - 4ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.733Z] GET /api/health - GREEN:200 - 1ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.736Z] GET /api/status - GREEN:200 - 0ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.740Z] GET /api/echo/hello-world - GREEN:200 - 1ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.744Z] GET /api/echo/test?repeat=3 - GREEN:200 - 1ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.747Z] GET /api/echo/test?repeat=not-a-number - GREEN:200 - 1ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.756Z] POST /api/echo - GREEN:200 - 7ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.762Z] POST /api/echo - GREEN:200 - 0ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.767Z] GET /api/nonexistent - YELLOW:404 - 0ms</pre></div></div></details><details id="suite-5" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\integration\web.integration.test.ts</div><div class="suite-time">2.489s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Integration Tests &gt; 静态文件服务</div><div class="test-title">应该提供静态HTML文件</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Integration Tests &gt; 中间件集成</div><div class="test-title">应该记录请求日志</div><div class="test-status">passed</div><div class="test-duration">0.005s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Web Routes Integration Tests &gt; 中间件集成</div><div class="test-title">应该设置CORS头</div><div class="test-status">failed</div><div class="test-duration">0.004s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "http://localhost:3000"
+Received: "http://localhost:3001"
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\web.integration.test.ts:70:63)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Integration Tests &gt; 静态文件服务</div><div class="test-title">应该返回404对于不存在的静态文件</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Web Routes Integration Tests &gt; GET /</div><div class="test-title">应该返回欢迎页面</div><div class="test-status">failed</div><div class="test-duration">0.028s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+- Expected  -  1
++ Received  + 54
+
+- Hello from Koa!
++ &lt;!doctype html&gt;&#xD;
++ &lt;html lang="en"&gt;&#xD;
++   &lt;head&gt;&#xD;
++     &lt;meta charset="UTF-8" /&gt;&#xD;
++     &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;&#xD;
++     &lt;title&gt;Koa Template App&lt;/title&gt;&#xD;
++     &lt;style&gt;&#xD;
++       body {&#xD;
++         font-family: Arial, sans-serif;&#xD;
++         max-width: 800px;&#xD;
++         margin: 0 auto;&#xD;
++         padding: 20px;&#xD;
++         line-height: 1.6;&#xD;
++       }&#xD;
++       .endpoint {&#xD;
++         background: #f5f5f5;&#xD;
++         padding: 10px;&#xD;
++         margin: 10px 0;&#xD;
++         border-radius: 4px;&#xD;
++       }&#xD;
++     &lt;/style&gt;&#xD;
++   &lt;/head&gt;&#xD;
++   &lt;body&gt;&#xD;
++     &lt;h1&gt;Koa Template App&lt;/h1&gt;&#xD;
++     &lt;p&gt;A template Koa.js application with TypeScript&lt;/p&gt;&#xD;
++ &#xD;
++     &lt;h2&gt;Available Endpoints:&lt;/h2&gt;&#xD;
++     &lt;div class="endpoint"&gt;&lt;strong&gt;GET /&lt;/strong&gt; - Welcome page&lt;/div&gt;&#xD;
++     &lt;div class="endpoint"&gt;&lt;strong&gt;GET /api&lt;/strong&gt; - API root&lt;/div&gt;&#xD;
++     &lt;div class="endpoint"&gt;&lt;strong&gt;GET /api/health&lt;/strong&gt; - Health check&lt;/div&gt;&#xD;
++     &lt;div class="endpoint"&gt;&#xD;
++       &lt;strong&gt;GET /api/status&lt;/strong&gt; - Application status&#xD;
++     &lt;/div&gt;&#xD;
++     &lt;div class="endpoint"&gt;&#xD;
++       &lt;strong&gt;GET /api/echo/:message&lt;/strong&gt; - Echo endpoint with parameter&#xD;
++     &lt;/div&gt;&#xD;
++ &#xD;
++     &lt;h2&gt;Try it:&lt;/h2&gt;&#xD;
++     &lt;ul&gt;&#xD;
++       &lt;li&gt;&lt;a href="/api"&gt;Visit /api&lt;/a&gt;&lt;/li&gt;&#xD;
++       &lt;li&gt;&lt;a href="/api/health"&gt;Visit /api/health&lt;/a&gt;&lt;/li&gt;&#xD;
++     &lt;/ul&gt;&#xD;
++ &#xD;
++     &lt;footer&gt;&#xD;
++       &lt;p&gt;Running on Node.js v&lt;span id="node-version"&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
++     &lt;/footer&gt;&#xD;
++ &#xD;
++     &lt;script&gt;&#xD;
++       document.getElementById('node-version').textContent =&#xD;
++         process.versions.node;&#xD;
++     &lt;/script&gt;&#xD;
++   &lt;/body&gt;&#xD;
++ &lt;/html&gt;&#xD;
++
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\web.integration.test.ts:28:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.require (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:2:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\middleware\index.ts:6:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\integration\web.integration.test.ts:6:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: ⚙️  write to custom object with { processEnv: myObject }</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.722Z] GET / - GREEN:200 - 3ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.748Z] GET / - GREEN:200 - 0ms</pre></div></div></details><details id="suite-6" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\middleware\cors.test.ts</div><div class="suite-time">2.379s</div></summary><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">cors Middleware</div><div class="test-title">应该允许跨域请求</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 500
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\cors.test.ts:59:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">cors Middleware</div><div class="test-title">应该处理OPTIONS预检请求</div><div class="test-status">failed</div><div class="test-duration">0.006s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 204
+Received: 500
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\cors.test.ts:48:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">cors Middleware</div><div class="test-title">应该支持跨域凭证</div><div class="test-status">failed</div><div class="test-duration">0.003s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "true"
+Received: undefined
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\cors.test.ts:69:66)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">cors Middleware</div><div class="test-title">应该设置正确的CORS头</div><div class="test-status">failed</div><div class="test-duration">0.026s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "http://localhost:3001"
+Received: undefined
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\cors.test.ts:30:61)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  TypeError: Invalid value "undefined" for header "Access-Control-Allow-Origin"
+      at ServerResponse.setHeader (node:_http_outgoing:703:3)
+      at Object.set (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\response.js:541:16)
+      at Object.proto.&lt;computed&gt; [as set] (D:\work\20251222\code_for_test\koa_template_app\node_modules\delegates\index.js:40:31)
+      at set (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:7:9)
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:34:12
+      at Application.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:193:12)
+      at Server.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:164:21)
+      at Server.emit (node:events:519:28)
+      at parserOnIncoming (node:_http_server:1168:12)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)
+</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  TypeError: Invalid value "undefined" for header "Access-Control-Allow-Origin"
+      at ServerResponse.setHeader (node:_http_outgoing:703:3)
+      at Object.set (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\response.js:541:16)
+      at Object.proto.&lt;computed&gt; [as set] (D:\work\20251222\code_for_test\koa_template_app\node_modules\delegates\index.js:40:31)
+      at set (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:7:9)
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:34:12
+      at Application.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:193:12)
+      at Server.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:164:21)
+      at Server.emit (node:events:519:28)
+      at parserOnIncoming (node:_http_server:1168:12)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)
+</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  TypeError: Invalid value "undefined" for header "Access-Control-Allow-Origin"
+      at ServerResponse.setHeader (node:_http_outgoing:703:3)
+      at Object.set (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\response.js:541:16)
+      at Object.proto.&lt;computed&gt; [as set] (D:\work\20251222\code_for_test\koa_template_app\node_modules\delegates\index.js:40:31)
+      at set (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:7:9)
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:34:12
+      at Application.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:193:12)
+      at Server.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:164:21)
+      at Server.emit (node:events:519:28)
+      at parserOnIncoming (node:_http_server:1168:12)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)
+</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  TypeError: Invalid value "undefined" for header "Access-Control-Allow-Origin"
+      at ServerResponse.setHeader (node:_http_outgoing:703:3)
+      at Object.set (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\response.js:541:16)
+      at Object.proto.&lt;computed&gt; [as set] (D:\work\20251222\code_for_test\koa_template_app\node_modules\delegates\index.js:40:31)
+      at set (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:7:9)
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:34:12
+      at Application.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:193:12)
+      at Server.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:164:21)
+      at Server.emit (node:events:519:28)
+      at parserOnIncoming (node:_http_server:1168:12)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)
+</pre></div></div></details><details id="suite-7" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\middleware\errorHandler.test.ts</div><div class="suite-time">2.367s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">errorHandler Middleware</div><div class="test-title">应该保留错误的状态码</div><div class="test-status">passed</div><div class="test-duration">0.002s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">errorHandler Middleware</div><div class="test-title">应该捕获并处理同步错误</div><div class="test-status">passed</div><div class="test-duration">0.027s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">errorHandler Middleware</div><div class="test-title">应该捕获并处理异步错误</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">errorHandler Middleware</div><div class="test-title">应该正确处理正常请求</div><div class="test-status">passed</div><div class="test-duration">0.002s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">errorHandler Middleware</div><div class="test-title">应该触发error事件</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details><details id="suite-8" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts</div><div class="suite-time">2.541s</div></summary><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件顺序</div><div class="test-title">CORS中间件应该在错误处理之后</div><div class="test-status">failed</div><div class="test-duration">0.006s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: "http://localhost:3000"
+Received: "http://localhost:3001"
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:35:63)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件顺序</div><div class="test-title">bodyParser应该解析JSON请求体</div><div class="test-status">passed</div><div class="test-duration">0.013s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件配置</div><div class="test-title">应该在生产环境设置静态文件缓存</div><div class="test-status">failed</div><div class="test-duration">0.019s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: JWT_SECRET must be set in production environment
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:113:11)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.require (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:2:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\middleware\index.ts:6:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:101:36)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 错误处理集成</div><div class="test-title">应该处理JSON解析错误</div><div class="test-status">passed</div><div class="test-duration">0.005s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 错误处理集成</div><div class="test-title">应该处理不同类型的错误</div><div class="test-status">failed</div><div class="test-duration">0.004s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 3
++ Received  + 1
+
+- Object {
+-   "message": "Not Found",
+- }
++ Object {}
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:120:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件顺序</div><div class="test-title">应该支持静态文件服务</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件配置</div><div class="test-title">应该正确配置bodyParser选项</div><div class="test-status">failed</div><div class="test-duration">0.038s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件顺序</div><div class="test-title">日志中间件应该记录请求</div><div class="test-status">failed</div><div class="test-duration">0.004s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: StringContaining "GET", StringContaining "/test", StringContaining "200"
+Received: "[2025-12-22T15:25:24.715Z] GET /test - GREEN:200 - 1ms"
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:49:26)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Middleware Integration &gt; 中间件顺序</div><div class="test-title">错误处理中间件应该在最前面</div><div class="test-status">failed</div><div class="test-duration">0.024s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expected 500 "Internal Server Error", got 200 "OK"
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:20:63)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)
+----
+    at Test._assertStatus (D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:309:14)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:365:13
+    at Test._assertFunction (D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:342:13)
+    at Test.assert (D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:195:23)
+    at localAssert (D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:138:14)
+    at Server.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\node_modules\supertest\lib\test.js:152:11)
+    at Object.onceWrapper (node:events:633:28)
+    at Server.emit (node:events:519:28)
+    at emitCloseNT (node:net:2419:8)
+    at processTicksAndRejections (node:internal/process/task_queues:89:21)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at _log (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:142:11)
+    at Object.configDotenv (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:320:5)
+    at Object.config (D:\work\20251222\code_for_test\koa_template_app\node_modules\dotenv\lib\main.js:334:25)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\config\index.ts:12:8)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.require (D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:2:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\src\middleware\index.ts:6:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at Runtime.requireModuleOrMock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:964:21)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\index.test.ts:3:1)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[dotenv@17.2.3] injecting env (8) from .env.test -- tip: 👥 sync secrets across teammates &amp; machines: https://dotenvx.com/ops</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.699Z] GET / - GREEN:200 - 3ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at log (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:29:13)
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+    at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7</pre><pre class="suite-consolelog-item-message">[2025-12-22T15:25:24.709Z] GET / - GREEN:200 - 1ms</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at emit (D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:28:17)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  SyntaxError: invalid JSON, only supports object and array
+      at parse (D:\work\20251222\code_for_test\koa_template_app\node_modules\co-body\lib\json.js:57:13)
+      at AsyncFunction.module.exports [as json] (D:\work\20251222\code_for_test\koa_template_app\node_modules\co-body\lib\json.js:43:20)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at parseBody (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-bodyparser\index.js:87:14)
+      at bodyParser (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-bodyparser\index.js:67:19)
+      at D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:9:7
+      at D:\work\20251222\code_for_test\koa_template_app\src\middleware\cors.ts:22:5
+      at D:\work\20251222\code_for_test\koa_template_app\src\middleware\errorHandler.ts:11:7
+</pre></div></div></details><details id="suite-9" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\middleware\logger.test.ts</div><div class="suite-time">2.094s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该包含ISO时间戳</div><div class="test-status">passed</div><div class="test-duration">0.007s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 错误处理</div><div class="test-title">应该在错误时重新抛出错误</div><div class="test-status">failed</div><div class="test-duration">0.009s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).rejects.toThrow()
+
+Received promise resolved instead of rejected
+Resolved to value: {"header": {"connection": "close", "content-length": "21", "content-type": "text/plain; charset=utf-8", "date": "Mon, 22 Dec 2025 15:25:24 GMT"}, "req": {"data": undefined, "headers": {}, "method": "GET", "url": "http://127.0.0.1:63318/throw"}, "status": 500, "text": "Internal Server Error"}
+    at expect (D:\work\20251222\code_for_test\koa_template_app\node_modules\expect\build\index.js:2116:15)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\logger.test.ts:148:13)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 边缘情况</div><div class="test-title">应该处理不同的HTTP方法</div><div class="test-status">passed</div><div class="test-duration">0.015s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 边缘情况</div><div class="test-title">应该处理带有查询参数的URL</div><div class="test-status">passed</div><div class="test-duration">0.006s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 边缘情况</div><div class="test-title">应该处理空的URL</div><div class="test-status">passed</div><div class="test-duration">0.006s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 颜色标记</div><div class="test-title">应该对客户端错误使用黄色标记</div><div class="test-status">passed</div><div class="test-duration">0.008s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 颜色标记</div><div class="test-title">应该对成功请求使用绿色标记</div><div class="test-status">passed</div><div class="test-duration">0.008s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 颜色标记</div><div class="test-title">应该对服务器错误使用红色标记</div><div class="test-status">passed</div><div class="test-duration">0.007s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该记录404错误请求</div><div class="test-status">passed</div><div class="test-duration">0.008s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该记录POST请求</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware &gt; 错误处理</div><div class="test-title">应该记录中间件抛出的错误</div><div class="test-status">passed</div><div class="test-duration">0.012s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该记录成功的请求</div><div class="test-status">passed</div><div class="test-duration">0.04s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该记录服务器错误请求</div><div class="test-status">passed</div><div class="test-duration">0.01s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">logger Middleware</div><div class="test-title">应该记录请求耗时</div><div class="test-status">passed</div><div class="test-duration">0.064s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  Error: Middleware error
+      at D:\work\20251222\code_for_test\koa_template_app\test\middleware\logger.test.ts:128:15
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at next (D:\work\20251222\code_for_test\koa_template_app\src\middleware\logger.ts:9:13)
+      at dispatch (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:42:32)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\koa-compose\index.js:34:12
+      at Application.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:193:12)
+      at Server.handleRequest (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:164:21)
+      at Server.emit (node:events:519:28)
+      at parserOnIncoming (node:_http_server:1168:12)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)
+</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Application.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:240:13)
+    at Application.emit (node:events:519:28)
+    at Object.onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\context.js:126:14)
+    at onerror (D:\work\20251222\code_for_test\koa_template_app\node_modules\koa\lib\application.js:190:34)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre><pre class="suite-consolelog-item-message">
+  Error: Test error
+      at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\middleware\logger.test.ts:142:25)
+      at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+      at new Promise (&lt;anonymous&gt;)
+      at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+      at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+      at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+      at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+      at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+      at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+      at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+      at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+      at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+      at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+      at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+      at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)
+</pre></div></div></details><details id="suite-10" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\routes\api.test.ts</div><div class="suite-time">1.954s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由处理器</div><div class="test-title">GET /api 应该返回正确格式</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由参数处理</div><div class="test-title">GET /api/echo/:message 应该处理查询参数</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由参数处理</div><div class="test-title">GET /api/echo/:message 应该处理路径参数</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由处理器</div><div class="test-title">GET /api/health 应该返回健康信息</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由请求方法</div><div class="test-title">应该支持不同的HTTP方法</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了POST回显路由</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了健康检查路由</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了回显路由</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了根路由</div><div class="test-status">passed</div><div class="test-duration">0.005s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">API Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了状态路由</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details><details id="suite-11" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\routes\web.test.ts</div><div class="suite-time">1.926s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由处理器</div><div class="test-title">GET / 应该返回正确的响应</div><div class="test-status">passed</div><div class="test-duration">0.002s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由中间件</div><div class="test-title">应该处理异步操作</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由路径</div><div class="test-title">应该处理根路径</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该支持GET方法</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toContain(expected) // indexOf
+
+Expected value: "GET"
+Received array: []
+    at D:\work\20251222\code_for_test\koa_template_app\test\routes\web.test.ts:27:31
+    at Array.forEach (&lt;anonymous&gt;)
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\routes\web.test.ts:26:14)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由路径</div><div class="test-title">应该正确匹配路径参数（如果有的话）</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由中间件</div><div class="test-title">应该正确执行中间件链</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由处理器</div><div class="test-title">应该正确设置响应状态码</div><div class="test-status">failed</div><div class="test-duration">0.001s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: undefined
+Received: null
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\routes\web.test.ts:73:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Web Routes Unit Tests &gt; 路由注册</div><div class="test-title">应该注册了根路由</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details><details id="suite-12" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\utils\index.test.ts</div><div class="suite-time">2.403s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 性能和安全</div><div class="test-title">apiError 应该创建不可变错误对象</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 性能和安全</div><div class="test-title">delay 不应该阻塞事件循环太久</div><div class="test-status">passed</div><div class="test-duration">0.045s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 性能和安全</div><div class="test-title">randomString 应该生成安全的随机字符串</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 性能和安全</div><div class="test-title">safeParseJSON 应该防止原型污染攻击</div><div class="test-status">failed</div><div class="test-duration">0.002s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 0
++ Received  + 2
+
+  Object {
++   "__proto__": Object {
+      "polluted": true,
++   },
+  }
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\utils\index.test.ts:420:22)
+    at Promise.finally.completed (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at _runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 工具函数集成</div><div class="test-title">可以创建完整的错误处理流程</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">多次生成的字符串应该不同</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiResponse</div><div class="test-title">应该使用默认消息</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该使用默认错误码</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiResponse</div><div class="test-title">应该保持响应结构的一致性</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该创建ValidationError实例</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiResponse</div><div class="test-title">应该包含有效的时间戳</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该包含额外的错误信息</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">应该只包含字母和数字</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该可以抛出自定义错误</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 工具函数集成</div><div class="test-title">应该可以组合使用 safeParseJSON 和 apiResponse</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该可以链式设置属性</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 工具函数集成</div><div class="test-title">应该在异步场景中工作</div><div class="test-status">passed</div><div class="test-duration">0.051s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">应该处理0长度</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理null输入</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理undefined输入</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理前导和尾随空格</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiResponse</div><div class="test-title">应该处理各种数据类型</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理带有换行符的JSON</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理空字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">应该处理负数长度</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 工具函数集成</div><div class="test-title">应该处理错误场景</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该处理非字符串输入</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; delay</div><div class="test-title">应该延迟指定的时间</div><div class="test-status">passed</div><div class="test-duration">0.117s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该成功解析有效的JSON字符串</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该支持复杂的数据结构</div><div class="test-status">passed</div><div class="test-duration">0.003s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; 工具函数集成</div><div class="test-title">应该支持随机字符串生成用于测试数据</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该正确处理布尔值</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该正确处理数字</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该正确处理数组</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">应该生成指定长度的字符串</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiResponse</div><div class="test-title">应该生成标准API响应格式</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; delay</div><div class="test-title">应该立即返回对于0延迟</div><div class="test-status">failed</div><div class="test-duration">0.014s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBeLessThan(expected)
+
+Expected: &lt; 10
+Received:   13
+    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\test\utils\index.test.ts:38:23)</pre></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; apiError</div><div class="test-title">应该设置正确的状态码</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; delay</div><div class="test-title">应该返回一个Promise</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; safeParseJSON</div><div class="test-title">应该返回回退值对于无效的JSON</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Utility Functions &gt; randomString</div><div class="test-title">应该默认生成8位字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details><details id="suite-13" class="suite-container" open=""><summary class="suite-info"><div class="suite-path">D:\work\20251222\code_for_test\koa_template_app\test\utils\validator.test.ts</div><div class="suite-time">2.118s</div></summary><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">对于非必填字段，空值应返回0</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">对于非必填字段，空值应返回空字符串</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; ValidationError</div><div class="test-title">应该创建带有正确属性的ValidationError实例</div><div class="test-status">passed</div><div class="test-duration">0.004s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; 边缘情况</div><div class="test-title">应该处理包含空格的数字字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">应该正确转换数字字符串</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; 边缘情况</div><div class="test-title">应该组合验证最小值和最大值</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该自动去除字符串两端的空格</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该验证字符串是否符合正则表达式模式</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该验证字符串的最大长度</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该验证字符串的最小长度</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该验证必填字符串字段</div><div class="test-status">passed</div><div class="test-duration">0.01s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">应该验证必填数字字段</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">应该验证数字的最大值</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">应该验证数字的最小值</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateString 函数</div><div class="test-title">应该验证输入是否为字符串类型</div><div class="test-status">passed</div><div class="test-duration">0.001s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Validator Utils &gt; validateNumber 函数</div><div class="test-title">应该验证输入是否能转换为有效数字</div><div class="test-status">passed</div><div class="test-duration"> </div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at Object.&lt;anonymous&gt; (D:\work\20251222\code_for_test\koa_template_app\jest.setup.js:10:9)
+    at Runtime._execModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-circus\build\runner.js:84:33)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:275:16)
+    at runTest (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:343:7)
+    at Object.worker (D:\work\20251222\code_for_test\koa_template_app\node_modules\jest-runner\build\testWorker.js:497:12)</pre><pre class="suite-consolelog-item-message">[测试环境] 模式: test</pre></div></div></details></main></body></html>

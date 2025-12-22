@@ -6,9 +6,31 @@ module.exports = {
   roots: ['<rootDir>/test'],
   collectCoverageFrom: ['src/**/*.ts', '!src/index.ts', '!src/**/index.ts'],
   coverageDirectory: 'coverage',
-  transform: {
-    '^.+\\.tsx?$': ['ts-jest', {}],
+
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@middleware/(.*)$': '<rootDir>/src/middleware/$1',
+    '^@routes/(.*)$': '<rootDir>/src/routes/$1',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@config/(.*)$': '<rootDir>/src/config/$1',
+    // 添加 chalk 的 mock
+    '^chalk$': '<rootDir>/test/__mocks__/chalk.js',
   },
+
+  transform: {
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.test.json',
+      },
+    ],
+  },
+
+  // 忽略 chalk 的转换
+  transformIgnorePatterns: ['/node_modules/(?!(chalk)/)'],
+
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+
   reporters: [
     'default',
     [

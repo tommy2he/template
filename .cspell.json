@@ -11,6 +11,8 @@
     "cors",
     "morgan",
     "maxage",
-    "asynciterable"
+    "asynciterable",
+    "testtesttest",
+    "hihihi"
   ]
 }
