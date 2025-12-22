@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Koa Template App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .endpoint {
+        background: #f5f5f5;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Koa Template App</h1>
+    <p>A template Koa.js application with TypeScript</p>
+
+    <h2>Available Endpoints:</h2>
+    <div class="endpoint"><strong>GET /</strong> - Welcome page</div>
+    <div class="endpoint"><strong>GET /api</strong> - API root</div>
+    <div class="endpoint"><strong>GET /api/health</strong> - Health check</div>
+    <div class="endpoint">
+      <strong>GET /api/status</strong> - Application status
+    </div>
+    <div class="endpoint">
+      <strong>GET /api/echo/:message</strong> - Echo endpoint with parameter
+    </div>
+
+    <h2>Try it:</h2>
+    <ul>
+      <li><a href="/api">Visit /api</a></li>
+      <li><a href="/api/health">Visit /api/health</a></li>
+    </ul>
+
+    <footer>
+      <p>Running on Node.js v<span id="node-version"></span></p>
+    </footer>
+
+    <script>
+      document.getElementById('node-version').textContent =
+        process.versions.node;
+    </script>
+  </body>
+</html>
