@@ -128,24 +128,31 @@ describe('logger Middleware', () => {
         throw new Error('Middleware error');
       });
 
-      try {
-        await request(app.callback()).get('/error-route').expect(500);
-      } catch (error) {
-        // 预期会抛出错误
-      }
+      // 直接请求并期望 500 状态码
+      const response = await request(app.callback())
+        .get('/error-route')
+        .expect(500);
 
-      // logger 应该被调用（在 catch 块中）
+      // 验证返回了正确的错误响应
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Internal Server Error');
+
+      // logger 应该被调用
       expect(mockConsoleLog).toHaveBeenCalled();
     });
 
-    it('应该在错误时重新抛出错误', async () => {
+    it('应该在错误时返回500状态码', async () => {
       const testError = new Error('Test error');
 
       app.use(async () => {
         throw testError;
       });
 
-      await expect(request(app.callback()).get('/throw')).rejects.toThrow(); // 应该抛出错误
+      // 请求应该成功（返回 500 响应），而不是抛出错误
+      const response = await request(app.callback()).get('/throw').expect(500);
+
+      expect(response.status).toBe(500);
+      expect(mockConsoleLog).toHaveBeenCalled();
     });
   });
 

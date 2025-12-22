@@ -1,24 +1,44 @@
 import Koa from 'koa';
 import request from 'supertest';
 import cors from '../../src/middleware/cors';
+import config from '../../src/config';
 
 // 模拟 config 模块
-jest.mock('../../src/config', () => ({
-  default: {
-    corsOrigin: 'http://localhost:3001', // 测试环境使用3001
-    corsCredentials: true,
-  },
-}));
+// 替换当前的 mock
+jest.mock('../../src/config', () => {
+  return {
+    __esModule: true,
+    default: {
+      corsOrigin: 'http://localhost:3001',
+      corsCredentials: true,
+    },
+  };
+});
 
 describe('cors Middleware', () => {
   let app: Koa;
+  let originalCorsOrigin: string;
+  let originalCorsCredentials: boolean;
 
   beforeEach(() => {
+    // 保存原始配置
+    originalCorsOrigin = config.corsOrigin;
+    originalCorsCredentials = config.corsCredentials;
+    // 修改配置为测试值
+    config.corsOrigin = 'http://localhost:3001';
+    config.corsCredentials = true;
+
     app = new Koa();
     app.use(cors());
     app.use(async (ctx) => {
       ctx.body = { message: 'Hello CORS' };
     });
+  });
+
+  afterEach(() => {
+    // 恢复原始配置
+    config.corsOrigin = originalCorsOrigin;
+    config.corsCredentials = originalCorsCredentials;
   });
 
   it('应该设置正确的CORS头', async () => {
