@@ -24,8 +24,14 @@ class App {
   public start(): void {
     const server = createServer(this.app.callback());
     server.listen(config.port, () => {
-      console.log(`🚀 Server running on port ${config.port}`);
-      console.log(`📁 Environment: ${config.env}`);
+      console.log(`
+🚀  ${config.appName} 启动成功！
+📁  环境: ${config.env}
+📍  地址: http://localhost:${config.port} (${config.appUrl})
+📊  API 前缀: ${config.apiPrefix}/${config.apiVersion}
+📈  日志级别: ${config.logLevel}
+📅  时间: ${new Date().toISOString()}
+    `);
     });
   }
 }
