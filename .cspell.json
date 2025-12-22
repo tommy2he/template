@@ -1,0 +1,15 @@
+{
+  "version": "0.2",
+  "ignorePaths": ["node_modules", "dist"],
+  "words": [
+    "koa",
+    "genieacs",
+    "middleware",
+    "dotenv",
+    "bodyparser",
+    "helmet",
+    "cors",
+    "morgan",
+    "maxage"
+  ]
+}
