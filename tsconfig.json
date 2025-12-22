@@ -14,7 +14,6 @@
     "declarationMap": true,
     "sourceMap": true,
 
-    // 添加这些来解决类型问题
     "types": ["node", "jest"],
     "typeRoots": ["./node_modules/@types", "./types"],
 
@@ -32,10 +31,11 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.integration.ts",
-    "**/*.e2e.ts"
+    "coverage"
+    // 删除下面的行，因为测试文件不在src下了
+    // "**/*.spec.ts",
+    // "**/*.test.ts",
+    // "**/*.integration.ts",
+    // "**/*.e2e.ts"
   ]
 }

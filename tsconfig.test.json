@@ -4,15 +4,37 @@
     "types": ["jest", "node"],
     "module": "commonjs",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    // 重要：测试配置不需要生成声明文件
+    "declaration": false,
+    "declarationMap": false,
+    "outDir": null, // 测试时不需要输出目录
+
+    // 基础URL和路径映射
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@routes/*": ["src/routes/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"]
+    }
   },
   "include": [
+    // 测试文件现在在根目录的test/下
+    "test/**/*.ts",
+    "test/**/*.spec.ts",
+    "test/**/*.test.ts",
+    "test/**/*.integration.ts",
+    "test/**/*.e2e.ts",
+
+    // 源码也需要包含，因为测试会引用
     "src/**/*.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "src/**/*.integration.ts",
-    "src/**/*.e2e.ts",
-    "jest.setup.js"
+
+    // Jest设置文件
+    "jest.setup.js",
+    "jest.config.js"
   ],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "coverage"]
 }

@@ -2,17 +2,29 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  testMatch: ['**/test/**/*.test.ts'],
+  roots: ['<rootDir>/test'],
   collectCoverageFrom: ['src/**/*.ts', '!src/index.ts', '!src/**/index.ts'],
   coverageDirectory: 'coverage',
   transform: {
-    // 使用新的配置方式，消除警告
-    '^.+\\.tsx?$': [
-      'ts-jest',
+    '^.+\\.tsx?$': ['ts-jest', {}],
+  },
+  reporters: [
+    'default',
+    [
+      'jest-html-reporter',
       {
-        // 可以在这里添加 ts-jest 的特定配置
-        // 例如：tsconfig: 'tsconfig.test.json'
+        pageTitle: 'Koa Template App - Test Report',
+        outputPath: './test-report.html',
+        includeFailureMsg: true,
+        includeConsoleLog: true,
+        logo: './public/logo.svg',
+        theme: 'lightTheme',
+        styleOverridePath: './test-report-style.css',
+        dateFormat: 'yyyy-mm-dd HH:MM:ss',
+        sort: 'titleAsc',
+        executionTimeWarningThreshold: 5,
       },
     ],
-  },
+  ],
 };
