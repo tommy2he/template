@@ -10,6 +10,7 @@
     "helmet",
     "cors",
     "morgan",
-    "maxage"
+    "maxage",
+    "asynciterable"
   ]
 }

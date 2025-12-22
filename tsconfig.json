@@ -1,9 +1,8 @@
-// tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["ES2020"],
+    "lib": ["es2018", "esnext.asynciterable"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -14,13 +13,29 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+
+    // 添加这些来解决类型问题
+    "types": ["node", "jest"],
+    "typeRoots": ["./node_modules/@types", "./types"],
+
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@config/*": ["src/config/*"],
-      "@middleware/*": ["src/middleware/*"]
+      "@middleware/*": ["src/middleware/*"],
+      "@routes/*": ["src/routes/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": ["src/**/*.ts", "src/**/*.json", "types/**/*.d.ts", ".env.*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.integration.ts",
+    "**/*.e2e.ts"
+  ]
 }

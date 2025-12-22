@@ -67,8 +67,8 @@ temp/
 
 # dotenv environment variables file
 .env
-.env.test
-.env.production
+# .env.test
+# .env.production
 
 # Local development files
 *.local

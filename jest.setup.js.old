@@ -1,0 +1,38 @@
+// // 测试环境设置
+// process.env.NODE_ENV = 'test';
+
+// // 全局测试钩子
+// beforeAll(() => {
+//   console.log('🚀 开始测试套件');
+// });
+
+// afterAll(() => {
+//   console.log('✅ 测试套件完成');
+// });
+
+// // 清理模拟
+// afterEach(() => {
+//   jest.clearAllMocks();
+// });
+
+// // 全局错误处理
+// process.on('unhandledRejection', (reason, promise) => {
+//   console.error('❌ 未处理的Promise拒绝:', reason);
+// });
+
+// process.on('uncaughtException', (error) => {
+//   console.error('❌ 未捕获的异常:', error);
+// });
+
+// jest.setup.js - 修正版
+// 这个文件会在所有测试文件运行前执行，但此时Jest的全局函数（如 beforeAll）尚未注入。
+// 因此，这里只能放置纯粹的Node.js代码，如环境变量设置。
+
+// 1. 设置测试环境变量（这是安全的）
+process.env.NODE_ENV = 'test';
+console.log('[测试环境已设置] NODE_ENV =', process.env.NODE_ENV);
+
+// 2. 全局错误处理（这也是Node.js API，是安全的）
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ 测试中捕获到未处理的Promise拒绝:', reason);
+});
