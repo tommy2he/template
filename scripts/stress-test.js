@@ -328,6 +328,17 @@ class StressTest {
     console.log('📊 压力测试报告');
     console.log('='.repeat(50));
 
+    const summary = this.calculateSummary();
+    this.printSummary(summary);
+
+    // 生成HTML报告
+    const report = this.generateHTMLReport(summary);
+    const reportPath = path.join(__dirname, '../stress-report.html');
+    await writeFile(reportPath, report);
+    console.log(`\n📄 压力测试报告已生成: file://${reportPath}`);
+  }
+
+  calculateSummary() {
     const summary = {
       totalRequests: 0,
       totalErrors: 0,
@@ -335,6 +346,9 @@ class StressTest {
       maxRPS: 0,
       minLatency: Infinity,
       maxLatency: 0,
+      avgLatency: 0,
+      avgRPS: 0,
+      avgErrorRate: 0,
     };
 
     this.results.forEach((result) => {
@@ -350,134 +364,233 @@ class StressTest {
         summary.maxLatency,
         result.meanLatencyMs || 0,
       );
+      summary.avgLatency += result.meanLatencyMs || 0;
+      summary.avgRPS += result.rps || 0;
+      summary.avgErrorRate += result.errorPercent || 0;
     });
+
+    const count = this.results.length;
+    summary.avgLatency /= count;
+    summary.avgRPS /= count;
+    summary.avgErrorRate /= count;
 
     // 如果没有有效的延迟数据
     if (summary.minLatency === Infinity) summary.minLatency = 0;
 
+    return summary;
+  }
+
+  printSummary(summary) {
     console.log(`📈 总请求数: ${summary.totalRequests.toLocaleString()}`);
     console.log(`⚠️  总错误数: ${summary.totalErrors}`);
     console.log(`⏱️  总耗时: ${(summary.totalTime / 1000).toFixed(2)} 秒`);
     console.log(`⚡ 最高请求/秒: ${summary.maxRPS.toFixed(2)}`);
     console.log(`📉 最低延迟: ${summary.minLatency.toFixed(2)}ms`);
     console.log(`📈 最高延迟: ${summary.maxLatency.toFixed(2)}ms`);
+    console.log(`📊 平均延迟: ${summary.avgLatency.toFixed(2)}ms`);
+    console.log(`⚡ 平均RPS: ${summary.avgRPS.toFixed(2)}`);
+    console.log(`🔴 平均错误率: ${summary.avgErrorRate.toFixed(2)}%`);
+  }
 
-    // 生成HTML报告
-    const report = `
+  generateHTMLReport(summary) {
+    return `
 <!DOCTYPE html>
 <html>
 <head>
     <title>Koa Template App - 压力测试报告</title>
+    <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .header { background: #d9534f; color: white; padding: 20px; border-radius: 5px; }
-        .summary { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #dee2e6; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { padding: 12px; border: 1px solid #dee2e6; text-align: left; }
-        th { background: #e9ecef; }
-        .good { color: #28a745; }
-        .warning { color: #ffc107; }
-        .bad { color: #dc3545; }
-        .chart { margin: 30px 0; padding: 20px; background: white; border: 1px solid #dee2e6; border-radius: 5px; }
-        .metric { display: inline-block; margin: 10px 20px 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #d9534f 0%, #b52b27 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
+        .summary { background: white; padding: 25px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .metric-card.good { border-left: 5px solid #28a745; }
+        .metric-card.warning { border-left: 5px solid #ffc107; }
+        .metric-card.bad { border-left: 5px solid #dc3545; }
+        .metric-value { font-size: 2em; font-weight: bold; margin: 10px 0; }
+        .metric-label { color: #666; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        th { background: #f8f9fa; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-top: 1px solid #dee2e6; }
+        tr:hover { background: #f8f9fa; }
+        .status-good { color: #28a745; font-weight: bold; }
+        .status-warning { color: #ffc107; font-weight: bold; }
+        .status-bad { color: #dc3545; font-weight: bold; }
+        .progress-bar { height: 10px; background: #e9ecef; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: #28a745; }
+        h1, h2, h3 { margin-top: 0; }
+        .timestamp { color: rgba(255,255,255,0.8); font-size: 0.9em; }
+        .section { margin-bottom: 30px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Koa Template App 压力测试报告</h1>
-        <p>生成时间: ${new Date().toLocaleString()}</p>
-        <p>测试端口: ${this.port}</p>
-    </div>
-    
-    <div class="summary">
-        <h2>📊 测试摘要</h2>
-        <div class="metric">总请求数: <strong>${summary.totalRequests.toLocaleString()}</strong></div>
-        <div class="metric">总错误数: <strong>${summary.totalErrors}</strong></div>
-        <div class="metric">总耗时: <strong>${(summary.totalTime / 1000).toFixed(2)} 秒</strong></div>
-        <div class="metric">最高RPS: <strong>${summary.maxRPS.toFixed(2)}</strong></div>
-    </div>
-    
-    <h2>🔥 测试结果</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>测试场景</th>
-                <th>请求数</th>
-                <th>并发数</th>
-                <th>平均延迟</th>
-                <th>请求/秒</th>
-                <th>错误率</th>
-                <th>耗时</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${this.results
-              .map(
-                (r) => `
-            <tr>
-                <td>${r.name}</td>
-                <td>${r.totalRequests.toLocaleString()}</td>
-                <td>${r.concurrency}</td>
-                <td class="${r.meanLatencyMs < 100 ? 'good' : r.meanLatencyMs < 500 ? 'warning' : 'bad'}">
-                    ${r.meanLatencyMs.toFixed(2)}ms
-                </td>
-                <td>${r.rps.toFixed(2)}</td>
-                <td class="${r.errorPercent === 0 ? 'good' : r.errorPercent < 1 ? 'warning' : 'bad'}">
-                    ${r.errorPercent.toFixed(2)}%
-                </td>
-                <td>${(r.elapsedTime / 1000).toFixed(2)}秒</td>
-            </tr>
-            `,
-              )
-              .join('')}
-        </tbody>
-    </table>
-    
-    <div class="chart">
-        <h3>📈 性能指标</h3>
-        <p>延迟分析:</p>
-        <ul>
-            <li><span class="good">绿色 (&lt; 100ms)</span>: 优秀性能</li>
-            <li><span class="warning">黄色 (100-500ms)</span>: 可接受性能</li>
-            <li><span class="bad">红色 (&gt; 500ms)</span>: 需要优化</li>
-        </ul>
-        
-        <p>错误率分析:</p>
-        <ul>
-            <li><span class="good">绿色 (0%)</span>: 完美</li>
-            <li><span class="warning">黄色 (&lt; 1%)</span>: 可接受</li>
-            <li><span class="bad">红色 (&gt;= 1%)</span>: 需要关注</li>
-        </ul>
-    </div>
-    
-    <div style="margin-top: 30px; color: #666; font-size: 0.9em;">
-        <h3>💡 建议</h3>
-        ${
-          summary.maxLatency > 500
-            ? '<p>⚠️ <strong>警告</strong>: 检测到高延迟，建议优化中间件顺序、添加缓存或升级服务器配置。</p>'
-            : '<p>✅ <strong>良好</strong>: 应用性能表现优秀。</p>'
-        }
-        
-        ${
-          summary.totalErrors > 0
-            ? '<p>⚠️ <strong>警告</strong>: 存在错误请求，建议检查错误日志并修复。</p>'
-            : '<p>✅ <strong>良好</strong>: 零错误率，应用稳定性良好。</p>'
-        }
-        
-        ${
-          summary.maxRPS < 100
-            ? '<p>⚠️ <strong>警告</strong>: RPS较低，建议优化代码性能或增加服务器资源。</p>'
-            : summary.maxRPS < 500
-              ? '<p>ℹ️ <strong>中等</strong>: RPS表现中等，有优化空间。</p>'
-              : '<p>✅ <strong>优秀</strong>: RPS表现优秀。</p>'
-        }
+    <div class="container">
+        ${this.generateHeader()}
+        ${this.generateSummarySection(summary)}
+        ${this.generateResultsTable()}
+        ${this.generatePerformanceGuidelines()}
+        ${this.generateRecommendations(summary)}
     </div>
 </body>
 </html>`;
+  }
 
-    const reportPath = path.join(__dirname, '../stress-report.html');
-    await writeFile(reportPath, report);
-    console.log(`\n📄 压力测试报告已生成: file://${reportPath}`);
+  generateHeader() {
+    return `
+        <div class="header">
+            <h1>Koa Template App 压力测试报告</h1>
+            <p class="timestamp">生成时间: ${new Date().toLocaleString()}</p>
+            <p class="timestamp">测试端口: ${this.port}</p>
+        </div>`;
+  }
+
+  generateSummarySection(summary) {
+    return `
+        <div class="summary">
+            <h2>📊 测试摘要</h2>
+            <div class="metrics">
+                <div class="metric-card ${summary.avgErrorRate === 0 ? 'good' : summary.avgErrorRate < 1 ? 'warning' : 'bad'}">
+                    <div class="metric-label">平均错误率</div>
+                    <div class="metric-value">${summary.avgErrorRate.toFixed(2)}%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.max(0, 100 - summary.avgErrorRate)}%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card ${summary.avgRPS > 1000 ? 'good' : summary.avgRPS > 500 ? 'warning' : 'bad'}">
+                    <div class="metric-label">平均RPS</div>
+                    <div class="metric-value">${summary.avgRPS.toFixed(2)}</div>
+                    <div class="metric-label">请求/秒</div>
+                </div>
+                
+                <div class="metric-card ${summary.avgLatency < 50 ? 'good' : summary.avgLatency < 200 ? 'warning' : 'bad'}">
+                    <div class="metric-label">平均延迟</div>
+                    <div class="metric-value">${summary.avgLatency.toFixed(2)}ms</div>
+                    <div class="metric-label">毫秒</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">总请求数</div>
+                    <div class="metric-value">${summary.totalRequests.toLocaleString()}</div>
+                    <div class="metric-label">请求</div>
+                </div>
+            </div>
+        </div>`;
+  }
+
+  generateResultsTable() {
+    return `
+        <div class="section">
+            <h2>🔥 测试结果</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>测试场景</th>
+                        <th>请求数</th>
+                        <th>并发数</th>
+                        <th>平均延迟</th>
+                        <th>请求/秒</th>
+                        <th>错误率</th>
+                        <th>耗时</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.results
+                      .map(
+                        (result) => `
+                    <tr>
+                        <td>${result.name}</td>
+                        <td>${result.totalRequests.toLocaleString()}</td>
+                        <td>${result.concurrency}</td>
+                        <td class="${result.meanLatencyMs < 100 ? 'status-good' : result.meanLatencyMs < 500 ? 'status-warning' : 'status-bad'}">
+                            ${result.meanLatencyMs.toFixed(2)}ms
+                        </td>
+                        <td>${result.rps.toFixed(2)}</td>
+                        <td class="${result.errorPercent === 0 ? 'status-good' : result.errorPercent < 1 ? 'status-warning' : 'status-bad'}">
+                            ${result.errorPercent.toFixed(2)}%
+                        </td>
+                        <td>${(result.elapsedTime / 1000).toFixed(2)}秒</td>
+                    </tr>
+                    `,
+                      )
+                      .join('')}
+                </tbody>
+            </table>
+        </div>`;
+  }
+
+  generatePerformanceGuidelines() {
+    return `
+        <div class="section" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3>📈 性能指标说明</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h4>延迟分析:</h4>
+                    <ul>
+                        <li><span class="status-good">绿色 (&lt; 100ms)</span>: 优秀性能</li>
+                        <li><span class="status-warning">黄色 (100-500ms)</span>: 可接受性能</li>
+                        <li><span class="status-bad">红色 (&gt; 500ms)</span>: 需要优化</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h4>错误率分析:</h4>
+                    <ul>
+                        <li><span class="status-good">绿色 (0%)</span>: 完美</li>
+                        <li><span class="status-warning">黄色 (&lt; 1%)</span>: 可接受</li>
+                        <li><span class="status-bad">红色 (&gt;= 1%)</span>: 需要关注</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h4>RPS分析:</h4>
+                    <ul>
+                        <li><span class="status-good">绿色 (&gt; 1000)</span>: 优秀吞吐量</li>
+                        <li><span class="status-warning">黄色 (500-1000)</span>: 中等吞吐量</li>
+                        <li><span class="status-bad">红色 (&lt; 500)</span>: 低吞吐量</li>
+                    </ul>
+                </div>
+            </div>
+        </div>`;
+  }
+
+  generateRecommendations(summary) {
+    let recommendations = [];
+
+    if (summary.maxLatency > 500) {
+      recommendations.push(
+        '检测到高延迟，建议优化中间件顺序、添加缓存或升级服务器配置。',
+      );
+    }
+
+    if (summary.totalErrors > 0) {
+      recommendations.push('存在错误请求，建议检查错误日志并修复。');
+    }
+
+    if (summary.maxRPS < 100) {
+      recommendations.push('RPS较低，建议优化代码性能或增加服务器资源。');
+    } else if (summary.maxRPS < 500) {
+      recommendations.push('RPS表现中等，有优化空间。');
+    }
+
+    if (
+      summary.avgErrorRate === 0 &&
+      summary.avgLatency < 100 &&
+      summary.avgRPS > 1000
+    ) {
+      recommendations.push('应用性能表现优秀，继续保持！');
+    }
+
+    return `
+        <div class="section" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3>💡 优化建议</h3>
+            ${
+              recommendations.length > 0
+                ? `<ul>${recommendations.map((rec) => `<li>${rec}</li>`).join('')}</ul>`
+                : '<p>所有性能指标均在优秀范围内，无需特别优化。</p>'
+            }
+            <p><strong>测试配置说明</strong>: 本测试运行于端口 ${this.port}，共执行 ${this.results.length} 个测试场景，涵盖从轻负载到极端并发的多种情况。</p>
+        </div>`;
   }
 }
 
