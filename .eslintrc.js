@@ -20,4 +20,17 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'no-console': 'warn',
   },
+  ignorePatterns: [
+    'node_modules/',
+    'dist/',
+    'coverage/',
+    '*.json',
+    '*.config.js',
+    '*.d.ts',
+    'package.json',
+    'jest.setup.js',
+    'test-report.html',
+    'performance-report.html',
+    'stress-report.html',
+  ],
 };

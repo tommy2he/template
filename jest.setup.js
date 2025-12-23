@@ -7,7 +7,15 @@ process.env.NODE_ENV = 'test';
 // 你可以根据 .env.test 文件的内容，在此覆盖或设置其他变量
 // 例如：process.env.LOG_LEVEL = 'silent';
 
+// 禁用dotenv日志（测试中输出太多）
+process.env.DOTENV_CONFIG_SILENT = 'true';
+process.env.DOTENV_CONFIG_DEBUG = 'false';
+
 console.log('[测试环境] 模式:', process.env.NODE_ENV);
+
+// 设置测试特定的环境变量
+process.env.LOG_LEVEL = 'error'; // 测试环境只记录错误
+process.env.ENABLE_SWAGGER = 'false'; // 测试环境禁用Swagger
 
 // ========== 2. 全局错误与警告处理 ==========
 // 捕获未处理的Promise拒绝，防止静默失败。

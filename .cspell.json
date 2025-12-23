@@ -21,6 +21,7 @@
     "nosniff",
     "Topbar",
     "autocannon",
-    "loadtest"
+    "loadtest",
+    "nodemon"
   ]
 }
