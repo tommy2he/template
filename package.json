@@ -33,7 +33,12 @@
     "docs:swagger": "node -e \"require('./src/middleware/swagger').validateSwaggerConfig()\"",
     "docs:generate": "node scripts/generate-swagger.js",
     "benchmark": "node scripts/benchmark.js",
-    "stress:test": "node scripts/stress-test.js"
+    "stress:test": "node scripts/stress-test.js",
+    "performance:test": "npm run build && npm run benchmark && npm run stress:test",
+    "load:test": "node scripts/load-test.js",
+    "profile": "node --prof src/index.js",
+    "profile:analyze": "node --prof-process isolate*.log > profile.txt",
+    "memory:check": "node scripts/memory-check.js"
   },
   "keywords": [
     "koa",
@@ -81,7 +86,9 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
-    "eslint": "^9.39.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.2.0",
     "jest-html-reporter": "^4.3.0",
     "nodemon": "^3.1.11",
