@@ -72,3 +72,6 @@ temp/
 
 # Local development files
 *.local
+
+# Test Report file
+test-report.html

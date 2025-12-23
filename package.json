@@ -15,7 +15,7 @@
     "prestart": "npm run build",
     "test": "jest --coverage --passWithNoTests",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage --coverageReporters=html",
+    "test:coverage": "jest --coverage --coverageReporters=html && start coverage/index.html",
     "test:unit": "jest --testPathPatterns=\\.test\\.ts$ --coverage",
     "test:integration": "jest --testPathPatterns=\\.integration\\.test\\.ts$ --coverage",
     "test:e2e": "jest --testPathPatterns=\\.e2e\\.test\\.ts$ --coverage",
