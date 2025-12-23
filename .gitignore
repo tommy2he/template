@@ -75,3 +75,7 @@ temp/
 
 # Test Report file
 test-report.html
+performance-report.html
+stress-report.html
+load-test-report.html
+performance-report.json

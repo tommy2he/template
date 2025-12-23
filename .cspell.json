@@ -22,6 +22,8 @@
     "Topbar",
     "autocannon",
     "loadtest",
-    "nodemon"
+    "nodemon",
+    "findstr",
+    "taskkill"
   ]
 }
