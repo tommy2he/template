@@ -33,4 +33,14 @@ module.exports = {
     'performance-report.html',
     'stress-report.html',
   ],
+  overrides: [
+    {
+      files: ['scripts/**/*.js'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'no-console': 'off',
+      },
+    },
+  ],
 };

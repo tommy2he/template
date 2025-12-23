@@ -38,7 +38,8 @@
     "load:test": "node scripts/load-test.js",
     "profile": "node --prof src/index.js",
     "profile:analyze": "node --prof-process isolate*.log > profile.txt",
-    "memory:check": "node scripts/memory-check.js"
+    "memory:check": "node scripts/memory-check.js",
+    "cleanup": "node scripts/cleanup.js"
   },
   "keywords": [
     "koa",
@@ -97,6 +98,8 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "autocannon": "^7.0.0",
+    "loadtest": "^6.0.0"
   }
 }

@@ -1,28 +1,64 @@
 #!/usr/bin/env node
 
 const autocannon = require('autocannon');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
 
 const writeFile = promisify(fs.writeFile);
-const exists = promisify(fs.exists);
+const execAsync = promisify(exec);
 
 class Benchmark {
   constructor(options = {}) {
     this.port = options.port || 3002;
     this.server = null;
+    this.serverPid = null;
     this.results = [];
   }
 
-  async startServer() {
-    return new Promise((resolve, reject) => {
-      console.log('🚀 启动测试服务器...');
+  // 清理占用端口的进程
+  async killPortProcess(port) {
+    try {
+      if (process.platform === 'win32') {
+        // Windows: 查找并杀死占用端口的进程
+        const netstatCmd = `netstat -ano | findstr :${port} | findstr LISTENING`;
+        try {
+          const { stdout } = await execAsync(netstatCmd, { shell: true });
+          if (stdout.trim()) {
+            const lines = stdout.trim().split('\n');
+            for (const line of lines) {
+              const parts = line.trim().split(/\s+/);
+              const pid = parts[parts.length - 1];
+              if (pid && !isNaN(pid)) {
+                console.log(`🔫 杀死占用端口 ${port} 的进程: ${pid}`);
+                await execAsync(`taskkill /F /PID ${pid} /T`, { shell: true });
+              }
+            }
+          }
+        } catch (error) {
+          // 没有找到进程是正常的
+        }
+      }
+      // 等待端口释放
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.log(`⚠️  清理端口时出错: ${error.message}`);
+    }
+  }
 
-      // 构建项目
-      const buildProcess = spawn('npm', ['run', 'build'], {
+  async startServer() {
+    console.log(`🚀 启动测试服务器 (端口: ${this.port})...`);
+
+    // 清理可能占用端口的进程
+    await this.killPortProcess(this.port);
+
+    return new Promise((resolve, reject) => {
+      const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
+      const buildProcess = spawn(npmCommand, ['run', 'build'], {
         stdio: 'inherit',
+        shell: true,
       });
 
       buildProcess.on('close', (code) => {
@@ -31,21 +67,30 @@ class Benchmark {
           return;
         }
 
-        // 启动服务器
+        console.log('✅ 构建完成，启动服务器...');
+
         this.server = spawn(
           'node',
           [path.join(__dirname, '../dist/index.js')],
           {
             env: {
               ...process.env,
-              PORT: this.port,
+              PORT: this.port.toString(),
               NODE_ENV: 'production',
-              LOG_LEVEL: 'error', // 性能测试时减少日志
+              LOG_LEVEL: 'error',
               ENABLE_SWAGGER: 'false',
+              JWT_SECRET: 'benchmark_test_secret_key_change_in_production',
+              RATE_LIMIT_ENABLED: 'false',
+              RATE_LIMIT_WINDOW_MS: '0',
+              RATE_LIMIT_MAX_REQUESTS: '999999',
             },
             stdio: ['ignore', 'pipe', 'pipe'],
+            shell: true,
           },
         );
+
+        this.serverPid = this.server.pid;
+        console.log(`📝 服务器PID: ${this.serverPid}`);
 
         let started = false;
         const timeout = setTimeout(() => {
@@ -53,21 +98,38 @@ class Benchmark {
             this.server.kill();
             reject(new Error('服务器启动超时'));
           }
-        }, 10000);
+        }, 15000);
 
-        // 监听服务器输出
         this.server.stdout.on('data', (data) => {
           const output = data.toString();
-          if (output.includes('启动成功')) {
+          if (
+            output.includes('启动成功') ||
+            output.includes('Server started') ||
+            output.includes('listening on port') ||
+            output.includes(`:${this.port}`)
+          ) {
             clearTimeout(timeout);
             started = true;
-            console.log('✅ 测试服务器已启动');
-            setTimeout(resolve, 1000); // 给服务器一点时间
+            console.log(`✅ 测试服务器已启动在端口 ${this.port}`);
+            setTimeout(resolve, 2000);
           }
         });
 
         this.server.stderr.on('data', (data) => {
-          console.error('服务器错误:', data.toString());
+          const errorOutput = data.toString();
+          if (errorOutput.includes('EADDRINUSE')) {
+            console.error(`❌ 端口 ${this.port} 被占用，尝试其他端口...`);
+            this.port += 1;
+            if (this.port > 3012) {
+              reject(new Error('找不到可用端口'));
+            } else {
+              this.server.kill();
+              setTimeout(() => {
+                this.startServer().then(resolve).catch(reject);
+              }, 1000);
+            }
+            return;
+          }
         });
 
         this.server.on('error', (error) => {
@@ -75,116 +137,155 @@ class Benchmark {
           reject(error);
         });
       });
+
+      buildProcess.on('error', (error) => {
+        reject(new Error(`构建失败: ${error.message}`));
+      });
     });
   }
 
   async stopServer() {
+    console.log('🛑 停止测试服务器...');
+
     if (this.server) {
-      console.log('🛑 停止测试服务器...');
-      this.server.kill();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 等待请求完成
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (process.platform === 'win32') {
+        // Windows: 使用taskkill
+        try {
+          await execAsync(`taskkill /F /PID ${this.serverPid} /T`, {
+            shell: true,
+          });
+          console.log('✅ 服务器已停止');
+        } catch (error) {
+          console.log(`⚠️  taskkill失败: ${error.message}`);
+          this.server.kill('SIGKILL');
+        }
+      } else {
+        // Linux/Mac: 先优雅关闭，再强制关闭
+        this.server.kill('SIGTERM');
+        const timeout = setTimeout(() => {
+          this.server.kill('SIGKILL');
+        }, 5000);
+
+        await new Promise((resolve) => {
+          this.server.on('close', () => {
+            clearTimeout(timeout);
+            resolve();
+          });
+        });
+      }
+
+      this.server = null;
+      this.serverPid = null;
     }
   }
 
   async runSingleBenchmark(config) {
     console.log(`\n🧪 ${config.title}`);
-    console.log(
-      `   📊 配置: ${config.connections} 连接, ${config.duration} 秒`,
-    );
+    console.log(`   📊 ${config.connections} 连接, ${config.duration} 秒`);
 
-    const startTime = Date.now();
-    const result = await autocannon(config);
-    const elapsed = Date.now() - startTime;
+    try {
+      const result = await autocannon(config);
 
-    // 美化输出
-    console.log(`   ✅ 完成: ${result.requests.total} 请求`);
-    console.log(`   ⏱️  耗时: ${(elapsed / 1000).toFixed(2)} 秒`);
-    console.log(`   📈 平均延迟: ${result.latency.average.toFixed(2)}ms`);
-    console.log(`   ⚡ 请求/秒: ${result.requests.average.toFixed(2)}`);
-    console.log(`   🔴 错误率: ${result.errors}%`);
-    console.log(
-      `   📤 吞吐量: ${(result.throughput.total / 1024 / 1024).toFixed(2)} MB`,
-    );
+      console.log(`   ✅ 完成: ${result.requests.total} 请求`);
+      console.log(`   📈 平均延迟: ${result.latency.average.toFixed(2)}ms`);
+      console.log(`   ⚡ 请求/秒: ${result.requests.average.toFixed(2)}`);
+      console.log(`   🔴 错误率: ${result.errors}%`);
+      console.log(
+        `   📤 吞吐量: ${(result.throughput.total / 1024 / 1024).toFixed(2)} MB`,
+      );
 
-    return result;
+      this.results.push({
+        name: config.title,
+        ...result,
+      });
+
+      return result;
+    } catch (error) {
+      console.error(`   ❌ 测试失败: ${error.message}`);
+      return null;
+    }
   }
 
   async runComprehensiveBenchmark() {
     try {
+      // 启动服务器
       await this.startServer();
+
+      console.log('\n📊 开始性能基准测试...');
+      console.log('='.repeat(50));
 
       const baseUrl = `http://localhost:${this.port}`;
 
-      console.log('\n' + '='.repeat(50));
-      console.log('🏁 Koa Template App 性能基准测试');
-      console.log('='.repeat(50));
-
-      // 测试1: 基础健康检查
-      const healthResult = await this.runSingleBenchmark({
-        url: `${baseUrl}/api/health`,
-        connections: 10,
-        duration: 10,
-        title: '健康检查端点',
-      });
-      this.results.push({ name: '健康检查', ...healthResult });
-
-      // 测试2: API端点
-      const apiResult = await this.runSingleBenchmark({
-        url: `${baseUrl}/api`,
-        connections: 10,
-        duration: 10,
-        title: 'API根端点',
-      });
-      this.results.push({ name: 'API根端点', ...apiResult });
-
-      // 测试3: 静态文件
-      const staticResult = await this.runSingleBenchmark({
-        url: `${baseUrl}/index.html`,
-        connections: 10,
-        duration: 10,
-        title: '静态文件服务',
-      });
-      this.results.push({ name: '静态文件', ...staticResult });
-
-      // 测试4: 中等并发
-      const mediumConcurrency = await this.runSingleBenchmark({
+      // 测试场景1: 健康检查API测试
+      await this.runSingleBenchmark({
+        title: '健康检查API测试 (低并发)',
         url: `${baseUrl}/api/health`,
         connections: 50,
-        duration: 15,
-        title: '中等并发 (50连接)',
+        duration: 10,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
       });
-      this.results.push({ name: '中等并发', ...mediumConcurrency });
 
-      // 测试5: 高并发
-      const highConcurrency = await this.runSingleBenchmark({
-        url: `${baseUrl}/api/health`,
-        connections: 100,
-        duration: 20,
-        title: '高并发 (100连接)',
-      });
-      this.results.push({ name: '高并发', ...highConcurrency });
-
-      // 测试6: 混合请求
-      const mixedRequests = await this.runSingleBenchmark({
-        url: baseUrl,
+      // 测试场景2: 根路径测试
+      await this.runSingleBenchmark({
+        title: '根路径测试 (中等并发)',
+        url: `${baseUrl}/`,
         connections: 30,
         duration: 15,
-        requests: [
-          { method: 'GET', path: '/' },
-          { method: 'GET', path: '/api' },
-          { method: 'GET', path: '/api/health' },
-          { method: 'GET', path: '/index.html' },
-        ],
-        title: '混合请求测试',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
       });
-      this.results.push({ name: '混合请求', ...mixedRequests });
+
+      // 测试场景3: 用户列表API测试
+      await this.runSingleBenchmark({
+        title: '用户列表API测试',
+        url: `${baseUrl}/api/users`,
+        connections: 100,
+        duration: 20,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      // 测试场景4: 混合请求测试
+      await this.runSingleBenchmark({
+        title: '混合请求测试',
+        url: [
+          { method: 'GET', url: `${baseUrl}/api/health` },
+          { method: 'GET', url: `${baseUrl}/` },
+        ],
+        connections: 80,
+        duration: 25,
+        pipelining: 1,
+      });
+
+      // 测试场景5: 压力测试
+      await this.runSingleBenchmark({
+        title: '压力测试 (高并发)',
+        url: `${baseUrl}/api/health`,
+        connections: 200,
+        duration: 30,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      console.log('\n' + '='.repeat(50));
+      console.log('🎉 所有测试完成！');
+      console.log('='.repeat(50));
 
       // 生成报告
-      await this.generateReport();
+      if (this.results.length > 0) {
+        await this.generateReport();
+      }
     } catch (error) {
       console.error('❌ 基准测试失败:', error.message);
     } finally {
+      // 停止服务器
       await this.stopServer();
+      console.log('\n✅ 基准测试完成');
+      process.exit(0);
     }
   }
 
@@ -201,7 +302,7 @@ class Benchmark {
       avgRPS: 0,
     };
 
-    this.results.forEach((result, index) => {
+    this.results.forEach((result) => {
       summary.totalRequests += result.requests.total;
       summary.totalErrors += result.errors;
       summary.avgLatency += result.latency.average;
@@ -244,6 +345,7 @@ class Benchmark {
     <div class="header">
         <h1>Koa Template App 性能测试报告</h1>
         <p>生成时间: ${new Date().toLocaleString()}</p>
+        <p>测试端口: ${this.port}</p>
     </div>
     
     <div class="summary">

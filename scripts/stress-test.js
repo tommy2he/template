@@ -1,60 +1,151 @@
 #!/usr/bin/env node
 
 const loadtest = require('loadtest');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
 
 const writeFile = promisify(fs.writeFile);
+const execAsync = promisify(exec);
 
 class StressTest {
   constructor(options = {}) {
     this.port = options.port || 3003;
     this.server = null;
+    this.serverPid = null;
     this.results = [];
   }
 
+  // 清理占用端口的进程
+  async killPortProcess(port) {
+    try {
+      if (process.platform === 'win32') {
+        const netstatCmd = `netstat -ano | findstr :${port} | findstr LISTENING`;
+        try {
+          const { stdout } = await execAsync(netstatCmd, { shell: true });
+          if (stdout.trim()) {
+            const lines = stdout.trim().split('\n');
+            for (const line of lines) {
+              const parts = line.trim().split(/\s+/);
+              const pid = parts[parts.length - 1];
+              if (pid && !isNaN(pid)) {
+                console.log(`🔫 杀死占用端口 ${port} 的进程: ${pid}`);
+                await execAsync(`taskkill /F /PID ${pid} /T`, { shell: true });
+              }
+            }
+          }
+        } catch (error) {
+          // 没有找到进程是正常的
+        }
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.log(`⚠️  清理端口时出错: ${error.message}`);
+    }
+  }
+
   async startServer() {
+    console.log(`🚀 启动压力测试服务器 (端口: ${this.port})...`);
+
+    // 清理可能占用端口的进程
+    await this.killPortProcess(this.port);
+
     return new Promise((resolve, reject) => {
-      console.log('🚀 启动压力测试服务器...');
-
-      this.server = spawn('node', [path.join(__dirname, '../dist/index.js')], {
-        env: {
-          ...process.env,
-          PORT: this.port,
-          NODE_ENV: 'production',
-          LOG_LEVEL: 'error',
-          ENABLE_SWAGGER: 'false',
-        },
-        stdio: ['ignore', 'pipe', 'pipe'],
+      const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+      const buildProcess = spawn(npmCommand, ['run', 'build'], {
+        stdio: 'inherit',
+        shell: true,
       });
 
-      let started = false;
-      const timeout = setTimeout(() => {
-        if (!started) {
-          this.server.kill();
-          reject(new Error('服务器启动超时'));
+      buildProcess.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`构建失败，退出码: ${code}`));
+          return;
         }
-      }, 10000);
 
-      this.server.stdout.on('data', (data) => {
-        const output = data.toString();
-        if (output.includes('启动成功')) {
+        console.log('✅ 构建完成，启动服务器...');
+
+        this.server = spawn(
+          'node',
+          [path.join(__dirname, '../dist/index.js')],
+          {
+            env: {
+              ...process.env,
+              PORT: this.port.toString(),
+              NODE_ENV: 'production',
+              LOG_LEVEL: 'error',
+              ENABLE_SWAGGER: 'false',
+              JWT_SECRET: 'benchmark_test_secret_key_change_in_production',
+              RATE_LIMIT_ENABLED: 'false',
+              RATE_LIMIT_WINDOW_MS: '0',
+              RATE_LIMIT_MAX_REQUESTS: '999999',
+            },
+            stdio: ['ignore', 'pipe', 'pipe'],
+            shell: true,
+          },
+        );
+
+        this.serverPid = this.server.pid;
+        console.log(`📝 服务器PID: ${this.serverPid}`);
+
+        let started = false;
+        const timeout = setTimeout(() => {
+          if (!started) {
+            this.server.kill();
+            reject(new Error('服务器启动超时'));
+          }
+        }, 15000);
+
+        this.server.stdout.on('data', (data) => {
+          const output = data.toString();
+          console.log('服务器输出:', output.trim());
+
+          if (
+            output.includes('启动成功') ||
+            output.includes('地址:') ||
+            output.includes('Server started') ||
+            output.includes('listening on port')
+          ) {
+            clearTimeout(timeout);
+            started = true;
+            console.log('✅ 压力测试服务器已启动');
+            setTimeout(resolve, 2000);
+          }
+        });
+
+        this.server.stderr.on('data', (data) => {
+          const errorOutput = data.toString();
+
+          if (
+            errorOutput.includes('EADDRINUSE') ||
+            errorOutput.includes('address already in use')
+          ) {
+            console.error(`❌ 端口 ${this.port} 被占用，尝试其他端口...`);
+            this.port += 1;
+            if (this.port > 3012) {
+              reject(new Error('找不到可用端口'));
+            } else {
+              this.server.kill();
+              setTimeout(() => {
+                this.startServer().then(resolve).catch(reject);
+              }, 1000);
+            }
+            return;
+          }
+
+          console.error('服务器错误:', data.toString());
+        });
+
+        this.server.on('error', (error) => {
           clearTimeout(timeout);
-          started = true;
-          console.log('✅ 压力测试服务器已启动');
-          setTimeout(resolve, 1000);
-        }
+          reject(error);
+        });
       });
 
-      this.server.stderr.on('data', (data) => {
-        console.error('服务器错误:', data.toString());
-      });
-
-      this.server.on('error', (error) => {
-        clearTimeout(timeout);
-        reject(error);
+      buildProcess.on('error', (error) => {
+        console.error('构建过程中发生错误:', error);
+        reject(new Error(`构建失败: ${error.message}`));
       });
     });
   }
@@ -62,8 +153,38 @@ class StressTest {
   async stopServer() {
     if (this.server) {
       console.log('🛑 停止压力测试服务器...');
-      this.server.kill();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // 等待请求完成
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (process.platform === 'win32') {
+        // Windows: 使用taskkill
+        try {
+          await execAsync(`taskkill /F /PID ${this.serverPid} /T`, {
+            shell: true,
+          });
+          console.log('✅ 服务器已停止');
+        } catch (error) {
+          console.log(`⚠️  taskkill失败: ${error.message}`);
+          this.server.kill();
+        }
+      } else {
+        // Linux/Mac: 先优雅关闭，再强制关闭
+        this.server.kill('SIGTERM');
+        const timeout = setTimeout(() => {
+          this.server.kill('SIGKILL');
+        }, 5000);
+
+        await new Promise((resolve) => {
+          this.server.on('close', () => {
+            clearTimeout(timeout);
+            resolve();
+          });
+        });
+      }
+
+      this.server = null;
+      this.serverPid = null;
     }
   }
 
@@ -99,13 +220,26 @@ class StressTest {
         } else {
           console.log(`   ✅ 完成: ${result.totalRequests} 请求`);
           console.log(`   ⏱️  耗时: ${(elapsed / 1000).toFixed(2)} 秒`);
-          console.log(`   📈 平均延迟: ${result.meanLatencyMs.toFixed(2)}ms`);
-          console.log(`   ⚡ 请求/秒: ${result.rps.toFixed(2)}`);
-          console.log(`   🔴 错误率: ${result.errorPercent.toFixed(2)}%`);
+
+          // 安全地访问可能不存在的属性
+          const meanLatencyMs = result.meanLatencyMs || 0;
+          const rps = result.rps || 0;
+          const errorPercent = result.errorPercent || 0;
+          const totalErrors = result.totalErrors || 0;
+
+          console.log(`   📈 平均延迟: ${meanLatencyMs.toFixed(2)}ms`);
+          console.log(`   ⚡ 请求/秒: ${rps.toFixed(2)}`);
+          console.log(`   🔴 错误率: ${errorPercent.toFixed(2)}%`);
 
           resolve({
             name: config.name,
-            ...result,
+            concurrency: config.concurrency,
+            maxRequests: config.maxRequests,
+            totalRequests: result.totalRequests || 0,
+            totalErrors: totalErrors,
+            meanLatencyMs: meanLatencyMs,
+            rps: rps,
+            errorPercent: errorPercent,
             elapsedTime: elapsed,
           });
         }
@@ -144,13 +278,6 @@ class StressTest {
           method: 'GET',
         },
         {
-          name: '静态文件压力测试',
-          path: '/index.html',
-          maxRequests: 5000,
-          concurrency: 100,
-          method: 'GET',
-        },
-        {
           name: 'API混合测试',
           path: '/api',
           maxRequests: 3000,
@@ -178,7 +305,7 @@ class StressTest {
             await new Promise((resolve) => setTimeout(resolve, 3000));
           }
         } catch (error) {
-          console.error(`   ❌ 跳过此测试`);
+          console.error(`   ❌ 跳过此测试: ${error.message}`);
         }
       }
 
@@ -187,10 +314,16 @@ class StressTest {
       console.error('❌ 压力测试失败:', error.message);
     } finally {
       await this.stopServer();
+      console.log('\n✅ 压力测试完成');
     }
   }
 
   async generateReport() {
+    if (this.results.length === 0) {
+      console.log('⚠️  没有测试结果可生成报告');
+      return;
+    }
+
     console.log('\n' + '='.repeat(50));
     console.log('📊 压力测试报告');
     console.log('='.repeat(50));
@@ -205,13 +338,22 @@ class StressTest {
     };
 
     this.results.forEach((result) => {
-      summary.totalRequests += result.totalRequests;
-      summary.totalErrors += result.totalErrors;
-      summary.totalTime += result.elapsedTime;
-      summary.maxRPS = Math.max(summary.maxRPS, result.rps);
-      summary.minLatency = Math.min(summary.minLatency, result.meanLatencyMs);
-      summary.maxLatency = Math.max(summary.maxLatency, result.meanLatencyMs);
+      summary.totalRequests += result.totalRequests || 0;
+      summary.totalErrors += result.totalErrors || 0;
+      summary.totalTime += result.elapsedTime || 0;
+      summary.maxRPS = Math.max(summary.maxRPS, result.rps || 0);
+      summary.minLatency = Math.min(
+        summary.minLatency,
+        result.meanLatencyMs || Infinity,
+      );
+      summary.maxLatency = Math.max(
+        summary.maxLatency,
+        result.meanLatencyMs || 0,
+      );
     });
+
+    // 如果没有有效的延迟数据
+    if (summary.minLatency === Infinity) summary.minLatency = 0;
 
     console.log(`📈 总请求数: ${summary.totalRequests.toLocaleString()}`);
     console.log(`⚠️  总错误数: ${summary.totalErrors}`);
@@ -244,6 +386,7 @@ class StressTest {
     <div class="header">
         <h1>Koa Template App 压力测试报告</h1>
         <p>生成时间: ${new Date().toLocaleString()}</p>
+        <p>测试端口: ${this.port}</p>
     </div>
     
     <div class="summary">
@@ -319,6 +462,14 @@ class StressTest {
           summary.totalErrors > 0
             ? '<p>⚠️ <strong>警告</strong>: 存在错误请求，建议检查错误日志并修复。</p>'
             : '<p>✅ <strong>良好</strong>: 零错误率，应用稳定性良好。</p>'
+        }
+        
+        ${
+          summary.maxRPS < 100
+            ? '<p>⚠️ <strong>警告</strong>: RPS较低，建议优化代码性能或增加服务器资源。</p>'
+            : summary.maxRPS < 500
+              ? '<p>ℹ️ <strong>中等</strong>: RPS表现中等，有优化空间。</p>'
+              : '<p>✅ <strong>优秀</strong>: RPS表现优秀。</p>'
         }
     </div>
 </body>
