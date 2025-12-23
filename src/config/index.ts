@@ -51,6 +51,28 @@ interface Config {
   // 其他配置
   uploadMaxSize: number;
   uploadAllowedTypes: string[];
+
+  // 1.3版本新增配置
+  rateLimit: {
+    enabled: boolean;
+    maxRequests: number;
+    windowMs: number;
+  };
+  compression: {
+    enabled: boolean;
+    threshold: number;
+  };
+  security: {
+    enabled: boolean;
+    cspEnabled: boolean;
+    hstsEnabled: boolean;
+  };
+  swagger: {
+    enabled: boolean;
+    title: string;
+    description: string;
+    version: string;
+  };
 }
 
 const config: Config = {
@@ -97,6 +119,28 @@ const config: Config = {
   uploadAllowedTypes: (
     process.env.UPLOAD_ALLOWED_TYPES || 'image/jpeg,image/png'
   ).split(','),
+
+  // 1.3版本新增配置
+  rateLimit: {
+    enabled: process.env.RATE_LIMIT_ENABLED === 'true',
+    maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
+  },
+  compression: {
+    enabled: process.env.COMPRESSION_ENABLED === 'true',
+    threshold: parseInt(process.env.COMPRESSION_THRESHOLD || '1024'),
+  },
+  security: {
+    enabled: process.env.SECURITY_ENABLED === 'true',
+    cspEnabled: process.env.CSP_ENABLED === 'true',
+    hstsEnabled: process.env.HSTS_ENABLED === 'true',
+  },
+  swagger: {
+    enabled: process.env.SWAGGER_ENABLED === 'true',
+    title: process.env.SWAGGER_TITLE || 'Koa Template App API',
+    description: process.env.SWAGGER_DESCRIPTION || 'Koa模板应用的API文档',
+    version: process.env.SWAGGER_VERSION || '1.0.0',
+  },
 };
 
 // 环境验证

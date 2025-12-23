@@ -15,6 +15,12 @@
     "testtesttest",
     "hihihi",
     "eslintcache",
-    "pids"
+    "pids",
+    "HSTS",
+    "frameguard",
+    "nosniff",
+    "Topbar",
+    "autocannon",
+    "loadtest"
   ]
 }
