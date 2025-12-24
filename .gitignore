@@ -10,6 +10,12 @@ build/
 out/
 *.tsbuildinfo
 
+# Test reports and coverage - 修改这部分
+# 忽略整个reports目录
+# 但是保留.gitkeep文件  
+reports/    
+!reports/.gitkeep  
+
 # Environment variables
 # .env
 .env.local
@@ -79,3 +85,4 @@ performance-report.html
 stress-report.html
 load-test-report.html
 performance-report.json
+scripts_backup/

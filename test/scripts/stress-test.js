@@ -68,7 +68,7 @@ class StressTest {
 
         this.server = spawn(
           'node',
-          [path.join(__dirname, '../dist/index.js')],
+          [path.join(__dirname, '../../dist/index.js')],
           {
             env: {
               ...process.env,
@@ -324,6 +324,12 @@ class StressTest {
       return;
     }
 
+    // 确保目录存在
+    const reportsDir = path.join(__dirname, '../../reports/performance');
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
     console.log('\n' + '='.repeat(50));
     console.log('📊 压力测试报告');
     console.log('='.repeat(50));
@@ -333,7 +339,11 @@ class StressTest {
 
     // 生成HTML报告
     const report = this.generateHTMLReport(summary);
-    const reportPath = path.join(__dirname, '../stress-report.html');
+    // const reportPath = path.join(__dirname, '../stress-report.html');
+    const reportPath = path.join(
+      __dirname,
+      '.../../reports/performance/stress-report.html',
+    );
     await writeFile(reportPath, report);
     console.log(`\n📄 压力测试报告已生成: file://${reportPath}`);
   }

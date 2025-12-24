@@ -72,7 +72,7 @@ class LoadTest {
 
         this.server = spawn(
           'node',
-          [path.join(__dirname, '../dist/index.js')],
+          [path.join(__dirname, '../../dist/index.js')],
           {
             env: {
               ...process.env,
@@ -487,6 +487,12 @@ class LoadTest {
   }
 
   async generateReport() {
+    // 确保目录存在
+    const reportsDir = path.join(__dirname, '../../reports/performance');
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
     console.log('\n' + '='.repeat(60));
     console.log('📊 负载测试报告摘要');
     console.log('='.repeat(60));
@@ -539,7 +545,11 @@ class LoadTest {
 
     // 生成HTML报告
     const report = this.generateHTMLReport(summary);
-    const reportPath = path.join(__dirname, '../load-test-report.html');
+    // const reportPath = path.join(__dirname, '../load-test-report.html');
+    const reportPath = path.join(
+      __dirname,
+      '../../reports/performance/load-test-report.html',
+    );
     await writeFile(reportPath, report);
     console.log(`\n📄 详细报告已生成: file://${reportPath}`);
   }

@@ -24,18 +24,10 @@
       "@middleware/*": ["src/middleware/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@scripts/*": ["test/scripts/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", "types/**/*.d.ts", ".env.*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage"
-    // 删除下面的行，因为测试文件不在src下了
-    // "**/*.spec.ts",
-    // "**/*.test.ts",
-    // "**/*.integration.ts",
-    // "**/*.e2e.ts"
-  ]
+  "exclude": ["node_modules", "dist", "report/coverage"]
 }

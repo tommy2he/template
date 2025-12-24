@@ -114,7 +114,7 @@ class ServerTester {
     console.log(`\n🚀 启动测试服务器 (端口: ${this.port})...`);
 
     return new Promise((resolve, reject) => {
-      this.server = spawn('node', [path.join(__dirname, '../dist/index.js')], {
+      this.server = spawn('node', [path.join(__dirname, '../../dist/index.js')], {
         env: {
           ...process.env,
           PORT: this.port.toString(),

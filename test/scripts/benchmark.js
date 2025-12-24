@@ -71,7 +71,7 @@ class Benchmark {
 
         this.server = spawn(
           'node',
-          [path.join(__dirname, '../dist/index.js')],
+          [path.join(__dirname, '../../dist/index.js')],
           {
             env: {
               ...process.env,
@@ -436,6 +436,11 @@ class Benchmark {
 
   // 生成HTML报告
   async generateHtmlReport(results, summary) {
+    // 确保目录存在
+    const reportsDir = path.join(__dirname, '../../reports/performance');
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
     const report = `
 <!DOCTYPE html>
 <html>
@@ -612,7 +617,11 @@ class Benchmark {
 </body>
 </html>`;
 
-    const reportPath = path.join(__dirname, '../performance-report.html');
+    // const reportPath = path.join(__dirname, '../performance-report.html');
+    const reportPath = path.join(
+      __dirname,
+      '../../reports/performance/performance-report.html',
+    );
     await writeFile(reportPath, report);
     return reportPath;
   }
@@ -822,7 +831,11 @@ class Benchmark {
       }),
     };
 
-    const jsonPath = path.join(__dirname, '../performance-report.json');
+    // const jsonPath = path.join(__dirname, '../performance-report.json');
+    const jsonPath = path.join(
+      __dirname,
+      '../../reports/performance/performance-report.json',
+    );
     await writeFile(jsonPath, JSON.stringify(jsonReport, null, 2));
     console.log(`📋 JSON报告已生成: ${jsonPath}`);
   }
