@@ -81,4 +81,3 @@ export * from './compression';
 export * from './security';
 export * from './rateLimit';
 export * from './swagger';
-export * from './performance';

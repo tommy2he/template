@@ -1,5 +1,9 @@
 import Router from 'koa-router';
 import os from 'os';
+import {
+  getPerformanceMetrics,
+  resetPerformanceMetrics,
+} from '../../middleware/performance';
 
 const router = new Router();
 
@@ -266,6 +270,73 @@ router.get('/rate-limit-test', async (ctx) => {
     message: '速率限制测试端点',
     timestamp: new Date().toISOString(),
     requestCount: 1,
+  };
+});
+
+// 新增：性能指标端点
+/**
+ * @swagger
+ * /api/performance:
+ *   get:
+ *     summary: 获取性能指标
+ *     description: 返回应用性能指标和系统状态
+ *     tags: [系统]
+ *     responses:
+ *       200:
+ *         description: 性能指标
+ */
+router.get('/performance', getPerformanceMetrics());
+
+/**
+ * @swagger
+ * /api/performance/reset:
+ *   post:
+ *     summary: 重置性能指标
+ *     description: 重置性能监控数据
+ *     tags: [系统]
+ *     responses:
+ *       200:
+ *         description: 重置成功
+ */
+router.post('/performance/reset', resetPerformanceMetrics());
+
+/**
+ * @swagger
+ * /api/performance/health:
+ *   get:
+ *     summary: 详细健康检查
+ *     description: 返回详细的系统健康状态
+ *     tags: [健康检查]
+ *     responses:
+ *       200:
+ *         description: 详细健康信息
+ */
+router.get('/performance/health', async (ctx) => {
+  const memory = process.memoryUsage();
+  const cpus = os.cpus();
+
+  ctx.body = {
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    process: {
+      uptime: process.uptime(),
+      memory: {
+        rss: `${(memory.rss / 1024 / 1024).toFixed(2)} MB`,
+        heapTotal: `${(memory.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+        heapUsed: `${(memory.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+        external: `${(memory.external / 1024 / 1024).toFixed(2)} MB`,
+      },
+      pid: process.pid,
+      version: process.version,
+      platform: process.platform,
+    },
+    system: {
+      cpus: cpus.length,
+      loadAvg: os.loadavg(),
+      freemem: `${(os.freemem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
+      totalmem: `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
+      uptime: os.uptime(),
+    },
   };
 });
 

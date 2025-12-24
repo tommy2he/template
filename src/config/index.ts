@@ -73,6 +73,13 @@ interface Config {
     description: string;
     version: string;
   };
+  // 1.4版本新增性能监控配置
+  performance: {
+    enabled: boolean;
+    sampleRate: number; // 采样率，0-1之间
+    retentionDays: number; // 数据保留天数
+    endpoints: string[]; // 需要监控的端点
+  };
 }
 
 const config: Config = {
@@ -141,12 +148,25 @@ const config: Config = {
     description: process.env.SWAGGER_DESCRIPTION || 'Koa模板应用的API文档',
     version: process.env.SWAGGER_VERSION || '1.0.0',
   },
+
+  // 1.4版本新增性能监控配置
+  performance: {
+    enabled:
+      process.env.PERFORMANCE_MONITORING === 'true' ||
+      process.env.NODE_ENV === 'development',
+    sampleRate: parseFloat(process.env.PERFORMANCE_SAMPLE_RATE || '1.0'),
+    retentionDays: parseInt(process.env.PERFORMANCE_RETENTION_DAYS || '7'),
+    endpoints: (
+      process.env.PERFORMANCE_ENDPOINTS || '/,/api,/api/health,/api/performance'
+    ).split(','),
+  },
 };
 
 // 环境验证
 const requiredEnvVars = ['NODE_ENV', 'PORT'];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
+    // eslint-disable-next-line no-console
     console.warn(`⚠️  Warning: ${envVar} is not set in environment variables`);
   }
 }
@@ -161,6 +181,7 @@ if (config.env === 'production') {
     config.mongodb.uri.includes('localhost') ||
     config.mongodb.uri.includes('127.0.0.1')
   ) {
+    // eslint-disable-next-line no-console
     console.warn(
       '⚠️  Warning: Using local MongoDB in production is not recommended',
     );
