@@ -52,8 +52,9 @@ if (!fs.existsSync(styleSource) && fs.existsSync('test-report-style.css')) {
 
 console.log('🎉 测试目录结构设置完成！');
 
-// 创建一个说明文件
-const readmeContent = `# 测试报告目录结构
+// 创建README.md文件的函数
+function generateReadmeFile(readmePath) {
+  const readmeContent = `# 测试报告目录结构
 
 ## 📁 目录说明
 
@@ -90,13 +91,22 @@ const readmeContent = `# 测试报告目录结构
 4. 查看性能报告:
    - 基准测试: \`reports/performance/performance-report.html\`
    - 负载测试: \`reports/performance/load-test-report.html\`
+   - 压力测试: \`reports/performance/stress-test-report.html\`
 
 ## 📊 报告生成时间
 ${new Date().toISOString()}
 `;
 
-const readmePath = path.join(__dirname, '..', 'reports', 'README.md');
-fs.writeFileSync(readmePath, readmeContent);
-console.log(`📄 创建说明文件: ${readmePath}`);
+  fs.writeFileSync(readmePath, readmeContent);
+  console.log(`📄 创建说明文件: ${readmePath}`);
+}
+
+// 生成README.md文件
+const readmePath = path.join(rootDir, 'reports', 'README.md');
+if (!fs.existsSync(readmePath)) {
+  generateReadmeFile(readmePath);
+} else {
+  console.log(`ℹ️  说明文件已存在: ${readmePath}`);
+}
 
 console.log('🎉 报告目录结构设置完成！');
