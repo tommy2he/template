@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import request from 'supertest';
-import errorHandler from '../../src/middleware/errorHandler';
+import errorHandler from '@/middleware/errorHandler';
 
 // 模拟 console.error 避免测试输出干扰
 const originalConsoleError = console.error;

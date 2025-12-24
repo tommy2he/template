@@ -24,10 +24,9 @@
       "@middleware/*": ["src/middleware/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"],
-      "@scripts/*": ["test/scripts/*"]
+      "@config/*": ["src/config/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", "types/**/*.d.ts", ".env.*"],
-  "exclude": ["node_modules", "dist", "report/coverage"]
+  "exclude": ["node_modules", "dist", "reports"]
 }

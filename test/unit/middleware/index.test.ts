@@ -1,9 +1,9 @@
 import Koa from 'koa';
 import request from 'supertest';
-import middleware from '../../src/middleware';
+import middleware from '@/middleware';
 
 // Mock config 模块
-jest.mock('../../src/config', () => ({
+jest.mock('@/config', () => ({
   __esModule: true,
   default: {
     env: 'test',
@@ -155,7 +155,7 @@ describe('Middleware Integration', () => {
       jest.resetModules();
 
       // 重新导入中间件（会使用新的配置）
-      const productionMiddleware = require('../../src/middleware').default;
+      const productionMiddleware = require('@/middleware').default;
       const productionApp = new Koa();
       productionMiddleware(productionApp);
 

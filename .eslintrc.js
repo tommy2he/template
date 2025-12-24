@@ -20,22 +20,34 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'no-console': 'warn',
   },
+  settings: {
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
+    },
+  },
   ignorePatterns: [
     'node_modules/',
     'dist/',
-    'coverage/',
+    'reports/',
     '*.json',
     '*.config.js',
     '*.d.ts',
     'package.json',
     'jest.setup.js',
-    'test-report.html',
-    'performance-report.html',
-    'stress-report.html',
+    '*.report.html',
   ],
   overrides: [
     {
-      files: ['scripts/**/*.js'],
+      files: [
+        'test/scripts/**/*.js',
+        'test/**/*.ts',
+        'jest.config.js',
+        'jest.*.config.js',
+        'jest.setup.js',
+      ],
       rules: {
         '@typescript-eslint/no-require-imports': 'off',
         '@typescript-eslint/no-unused-vars': 'off',

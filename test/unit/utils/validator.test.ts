@@ -2,7 +2,7 @@ import {
   ValidationError,
   validateString,
   validateNumber,
-} from '../../src/utils/validator';
+} from '@/utils/validator';
 
 describe('Validator Utils', () => {
   describe('ValidationError', () => {

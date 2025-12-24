@@ -20,7 +20,7 @@ describe('Configuration Module', () => {
     process.env = {};
 
     // 重新加载配置模块
-    const configModule = require('../../src/config');
+    const configModule = require('../../../src/config');
     const config = configModule.default;
     const { isDevelopment, isProduction, isTest } = configModule;
 
@@ -35,7 +35,7 @@ describe('Configuration Module', () => {
   it('应该加载测试环境配置', () => {
     process.env.NODE_ENV = 'test';
 
-    const configModule = require('../../src/config');
+    const configModule = require('@/config');
     const config = configModule.default;
     const { isTest } = configModule;
 
@@ -49,7 +49,7 @@ describe('Configuration Module', () => {
     process.env.APP_NAME = 'Production App';
     process.env.JWT_SECRET = 'production_secret'; // 添加这个避免错误
 
-    const configModule = require('../../src/config');
+    const configModule = require('@/config');
     const config = configModule.default;
     const { isProduction } = configModule;
 
@@ -62,7 +62,7 @@ describe('Configuration Module', () => {
   it('应该正确解析CORS配置', () => {
     process.env.CORS_CREDENTIALS = 'true';
 
-    const config = require('../../src/config').default;
+    const config = require('@/config').default;
 
     expect(config.corsCredentials).toBe(true);
   });
@@ -70,7 +70,7 @@ describe('Configuration Module', () => {
   it('应该正确解析数组配置', () => {
     process.env.UPLOAD_ALLOWED_TYPES = 'image/jpeg,image/png,application/pdf';
 
-    const config = require('../../src/config').default;
+    const config = require('@/config').default;
 
     expect(config.uploadAllowedTypes).toEqual([
       'image/jpeg',
@@ -84,7 +84,7 @@ describe('Configuration Module', () => {
     process.env.JWT_SECRET = 'default_dev_secret_change_in_production';
 
     expect(() => {
-      require('../../src/config');
+      require('@/config');
     }).toThrow('JWT_SECRET must be set in production environment');
   });
 
@@ -94,7 +94,7 @@ describe('Configuration Module', () => {
     process.env.MONGODB_URI = 'mongodb://localhost:27017/prod_db';
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    require('../../src/config');
+    require('@/config');
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining('Using local MongoDB in production'),

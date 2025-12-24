@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import apiRoutes from '../../src/routes/api';
+import apiRoutes from '@/routes/api';
 
 describe('API Routes Unit Tests', () => {
   let router: Router;

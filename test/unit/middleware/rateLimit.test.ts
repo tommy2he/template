@@ -4,7 +4,7 @@ import request from 'supertest';
 import { Context } from 'koa';
 
 // 正确导入：从 test/middleware 到 src/middleware 是两层上级
-import { createBuiltInRateLimit } from '../../src/middleware/rateLimit';
+import { createBuiltInRateLimit } from '@/middleware/rateLimit';
 
 describe('rateLimit Middleware', () => {
   let app: Koa;

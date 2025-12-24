@@ -1,7 +1,7 @@
 // 全局类型声明
 declare namespace NodeJS {
   interface ProcessEnv {
-    NODE_ENV: "development" | "production" | "test";
+    NODE_ENV: 'development' | 'production' | 'test';
     PORT: string;
     APP_NAME: string;
     LOG_LEVEL: string;
@@ -14,3 +14,10 @@ declare namespace NodeJS {
     [key: string]: string;
   }
 }
+
+// 路径别名模块声明，避免TypeScript报错
+declare module '@/utils';
+declare module '@/utils/validator';
+declare module '@/config';
+declare module '@/middleware';
+declare module '@/routes';

@@ -2,25 +2,55 @@
 const fs = require('fs');
 const path = require('path');
 
-// 创建报告目录结构
-const reportsStructure = [
+const rootDir = path.join(__dirname, '../..');
+
+console.log('📁 设置测试目录结构...');
+
+// 创建测试目录结构
+const testDirectories = [
+  'test/unit/config',
+  'test/unit/middleware',
+  'test/unit/routes',
+  'test/unit/utils',
+  'test/integration',
+  'test/e2e',
+  'test/scripts',
+  'test/css',
+  'test/__mocks__',
+];
+
+testDirectories.forEach((dir) => {
+  const fullPath = path.join(rootDir, dir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true });
+    console.log(`✅ 创建测试目录: ${dir}`);
+  }
+});
+
+// 创建报告目录
+const reportDirectories = [
   'reports/unit/coverage',
-  'reports/integration',
+  'reports/integration/coverage',
   'reports/performance',
   'reports/e2e',
 ];
 
-console.log('📁 设置报告目录结构...');
-
-reportsStructure.forEach((dir) => {
-  const fullPath = path.join(__dirname, '..', dir);
+reportDirectories.forEach((dir) => {
+  const fullPath = path.join(rootDir, dir);
   if (!fs.existsSync(fullPath)) {
     fs.mkdirSync(fullPath, { recursive: true });
-    console.log(`✅ 创建目录: ${dir}`);
-  } else {
-    console.log(`📁 目录已存在: ${dir}`);
+    console.log(`✅ 创建报告目录: ${dir}`);
   }
 });
+
+// 确保测试报告样式文件存在
+const styleSource = path.join(rootDir, 'test/css/test-report-style.css');
+if (!fs.existsSync(styleSource) && fs.existsSync('test-report-style.css')) {
+  fs.renameSync('test-report-style.css', styleSource);
+  console.log(`📄 移动样式文件到: test/css/test-report-style.css`);
+}
+
+console.log('🎉 测试目录结构设置完成！');
 
 // 创建一个说明文件
 const readmeContent = `# 测试报告目录结构

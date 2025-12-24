@@ -1,7 +1,7 @@
 // test/middleware/security.test.ts - 灵活版本
 import Koa from 'koa';
 import request from 'supertest';
-import security from '../../src/middleware/security';
+import security from '@/middleware/security';
 
 describe('security Middleware', () => {
   let app: Koa;

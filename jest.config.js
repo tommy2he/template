@@ -1,11 +1,9 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+const baseConfig = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/test/**/*.test.ts'],
-  roots: ['<rootDir>/test'],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
   collectCoverageFrom: ['src/**/*.ts', '!src/index.ts', '!src/**/index.ts'],
-  coverageDirectory: 'reports/unit/coverage',
 
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -13,8 +11,6 @@ module.exports = {
     '^@routes/(.*)$': '<rootDir>/src/routes/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     '^@config/(.*)$': '<rootDir>/src/config/$1',
-    '^@scripts/(.*)$': '<rootDir>/test/scripts/$1',
-    // 添加 chalk 的 mock
     '^chalk$': '<rootDir>/test/__mocks__/chalk.js',
   },
 
@@ -27,27 +23,11 @@ module.exports = {
     ],
   },
 
-  // 忽略 chalk 的转换
   transformIgnorePatterns: ['/node_modules/(?!(chalk)/)'],
 
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 
-  reporters: [
-    'default',
-    [
-      'jest-html-reporter',
-      {
-        pageTitle: 'Koa Template App - Test Report',
-        outputPath: './reports/unit/test-report.html',
-        includeFailureMsg: true,
-        includeConsoleLog: true,
-        logo: './public/logo.svg',
-        theme: 'lightTheme',
-        styleOverridePath: './test/css/test-report-style.css',
-        dateFormat: 'yyyy-mm-dd HH:MM:ss',
-        sort: 'titleAsc',
-        executionTimeWarningThreshold: 5,
-      },
-    ],
-  ],
+  // 这里没有 reporters 和 coverageDirectory，由子配置定义
 };
+
+module.exports = baseConfig;

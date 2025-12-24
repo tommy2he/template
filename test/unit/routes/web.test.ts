@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import webRoutes from '../../src/routes/web';
+import webRoutes from '@/routes/web';
 
 describe('Web Routes Unit Tests', () => {
   let router: Router;

@@ -4,6 +4,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+
+  "typescript.validate.enable": true,
+  "typescript.preferences.project": "tsconfig.test.json",
+
   "typescript.preferences.importModuleSpecifier": "relative",
   "files.exclude": {
     "**/.git": true,
@@ -14,5 +18,6 @@
     "**/node_modules": true,
     "**/.cache": true,
     "**/dist": true
-  }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

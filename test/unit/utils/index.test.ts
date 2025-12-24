@@ -4,7 +4,7 @@ import {
   safeParseJSON,
   apiResponse,
   apiError,
-} from '../../src/utils';
+} from '@/utils';
 
 // 模拟 console.error 避免测试输出干扰
 const originalConsoleError = console.error;

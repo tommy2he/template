@@ -1,11 +1,11 @@
 import Koa from 'koa';
 import request from 'supertest';
-import cors from '../../src/middleware/cors';
-import config from '../../src/config';
+import cors from '@/middleware/cors';
+import config from '@/config';
 
 // 模拟 config 模块
 // 替换当前的 mock
-jest.mock('../../src/config', () => {
+jest.mock('@/config', () => {
   return {
     __esModule: true,
     default: {

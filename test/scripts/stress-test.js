@@ -342,7 +342,7 @@ class StressTest {
     // const reportPath = path.join(__dirname, '../stress-report.html');
     const reportPath = path.join(
       __dirname,
-      '.../../reports/performance/stress-report.html',
+      '../../reports/performance/stress-report.html',
     );
     await writeFile(reportPath, report);
     console.log(`\n📄 压力测试报告已生成: file://${reportPath}`);

@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import request from 'supertest';
-import logger from '../../src/middleware/logger';
+import logger from '@/middleware/logger';
 
 // 模拟 console.log 以便我们可以测试它被调用了
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
