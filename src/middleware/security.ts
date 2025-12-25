@@ -48,7 +48,7 @@ export default function security() {
   });
 }
 
-// 自定义安全头
+// 自定义安全头 - 移除 CSP 设置以避免冲突
 export function customSecurityHeaders() {
   return async (ctx: Context, next: Next) => {
     await next();
@@ -60,12 +60,15 @@ export function customSecurityHeaders() {
     ctx.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     ctx.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+    // 注意：已移除开发环境的 CSP 设置
+    // 所有 CSP 逻辑现在由 security() 和 index.ts 中的专门中间件处理
+    // 这样可以避免 CSP 头被重复设置和覆盖
     // 在开发环境，允许更宽松的CSP用于调试
-    if (config.env === 'development') {
-      ctx.set(
-        'Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';",
-      );
-    }
+    // if (config.env === 'development') {
+    //   ctx.set(
+    //     'Content-Security-Policy',
+    //     "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';",
+    //   );
+    // }
   };
 }
