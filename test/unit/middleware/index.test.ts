@@ -7,9 +7,24 @@ jest.mock('@/config', () => ({
   __esModule: true,
   default: {
     env: 'test',
+    port: 3000,
+    appName: 'Koa Template App',
+    appUrl: 'http://localhost:3000',
+
+    // 日志配置
+    logLevel: 'info',
+    logFormat: 'combined',
+    
+    // API 配置
+    apiPrefix: '/api',
+    apiVersion: 'v1',
+    apiTimeout: 30000,
+    
+    // CORS 配置
     corsOrigin: 'http://localhost:3000',
     corsCredentials: true,
-    jwtSecret: 'test_secret_key',
+
+    // 数据库配置
     mongodb: {
       uri: 'mongodb://localhost:27017/koa_template_test',
       options: {
@@ -17,18 +32,48 @@ jest.mock('@/config', () => ({
         useUnifiedTopology: true,
       },
     },
+
+    // 安全配置
+    jwtSecret: 'test_jwt_secret',
+    jwtExpiresIn: '7d',
+
+    // 开发配置
     enableSwagger: false,
     debug: false,
-    appName: 'Test App',
-    port: 3000,
-    appUrl: 'http://localhost:3000',
-    logLevel: 'info',
-    logFormat: 'combined',
-    apiPrefix: '/api',
-    apiVersion: 'v1',
-    apiTimeout: 30000,
+    
+    // 其他配置
     uploadMaxSize: 10485760,
     uploadAllowedTypes: ['image/jpeg', 'image/png'],
+    
+    // 1.3版本新增配置
+    rateLimit: {
+      enabled: false, // 测试环境禁用
+      maxRequests: 100,
+      windowMs: 900000,
+    },
+    compression: {
+      enabled: false, // 测试环境禁用
+      threshold: 1024,
+    },
+    security: {
+      enabled: false, // 测试环境禁用
+      cspEnabled: false,
+      hstsEnabled: false,
+    },
+    swagger: {
+      enabled: false,
+      title: 'Koa Template App API',
+      description: 'Koa模板应用的API文档',
+      version: '1.0.0',
+    },
+    
+    // 1.4版本新增性能监控配置
+    performance: {
+      enabled: false, // 测试环境禁用
+      sampleRate: 1.0,
+      retentionDays: 7,
+      endpoints: ['/', '/api', '/api/health', '/api/performance'],
+    },
   },
 }));
 
