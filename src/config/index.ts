@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { configLogger } from './logger';
 
 // 根据环境加载不同的 .env 文件
 const envFile =
@@ -166,8 +167,10 @@ const config: Config = {
 const requiredEnvVars = ['NODE_ENV', 'PORT'];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
-    // eslint-disable-next-line no-console
-    console.warn(`⚠️  Warning: ${envVar} is not set in environment variables`);
+    configLogger.warn(`${envVar} is not set in environment variables`, {
+      environment: config.env,
+      variable: envVar,
+    });
   }
 }
 
@@ -181,10 +184,11 @@ if (config.env === 'production') {
     config.mongodb.uri.includes('localhost') ||
     config.mongodb.uri.includes('127.0.0.1')
   ) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      '⚠️  Warning: Using local MongoDB in production is not recommended',
-    );
+    configLogger.warn('Using local MongoDB in production is not recommended', {
+      environment: config.env,
+      mongodbUri: config.mongodb.uri,
+      suggestion: 'Use a managed MongoDB service or remote database',
+    });
   }
 }
 
@@ -192,5 +196,10 @@ if (config.env === 'production') {
 export const isDevelopment = config.env === 'development';
 export const isProduction = config.env === 'production';
 export const isTest = config.env === 'test';
+
+// 可选：在测试环境禁用配置日志
+if (isTest) {
+  configLogger.disable();
+}
 
 export default config;

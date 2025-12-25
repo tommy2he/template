@@ -1,4 +1,4 @@
-import { Context, Next } from 'koa';
+import { Context } from 'koa';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { koaSwagger } from 'koa2-swagger-ui';
 import path from 'path';

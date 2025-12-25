@@ -1,10 +1,5 @@
 import { Context, Next } from 'koa';
 
-interface KoaError extends Error {
-  status?: number;
-  expose?: boolean;
-}
-
 export default function errorHandler() {
   return async (ctx: Context, next: Next) => {
     try {

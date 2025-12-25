@@ -1,4 +1,3 @@
-import { Context, Next } from 'koa';
 import compress, { CompressOptions } from 'koa-compress';
 import zlib from 'zlib';
 import config from '../config';

@@ -54,5 +54,24 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    // 允许配置模块使用 console
+    {
+      files: ['src/config/**/*.ts'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+    // 允许应用启动文件和日志中间件使用 console
+    {
+      files: [
+        'src/app.ts',
+        'src/middleware/logger.ts',
+        'src/middleware/index.ts',
+        'src/middleware/swagger.ts',
+      ],
+      rules: {
+        'no-console': 'off',
+      },
+    },
   ],
 };
