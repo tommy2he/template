@@ -686,7 +686,7 @@ class MiddlewareBenchmark {
         </div>
         
         <div class="footer">
-            <p>© ${new Date().getFullYear()} Koa中间件性能测试报告 | 生成时间: ${new Date().toLocaleString('zh-CN')}</p>
+            <p>© ${new Date().getFullYear()} Koa Template App - 中间件性能测试报告 | 生成时间: ${new Date().toLocaleString('zh-CN')}</p>
         </div>
     </div>
 </body>
