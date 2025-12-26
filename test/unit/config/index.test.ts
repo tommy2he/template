@@ -96,8 +96,12 @@ describe('Configuration Module', () => {
 
     require('@/config');
 
+    // 检查是否被调用，并且第一个参数包含指定文本
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Using local MongoDB in production'),
+      expect.stringContaining(
+        'Using local MongoDB in production is not recommended',
+      ),
+      expect.any(Object), // 第二个参数是上下文对象
     );
 
     consoleWarnSpy.mockRestore();
