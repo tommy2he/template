@@ -42,6 +42,7 @@
     "load:test": "node test/scripts/load-test.js",
     "performance:test": "npm run build && npm run benchmark && npm run stress:test && npm run test:concurrent",
     "test:concurrent": "cross-env NODE_ENV=test node test/scripts/enhanced-load-test.js",
+    "test:peek": "cross-env NODE_ENV=test node test/scripts/peek-load-test.js",
     "test:full": "npm run test:unit && npm run test:integration && npm run test:concurrent",
     "monitor:start": "NODE_ENV=development node src/index.ts & echo $! > app.pid",
     "monitor:stop": "kill $(cat app.pid) && rm app.pid",
