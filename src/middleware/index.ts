@@ -1,3 +1,4 @@
+// /middleware/index.ts - 使用修正后的 swaggerUISimple
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';
@@ -13,7 +14,9 @@ import { performanceMonitor } from './performance';
 import compression from './compression';
 import security from './security';
 import rateLimit from './rateLimit';
-import { swaggerUI } from './swagger';
+// 使用简化版的 Swagger UI
+// import { swaggerUISimple as swaggerUI } from './swagger';
+import { swaggerUIOptimized as swaggerUI } from './swagger';
 
 export default (app: Koa): void => {
   // ========== 1. 性能监控（最外层，测量完整请求时间） ==========
@@ -39,7 +42,7 @@ export default (app: Koa): void => {
   app.use(
     bodyParser({
       enableTypes: ['json', 'form', 'text'],
-      jsonLimit: config.env === 'production' ? '1mb' : '10mb', // 生产环境限制更严格
+      jsonLimit: config.env === 'production' ? '1mb' : '10mb',
       formLimit: config.env === 'production' ? '1mb' : '10mb',
       textLimit: config.env === 'production' ? '1mb' : '10mb',
     }),
@@ -60,7 +63,6 @@ export default (app: Koa): void => {
     app.use(async (ctx, next) => {
       if (ctx.path === '/api-docs' || ctx.path.startsWith('/api-docs/')) {
         // 设置允许 Swagger UI 加载外部资源的 CSP
-        // 添加 cdnjs.cloudflare.com
         ctx.set(
           'Content-Security-Policy',
           "default-src 'self'; " +
@@ -76,7 +78,6 @@ export default (app: Koa): void => {
   }
 
   // ========== 10. Swagger UI（1.3版本） ==========
-  // 注意：必须在 CSP 中间件之后
   if (config.enableSwagger && config.env !== 'production') {
     app.use(swaggerUI());
   }
@@ -84,16 +85,18 @@ export default (app: Koa): void => {
   // ========== 11. 静态文件服务 ==========
   app.use(
     serve('public', {
-      maxage: config.env === 'production' ? 86400000 : 0, // 生产环境缓存1天
+      maxage: config.env === 'production' ? 86400000 : 0,
       hidden: false,
       index: 'index.html',
       defer: false,
-      //defer: true, // 让Koa先处理其他中间件
     }),
   );
 
   console.log(`✅ 中间件加载完成（共${app.middleware.length}个）`);
-  console.log(`📖 Swagger UI 地址: http://localhost:${config.port}/api-docs`);
+
+  if (config.enableSwagger && config.env !== 'production') {
+    console.log(`📖 Swagger UI 地址: http://localhost:${config.port}/api-docs`);
+  }
 };
 
 // 导出所有中间件，方便单独使用

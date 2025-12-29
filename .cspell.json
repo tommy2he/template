@@ -1,7 +1,11 @@
 {
   "version": "0.2",
-  "ignorePaths": ["node_modules", "dist"],
+  "ignorePaths": [
+    "node_modules",
+    "dist"
+  ],
   "words": [
+    "APIV",
     "asynciterable",
     "autocannon",
     "bodyparser",

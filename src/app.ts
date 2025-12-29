@@ -4,6 +4,7 @@ import config from './config';
 import middleware from './middleware';
 import routes from './routes';
 import db from './db/connection'; // 新增：导入数据库连接模块
+import { validateSwaggerConfig } from './middleware/swagger';
 
 class App {
   private app: Koa;
@@ -68,6 +69,11 @@ class App {
       // 1. 先连接数据库
       console.log('⏳ 正在连接数据库...');
       await db.connect(); // 等待数据库连接
+
+      // 1-A. 验证Swagger配置（如果启用）
+      if (config.enableSwagger && config.env !== 'production') {
+        validateSwaggerConfig();
+      }
 
       // 2. 再启动服务器
       const server = createServer(this.app.callback());
