@@ -1,7 +1,7 @@
 {
   "name": "koa_template_app",
-  "version": "1.4.0",
-  "description": "Koa模板应用 - 性能监控与优化版本",
+  "version": "1.5.0",
+  "description": "Koa模板应用 - 数据库集成版本",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --watch src --ext ts,json --exec ts-node src/index.ts",
