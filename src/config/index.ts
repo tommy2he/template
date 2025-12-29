@@ -32,12 +32,18 @@ interface Config {
   corsOrigin: string;
   corsCredentials: boolean;
 
-  // 数据库配置
+  // 数据库配置（已更新）
   mongodb: {
     uri: string;
+    adminUri: string;
     options: {
-      useNewUrlParser: boolean;
-      useUnifiedTopology: boolean;
+      maxPoolSize: number;
+      minPoolSize: number;
+      socketTimeoutMS: number;
+      connectTimeoutMS: number;
+      retryWrites: boolean;
+      retryReads: boolean;
+      serverSelectionTimeoutMS: number;
     };
   };
 
@@ -103,13 +109,26 @@ const config: Config = {
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   corsCredentials: process.env.CORS_CREDENTIALS === 'true',
 
-  // 数据库配置
+  // 数据库配置（已更新 - 与 .env 文件匹配）
   mongodb: {
     uri:
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/koa_template_dev',
+      process.env.MONGODB_URI ||
+      'mongodb://koa_user:koa_password@localhost:27017/koa_template_dev',
+    adminUri:
+      process.env.MONGODB_ADMIN_URI ||
+      'mongodb://admin:secret@localhost:27017/admin',
     options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      maxPoolSize: parseInt(process.env.MONGODB_MAX_POOL_SIZE || '10'),
+      minPoolSize: parseInt(process.env.MONGODB_MIN_POOL_SIZE || '2'),
+      socketTimeoutMS: parseInt(
+        process.env.MONGODB_SOCKET_TIMEOUT_MS || '45000',
+      ),
+      connectTimeoutMS: parseInt(
+        process.env.MONGODB_CONNECT_TIMEOUT_MS || '30000',
+      ),
+      retryWrites: process.env.MONGODB_RETRY_WRITES === 'true',
+      retryReads: process.env.MONGODB_RETRY_READS === 'true',
+      serverSelectionTimeoutMS: 30000,
     },
   },
 

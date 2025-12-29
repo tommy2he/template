@@ -52,7 +52,16 @@
     "profile": "node --prof src/index.js",
     "profile:analyze": "node --prof-process isolate*.log > profile.txt",
     "memory:check": "node test/scripts/memory-check.js",
-    "cleanup": "node test/scripts/cleanup.js"
+    "cleanup": "node test/scripts/cleanup.js",
+    "db:setup": "powershell -ExecutionPolicy Bypass -File scripts\\dev\\setup-db.ps1",
+    "db:start": "powershell -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 start",
+    "db:stop": "powershell -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 stop",
+    "db:status": "powershell -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 status",
+    "db:test": "node db/scripts/test-connection.js",
+    "db:shell": "powershell -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 shell",
+    "init:env": "powershell -ExecutionPolicy Bypass -File scripts\\dev\\init-project.ps1",
+    "db:migrate": "node db/scripts/migrate.js",
+    "db:seed": "node db/scripts/seed.js"
   },
   "keywords": [
     "koa",
@@ -82,6 +91,8 @@
     "koa-router": "^14.0.0",
     "koa-static": "^5.0.0",
     "koa2-swagger-ui": "^5.10.3",
+    "mongodb": "^7.0.0",
+    "mongoose": "^9.0.2",
     "swagger-jsdoc": "^6.2.8"
   },
   "devDependencies": {
@@ -96,6 +107,8 @@
     "@types/koa-ratelimit": "^5.0.5",
     "@types/koa-router": "^7.4.9",
     "@types/koa-static": "^4.0.4",
+    "@types/mongodb": "^4.0.6",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^25.0.3",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
@@ -109,6 +122,7 @@
     "jest": "^30.2.0",
     "jest-html-reporter": "^4.3.0",
     "loadtest": "^6.0.0",
+    "mongodb-memory-server": "^11.0.1",
     "nodemon": "^3.1.11",
     "nyc": "^17.1.0",
     "prettier": "^3.7.4",

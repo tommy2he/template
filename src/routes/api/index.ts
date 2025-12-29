@@ -5,6 +5,8 @@ import {
   resetPerformanceMetrics,
 } from '../../middleware/performance';
 
+import deviceRoutes from './deviceRoutes';
+
 const router = new Router();
 
 /**
@@ -339,5 +341,14 @@ router.get('/performance/health', async (ctx) => {
     },
   };
 });
+
+// 新增：挂载设备路由
+/**
+ * @swagger
+ * tags:
+ *   name: 设备管理
+ *   description: 设备管理相关接口
+ */
+router.use('/devices', deviceRoutes.routes(), deviceRoutes.allowedMethods());
 
 export default router;
