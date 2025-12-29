@@ -19,5 +19,5 @@ if (Test-Path $envFile) {
 }
 
 Write-Host ""
-Write-Host "💡 下次启动 PowerShell 时，环境变量将生效" -ForegroundColor Yellow
+Write-Host "💡 下次启动 pwsh 时，环境变量将生效" -ForegroundColor Yellow
 Write-Host "   或者运行: . `$env:KOA_PROJECT_ROOT\scripts\dev\init-project.ps1" -ForegroundColor Gray
