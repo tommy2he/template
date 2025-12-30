@@ -52,19 +52,7 @@
     "profile": "node --prof src/index.js",
     "profile:analyze": "node --prof-process isolate*.log > profile.txt",
     "memory:check": "node test/scripts/memory-check.js",
-    "cleanup": "node test/scripts/cleanup.js",
-    "db:setup": "pwsh -ExecutionPolicy Bypass -File scripts\\dev\\setup-db.ps1",
-    "db:start": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 start",
-    "db:stop": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 stop",
-    "db:status": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 status",
-    "db:test": "node db/scripts/test-connection.js",
-    "db:shell": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 shell",
-    "init:env": "pwsh -ExecutionPolicy Bypass -File scripts\\dev\\init-project.ps1",
-    "db:migrate": "node db/scripts/migrate.js",
-    "db:seed": "node db/scripts/seed.js",
-    "db:seed:devices": "node db/scripts/run-seed-devices.js",
-    "db:seed:clean": "node db/scripts/seed.js --drop",
-    "db:seed:devices:clean": "node db/scripts/run-seed-devices.js --drop"
+    "cleanup": "node test/scripts/cleanup.js"
   },
   "keywords": [
     "koa",

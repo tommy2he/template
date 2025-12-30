@@ -282,26 +282,119 @@ switch ($Command.ToLower()) {
         }
     }
 
+    "express:start" {
+        Show-Header
+        Write-Host "🌐 启动Mongo Express Web界面..." -ForegroundColor Green
+        docker-compose -f $DockerComposeFile up -d mongo-express
+        Write-Host "✅ Mongo Express启动完成" -ForegroundColor Green
+        Write-Host "⏳ 等待服务就绪（3秒）..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 3
+        Write-Host "📊 访问地址: http://localhost:8081" -ForegroundColor Cyan
+        Write-Host "🔑 登录信息: 用户名: admin, 密码: express" -ForegroundColor Cyan
+    }
+    
+    "express:stop" {
+        Show-Header
+        Write-Host "🛑 停止Mongo Express..." -ForegroundColor Yellow
+        docker-compose -f $DockerComposeFile stop mongo-express
+        Write-Host "✅ Mongo Express已停止" -ForegroundColor Green
+    }
+    
+    "express:logs" {
+        Show-Header
+        Write-Host "📋 查看Mongo Express日志..." -ForegroundColor Cyan
+        docker-compose -f $DockerComposeFile logs -f mongo-express
+    }
+    
+    "express:status" {
+        Show-Header
+        Write-Host "📊 Mongo Express状态:" -ForegroundColor Cyan
+        docker-compose -f $DockerComposeFile ps mongo-express 2>$null
+        
+        # 检查端口是否可访问
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:8081" -TimeoutSec 2 -ErrorAction SilentlyContinue
+            if ($response.StatusCode -eq 200) {
+                Write-Host "✅ 服务状态: 运行正常" -ForegroundColor Green
+                Write-Host "🌐 访问地址: http://localhost:8081" -ForegroundColor White
+            }
+        } catch {
+            Write-Host "⚠️  服务状态: 可能未运行或启动中" -ForegroundColor Yellow
+        }
+    }
+    
+    "express:open" {
+        Show-Header
+        Write-Host "🌐 在浏览器中打开Mongo Express..." -ForegroundColor Magenta
+        Start-Process "http://localhost:8081"
+        Write-Host "✅ 浏览器已打开" -ForegroundColor Green
+    }
+    
+    "start-all" {
+        Show-Header
+        Write-Host "🚀 启动所有数据库服务 (MongoDB + Mongo Express)..." -ForegroundColor Green
+        
+        # 确保数据目录存在
+        if (-not (Test-Path "$DataDir\data")) {
+            Write-Host "📁 创建数据目录..." -ForegroundColor Yellow
+            New-Item -ItemType Directory -Path "$DataDir\data" -Force | Out-Null
+        }
+        
+        docker-compose -f $DockerComposeFile up -d
+        Write-Host "✅ 所有服务启动完成" -ForegroundColor Green
+        Write-Host "⏳ 等待数据库就绪（5秒）..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 5
+        
+        Write-Host "📊 服务状态:" -ForegroundColor Cyan
+        docker-compose -f $DockerComposeFile ps
+        
+        Write-Host "`n🌐 Mongo Express: http://localhost:8081" -ForegroundColor White
+        Write-Host "🔑 用户名: admin, 密码: express" -ForegroundColor White
+        
+        Test-DbConnection
+    }
+    
+    "stop-all" {
+        Show-Header
+        Write-Host "🛑 停止所有数据库服务..." -ForegroundColor Yellow
+        docker-compose -f $DockerComposeFile down
+        Write-Host "✅ 所有服务已停止" -ForegroundColor Green
+    }
+
     default {
         Show-Header
         Write-Host "使用方法: .\db-manage.ps1 [命令]" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "数据库管理命令:" -ForegroundColor Green
-        Write-Host "  start     启动数据库" -ForegroundColor White
-        Write-Host "  stop      停止数据库" -ForegroundColor White
-        Write-Host "  status    查看状态" -ForegroundColor White
-        Write-Host "  logs      查看日志" -ForegroundColor White
-        Write-Host "  shell     进入MongoDB Shell (admin)" -ForegroundColor White
-        Write-Host "  app-shell 进入应用数据库Shell" -ForegroundColor White
-        Write-Host "  reset     重置数据库（删除数据）" -ForegroundColor White
-        Write-Host "  backup    备份数据库" -ForegroundColor White
-        Write-Host "  restore   恢复数据库" -ForegroundColor White
-        Write-Host "  test      测试连接" -ForegroundColor White
-        Write-Host "  info      显示连接信息" -ForegroundColor White
+        Write-Host "  start         启动MongoDB数据库" -ForegroundColor White
+        Write-Host "  stop          停止MongoDB数据库" -ForegroundColor White
+        Write-Host "  status        查看MongoDB状态" -ForegroundColor White
+        Write-Host "  logs          查看MongoDB日志" -ForegroundColor White
+        Write-Host "  shell         进入MongoDB Shell (admin)" -ForegroundColor White
+        Write-Host "  app-shell     进入应用数据库Shell" -ForegroundColor White
+        Write-Host "  reset         重置数据库（删除数据）" -ForegroundColor White
+        Write-Host "  backup        备份数据库" -ForegroundColor White
+        Write-Host "  restore       恢复数据库" -ForegroundColor White
+        Write-Host "  test          测试连接" -ForegroundColor White
+        Write-Host "  info          显示连接信息" -ForegroundColor White
+        Write-Host "  migrate       运行数据库迁移" -ForegroundColor White
+        Write-Host "  seed          运行数据库种子数据" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Mongo Express命令:" -ForegroundColor Cyan
+        Write-Host "  express:start  启动Mongo Express Web界面" -ForegroundColor White
+        Write-Host "  express:stop   停止Mongo Express" -ForegroundColor White
+        Write-Host "  express:logs   查看Mongo Express日志" -ForegroundColor White
+        Write-Host "  express:status 查看Mongo Express状态" -ForegroundColor White
+        Write-Host "  express:open   在浏览器中打开Mongo Express" -ForegroundColor White
+        Write-Host ""
+        Write-Host "组合命令:" -ForegroundColor Magenta
+        Write-Host "  start-all      启动所有服务 (MongoDB + Mongo Express)" -ForegroundColor White
+        Write-Host "  stop-all       停止所有服务" -ForegroundColor White
         Write-Host ""
         Write-Host "示例:" -ForegroundColor Gray
-        Write-Host "  .\db-manage.ps1 start     # 启动数据库并测试连接" -ForegroundColor DarkGray
-        Write-Host "  .\db-manage.ps1 shell     # 进入MongoDB Shell" -ForegroundColor DarkGray
-        Write-Host "  .\db-manage.ps1 backup    # 备份数据库" -ForegroundColor DarkGray
+        Write-Host "  .\db-manage.ps1 start             # 启动数据库并测试连接" -ForegroundColor DarkGray
+        Write-Host "  .\db-manage.ps1 start-all         # 启动所有数据库服务" -ForegroundColor DarkGray
+        Write-Host "  .\db-manage.ps1 express:start     # 启动Mongo Express" -ForegroundColor DarkGray
+        Write-Host "  .\db-manage.ps1 express:open      # 打开Mongo Express界面" -ForegroundColor DarkGray
     }
 }
