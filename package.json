@@ -61,7 +61,10 @@
     "db:shell": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 shell",
     "init:env": "pwsh -ExecutionPolicy Bypass -File scripts\\dev\\init-project.ps1",
     "db:migrate": "node db/scripts/migrate.js",
-    "db:seed": "node db/scripts/seed.js"
+    "db:seed": "node db/scripts/seed.js",
+    "db:seed:devices": "node db/scripts/run-seed-devices.js",
+    "db:seed:clean": "node db/scripts/seed.js --drop",
+    "db:seed:devices:clean": "node db/scripts/run-seed-devices.js --drop"
   },
   "keywords": [
     "koa",
