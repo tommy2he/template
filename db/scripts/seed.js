@@ -8,7 +8,7 @@ const fs = require('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { getEnvValue } = require('./test-connection');
 
-// 从种子目录加载所有种子数据
+// 加载所有种子数据
 function loadSeeds() {
   const seedsDir = path.join(__dirname, '..', 'seeds');
   const seeds = {};
@@ -40,7 +40,7 @@ function loadSeeds() {
 
 // 运行种子数据
 async function runSeeds(options = {}) {
-  const { drop = false, force = false } = options;
+  const { drop = false, force = false, collection = null } = options;
 
   console.log('🌱 开始数据库种子数据');
   console.log('='.repeat(50));
@@ -73,7 +73,21 @@ async function runSeeds(options = {}) {
 
     // 加载所有种子数据
     const seeds = loadSeeds();
-    const seedCount = Object.keys(seeds).length;
+    let seedEntries = Object.entries(seeds);
+
+    // 如果指定了特定集合，只处理该集合
+    if (collection) {
+      const seedKey = `seed-${collection}`;
+      if (seeds[seedKey]) {
+        seedEntries = [[seedKey, seeds[seedKey]]];
+        console.log(`🎯 只运行指定集合: ${collection}`);
+      } else {
+        console.log(`❌ 未找到集合 ${collection} 的种子数据`);
+        return;
+      }
+    }
+
+    const seedCount = seedEntries.length;
 
     if (seedCount === 0) {
       console.log('⚠️  没有找到种子文件');
@@ -84,20 +98,14 @@ async function runSeeds(options = {}) {
 
     console.log(`📋 找到 ${seedCount} 个种子文件`);
 
-    // 创建设备集合（如果不存在）
-    const collections = await db.listCollections().toArray();
-    const collectionNames = collections.map((col) => col.name);
-
-    if (!collectionNames.includes('devices')) {
-      console.log('📁 创建设备集合...');
-      await db.createCollection('devices');
-      console.log('✅ 设备集合创建完成');
-    }
-
     // 处理每个种子
-    for (const [seedName, seedData] of Object.entries(seeds)) {
+    for (const [seedName, seedData] of seedEntries) {
       const collectionName = seedName.replace('seed-', '');
       console.log(`\n🔄 运行种子: ${seedName}`);
+
+      // 检查集合是否存在
+      const collections = await db.listCollections().toArray();
+      const collectionNames = collections.map((col) => col.name);
 
       // 如果指定了 drop 选项，先删除集合
       if (drop && collectionNames.includes(collectionName)) {
@@ -113,10 +121,10 @@ async function runSeeds(options = {}) {
       }
 
       // 获取当前集合
-      const collection = db.collection(collectionName);
+      const currentCollection = db.collection(collectionName);
 
       // 检查是否已有数据
-      const count = await collection.countDocuments();
+      const count = await currentCollection.countDocuments();
       if (count > 0 && !drop) {
         console.log(`   ⏭️  集合 ${collectionName} 已有 ${count} 条数据，跳过`);
         console.log(`      使用 --drop 参数删除现有数据并重新插入`);
@@ -127,39 +135,41 @@ async function runSeeds(options = {}) {
       if (Array.isArray(seedData) && seedData.length > 0) {
         console.log(`   📝 插入 ${seedData.length} 条数据到 ${collectionName}`);
 
-        // 为数据添加时间戳（如果需要）
+        // 为数据添加时间戳
         const dataWithTimestamps = seedData.map((item) => ({
           ...item,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: item.createdAt || new Date(),
+          updatedAt: item.updatedAt || new Date(),
         }));
 
-        const result = await collection.insertMany(dataWithTimestamps);
+        const result = await currentCollection.insertMany(dataWithTimestamps);
         console.log(`   ✅ 插入完成: ${result.insertedCount} 条`);
       } else {
         console.log(`   ⚠️  种子数据为空或格式错误`);
       }
     }
 
-    // 创建设备索引（如果还没有）
-    console.log('\n🔍 检查设备索引...');
-    const deviceIndexes = await db.collection('devices').indexes();
-    const indexNames = deviceIndexes.map((idx) => idx.name);
+    // 如果是设备集合，创建索引
+    if (!collection || collection === 'devices') {
+      console.log('\n🔍 创建设备索引...');
+      const deviceIndexes = await db.collection('devices').indexes();
+      const indexNames = deviceIndexes.map((idx) => idx.name);
 
-    const requiredIndexes = [
-      { key: { deviceId: 1 }, options: { unique: true, name: 'deviceId_1' } },
-      { key: { status: 1 }, options: { name: 'status_1' } },
-      { key: { lastSeen: -1 }, options: { name: 'lastSeen_-1' } },
-      { key: { tags: 1 }, options: { name: 'tags_1' } },
-    ];
+      const requiredIndexes = [
+        { key: { deviceId: 1 }, options: { unique: true, name: 'deviceId_1' } },
+        { key: { status: 1 }, options: { name: 'status_1' } },
+        { key: { lastSeen: -1 }, options: { name: 'lastSeen_-1' } },
+        { key: { tags: 1 }, options: { name: 'tags_1' } },
+      ];
 
-    for (const index of requiredIndexes) {
-      if (!indexNames.includes(index.options.name)) {
-        console.log(`   📊 创建索引: ${index.options.name}`);
-        await db.collection('devices').createIndex(index.key, index.options);
-        console.log(`   ✅ 索引创建完成: ${index.options.name}`);
-      } else {
-        console.log(`   ⏭️  索引已存在: ${index.options.name}`);
+      for (const index of requiredIndexes) {
+        if (!indexNames.includes(index.options.name)) {
+          console.log(`   📊 创建索引: ${index.options.name}`);
+          await db.collection('devices').createIndex(index.key, index.options);
+          console.log(`   ✅ 索引创建完成: ${index.options.name}`);
+        } else {
+          console.log(`   ⏭️  索引已存在: ${index.options.name}`);
+        }
       }
     }
 
@@ -178,16 +188,14 @@ async function runSeeds(options = {}) {
     console.log(`   设备总数: ${devicesCount}`);
     console.log(`   在线设备: ${onlineDevices}`);
     console.log(`   离线设备: ${offlineDevices}`);
-    console.log(
-      `   在线率: ${devicesCount > 0 ? Math.round((onlineDevices / devicesCount) * 100) : 0}%`,
-    );
+    console.log(`   在线率: ${devicesCount > 0 ? Math.round((onlineDevices / devicesCount) * 100) : 0}%`);
 
     console.log('='.repeat(50));
     console.log('✅ 种子数据执行完成');
     console.log('\n💡 提示:');
     console.log('   查看数据: npm run db:app-shell');
-    console.log('   删除数据: node db/scripts/seed.js --drop');
-    console.log('   强制生产环境运行: node db/scripts/seed.js --force');
+    console.log('   删除数据: node db/scripts/seed.js --drop --collection=devices');
+    console.log('   只运行特定集合: node db/scripts/seed.js --collection=devices');
   } catch (error) {
     console.error('❌ 种子过程出错:', error.message);
     process.exit(1);
@@ -205,20 +213,29 @@ function parseArgs() {
     help: args.includes('--help') || args.includes('-h'),
   };
 
+  // 解析 --collection 参数
+  const collectionIndex = args.findIndex(arg => arg.startsWith('--collection='));
+  if (collectionIndex !== -1) {
+    options.collection = args[collectionIndex].split('=')[1];
+  }
+
   if (options.help) {
     console.log('🌱 数据库种子脚本');
     console.log('='.repeat(50));
     console.log('使用方法: node db/scripts/seed.js [选项]');
     console.log('');
     console.log('选项:');
-    console.log('  --drop     删除现有数据并重新插入');
-    console.log('  --force    强制在生产环境运行');
-    console.log('  --help, -h 显示帮助信息');
+    console.log('  --drop               删除现有数据并重新插入');
+    console.log('  --force              强制在生产环境运行');
+    console.log('  --collection=<name>  只运行指定集合的种子');
+    console.log('  --help, -h           显示帮助信息');
     console.log('');
     console.log('示例:');
-    console.log('  node db/scripts/seed.js            # 开发环境运行');
-    console.log('  node db/scripts/seed.js --drop     # 删除并重新插入');
-    console.log('  node db/scripts/seed.js --force    # 强制生产环境运行');
+    console.log('  node db/scripts/seed.js                       # 运行所有种子');
+    console.log('  node db/scripts/seed.js --drop                # 删除并重新插入所有');
+    console.log('  node db/scripts/seed.js --collection=devices  # 只运行设备种子');
+    console.log('  node db/scripts/seed.js --drop --collection=devices # 删除并重新插入设备数据');
+    console.log('  node db/scripts/seed.js --force               # 强制生产环境运行');
     console.log('');
     process.exit(0);
   }
