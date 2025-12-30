@@ -1,5 +1,7 @@
 ﻿# 导入环境工具函数
-Import-Module (Join-Path $PSScriptRoot "..\utils\env.ps1") -Force
+
+# Import-Module (Join-Path $PSScriptRoot "..\utils\env.ps1") -Force
+. (Join-Path $PSScriptRoot "..\utils\env.ps1")
 
 # 获取项目根目录
 $ProjectRoot = Get-ProjectRoot
@@ -31,6 +33,7 @@ $TestConnectionScript = Join-Path $ProjectRoot "db\scripts\test-connection.js"
 # 1. 检查Docker
 Write-Host "1. 检查Docker状态..." -ForegroundColor Yellow
 # $dockerRunning = docker info 2>$null
+docker info 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "❌ Docker未运行，请启动Docker Desktop" -ForegroundColor Red
     exit 1
@@ -94,7 +97,8 @@ $connected = $false
 while ($attempt -lt $maxAttempts -and -not $connected) {
     $attempt++
     Write-Host "   尝试连接 ($attempt/$maxAttempts)..." -ForegroundColor Gray
-#    $testResult = node $TestConnectionScript 2>&1
+    # $testResult = node $TestConnectionScript 2>&1
+    node $TestConnectionScript 2>&1
     if ($LASTEXITCODE -eq 0) {
         $connected = $true
     } else {

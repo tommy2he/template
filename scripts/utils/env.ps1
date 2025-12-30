@@ -90,4 +90,4 @@ function Resolve-PathWithRoot {
 }
 
 # 导出函数
-Export-ModuleMember -Function Get-ProjectRoot, Import-EnvFile, Get-EnvValue, Resolve-PathWithRoot
+# Export-ModuleMember -Function Get-ProjectRoot, Import-EnvFile, Get-EnvValue, Resolve-PathWithRoot

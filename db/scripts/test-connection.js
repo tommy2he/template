@@ -83,7 +83,7 @@ async function testConnection() {
 
       console.log(`   ✅ 连接成功 (${connectionTime}ms)`);
 
-      const db = client.db(testCase.expectedDb);
+      const db = client.db(testCase.database);
 
       // Ping测试
       const pingStart = Date.now();
