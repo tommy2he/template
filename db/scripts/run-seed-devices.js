@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 // 设备种子数据专用脚本 - 调用主种子脚本运行设备数据
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { runSeeds } = require('./seed');
 
 async function runDeviceSeed() {
