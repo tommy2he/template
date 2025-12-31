@@ -15,25 +15,69 @@ export class DeviceController {
         // Fix the error when sort with LastSeen
         sortOrder = 'desc',
       } = ctx.query;
-      const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
+
+      // 参数验证和转换
+      const pageNum = Math.max(1, parseInt(page as string) || 1);
+      const limitNum = Math.min(
+        100,
+        Math.max(1, parseInt(limit as string) || 20),
+      ); // 限制最大100条
+      const skip = (pageNum - 1) * limitNum;
 
       const filter: any = {};
       if (status) {
-        filter.status = status;
+        // 验证status是否有效
+        const validStatuses = [
+          'online',
+          'offline',
+          'provisioning',
+          'maintenance',
+        ];
+        if (validStatuses.includes(status as string)) {
+          filter.status = status;
+        } else {
+          ctx.status = 400;
+          ctx.body = {
+            success: false,
+            error: `无效的status值: ${status}。有效值为: ${validStatuses.join(', ')}`,
+          };
+          return;
+        }
       }
 
       const sort: Record<string, 1 | -1> = {};
       // sort[sortBy as string] = parseInt(sortOrder as string) as 1 | -1;
       // Fix the error when sort with LastSeen
       if (sortBy) {
-        // 正确解析排序方向
+        // 验证sortBy是否有效
+        const validSortFields = [
+          'lastSeen',
+          'createdAt',
+          'updatedAt',
+          'deviceId',
+          'manufacturer',
+          'model',
+          'status',
+          'ipAddress',
+        ];
+
+        if (!validSortFields.includes(sortBy as string)) {
+          ctx.status = 400;
+          ctx.body = {
+            success: false,
+            error: `无效的排序字段: ${sortBy}。有效字段为: ${validSortFields.join(', ')}`,
+          };
+          return;
+        }
+
+        // 解析排序方向
         const order = sortOrder === 'desc' ? -1 : 1;
         sort[sortBy as string] = order as 1 | -1;
       }
 
       const devices = await deviceRepository.findAll(filter, {
         skip,
-        limit: parseInt(limit as string),
+        limit: limitNum,
         sort,
       });
 
@@ -43,10 +87,10 @@ export class DeviceController {
         success: true,
         data: devices,
         pagination: {
-          page: parseInt(page as string),
-          limit: parseInt(limit as string),
+          page: pageNum,
+          limit: limitNum,
           total,
-          pages: Math.ceil(total / parseInt(limit as string)),
+          pages: Math.ceil(total / limitNum),
         },
       };
     } catch (error: any) {
