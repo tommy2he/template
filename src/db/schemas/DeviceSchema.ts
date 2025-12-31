@@ -25,7 +25,7 @@ export const DeviceSchema = new Schema<IDeviceDocument>(
       required: true,
       unique: true,
       trim: true,
-      index: true,
+      // index: true,  // 移除这一行，因为下面已经定义了索引
     },
     manufacturer: {
       type: String,
@@ -89,7 +89,7 @@ export const DeviceSchema = new Schema<IDeviceDocument>(
 );
 
 // 添加索引
-DeviceSchema.index({ deviceId: 1 }, { unique: true });
+// DeviceSchema.index({ deviceId: 1 }, { unique: true });
 DeviceSchema.index({ status: 1 });
 DeviceSchema.index({ lastSeen: -1 });
 DeviceSchema.index({ 'parameters._id': 1 });

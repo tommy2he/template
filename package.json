@@ -24,6 +24,7 @@
     "test:coverage": "jest --config jest.unit.config.js --coverage --coverageReporters=html && echo '报告已生成: reports/unit/coverage/index.html'",
     "test:unit": "cross-env NODE_ENV=test jest --config jest.unit.config.js --coverage",
     "test:integration": "cross-env NODE_ENV=test jest --config jest.integration.config.js --coverage",
+    "test:db:integration": "cross-env NODE_ENV=test jest test/integration/db-integration.test.ts --verbose",
     "test:e2e": "jest --config jest.unit.config.js --testPathPattern=\\.e2e\\.test\\.ts$ --coverage",
     "test:verbose": "jest --verbose",
     "test:clean": "jest --clearCache",
