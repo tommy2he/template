@@ -179,15 +179,26 @@ export class DeviceController {
   // 更新设备
   static async updateDevice(ctx: Context): Promise<void> {
     try {
-      const { id } = ctx.params;
+      const { id } = ctx.params; // id 是 deviceId
       const updateData = ctx.request.body as Partial<IDevice>;
 
+      // 先根据 deviceId 查找设备
+      const existingDevice = await deviceRepository.findByDeviceId(id);
+      if (!existingDevice) {
+        ctx.status = 404;
+        ctx.body = {
+          success: false,
+          error: '设备不存在',
+        };
+        return;
+      }
+
       // 如果尝试更新 deviceId，检查是否冲突
-      if (updateData.deviceId) {
-        const existingDevice = await deviceRepository.findByDeviceId(
+      if (updateData.deviceId && updateData.deviceId !== id) {
+        const deviceWithSameId = await deviceRepository.findByDeviceId(
           updateData.deviceId,
         );
-        if (existingDevice && existingDevice._id.toString() !== id) {
+        if (deviceWithSameId) {
           ctx.status = 409;
           ctx.body = {
             success: false,
@@ -197,7 +208,11 @@ export class DeviceController {
         }
       }
 
-      const device = await deviceRepository.update(id, updateData);
+      // 使用数据库中的 _id 进行更新
+      const device = await deviceRepository.update(
+        existingDevice._id.toString(),
+        updateData,
+      );
 
       if (!device) {
         ctx.status = 404;
@@ -224,8 +239,23 @@ export class DeviceController {
   // 删除设备
   static async deleteDevice(ctx: Context): Promise<void> {
     try {
-      const { id } = ctx.params;
-      const device = await deviceRepository.delete(id);
+      const { id } = ctx.params; // id 是 deviceId
+
+      // 先根据 deviceId 查找设备，获取数据库 _id
+      const deviceToDelete = await deviceRepository.findByDeviceId(id);
+      if (!deviceToDelete) {
+        ctx.status = 404;
+        ctx.body = {
+          success: false,
+          error: '设备不存在',
+        };
+        return;
+      }
+
+      // 使用数据库中的 _id 进行删除
+      const device = await deviceRepository.delete(
+        deviceToDelete._id.toString(),
+      );
 
       if (!device) {
         ctx.status = 404;
