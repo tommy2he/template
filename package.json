@@ -25,7 +25,10 @@
     "test:unit": "cross-env NODE_ENV=test jest --config jest.unit.config.js --coverage",
     "test:integration": "cross-env NODE_ENV=test jest --config jest.integration.config.js --coverage",
     "test:db:integration": "cross-env NODE_ENV=test jest test/integration/db-integration.test.ts --verbose",
-    "test:e2e": "jest --config jest.unit.config.js --testPathPattern=\\.e2e\\.test\\.ts$ --coverage",
+    "test:e2e": "node test/scripts/e2e-runner.js",
+    "test:e2e:ci": "cross-env NODE_ENV=test jest test/e2e/device-api.e2e.test.ts --ci --reporters=default --reporters=jest-junit",
+    "test:e2e:watch": "cross-env NODE_ENV=test jest test/e2e/device-api.e2e.test.ts --watch",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:verbose": "jest --verbose",
     "test:clean": "jest --clearCache",
     "test:config": "jest --showConfig",
@@ -90,6 +93,7 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "axios": "^1.13.2",
     "benchmark": "^2.1.4",
     "chalk": "^5.6.2",
     "compression": "^1.7.5",
