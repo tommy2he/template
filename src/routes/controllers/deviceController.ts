@@ -11,7 +11,9 @@ export class DeviceController {
         limit = '20',
         status,
         sortBy = 'lastSeen',
-        sortOrder = '-1',
+        // sortOrder = '-1',
+        // Fix the error when sort with LastSeen
+        sortOrder = 'desc',
       } = ctx.query;
       const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
 
@@ -21,7 +23,13 @@ export class DeviceController {
       }
 
       const sort: Record<string, 1 | -1> = {};
-      sort[sortBy as string] = parseInt(sortOrder as string) as 1 | -1;
+      // sort[sortBy as string] = parseInt(sortOrder as string) as 1 | -1;
+      // Fix the error when sort with LastSeen
+      if (sortBy) {
+        // 正确解析排序方向
+        const order = sortOrder === 'desc' ? -1 : 1;
+        sort[sortBy as string] = order as 1 | -1;
+      }
 
       const devices = await deviceRepository.findAll(filter, {
         skip,
