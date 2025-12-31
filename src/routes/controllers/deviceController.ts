@@ -146,10 +146,13 @@ export class DeviceController {
   }
 
   // 获取单个设备
+  // 获取单个设备 - 修改为按 deviceId 查询
   static async getDevice(ctx: Context): Promise<void> {
     try {
       const { id } = ctx.params;
-      const device = await deviceRepository.findById(id);
+
+      // 改为按 deviceId 查询，因为用户在实际应用中应该使用业务ID
+      const device = await deviceRepository.findByDeviceId(id);
 
       if (!device) {
         ctx.status = 404;
@@ -246,10 +249,10 @@ export class DeviceController {
     }
   }
 
-  // 更新设备参数
+  // 更新设备参数 - 也修正了findByDeviceId
   static async updateDeviceParameters(ctx: Context): Promise<void> {
     try {
-      const { id } = ctx.params;
+      const { id } = ctx.params; // 这里的 id 应该是 deviceId
       const { parameters } = ctx.request.body as {
         parameters: Record<string, any>;
       };
@@ -263,7 +266,8 @@ export class DeviceController {
         return;
       }
 
-      const device = await deviceRepository.findById(id);
+      // 修改：直接按 deviceId 查找设备
+      const device = await deviceRepository.findByDeviceId(id);
       if (!device) {
         ctx.status = 404;
         ctx.body = {
@@ -274,7 +278,7 @@ export class DeviceController {
       }
 
       const updatedDevice = await deviceRepository.updateParameters(
-        device.deviceId,
+        device.deviceId, // 这里可以改为 id，因为 id 现在就是 deviceId
         parameters,
       );
 
