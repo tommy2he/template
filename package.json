@@ -9,6 +9,10 @@
     "start": "NODE_ENV=production node dist/index.js",
     "start:dev": "NODE_ENV=development node dist/index.js",
     "start:secure": "NODE_ENV=production node dist/index.js --security",
+    "cpe:dev": "nodemon --watch cpe/src --ext ts --exec ts-node cpe/src/client.ts",
+    "cpe:start": "node cpe/dist/client.js",
+    "cpe:build": "tsc --project cpe/tsconfig.json",
+    "cpe:multi": "node cpe/scripts/start-multiple.js 3",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "type-check": "tsc --noEmit",
@@ -109,7 +113,8 @@
     "koa2-swagger-ui": "^5.10.3",
     "mongodb": "^7.0.0",
     "mongoose": "^9.0.2",
-    "swagger-jsdoc": "^6.2.8"
+    "swagger-jsdoc": "^6.2.8",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
@@ -128,6 +133,7 @@
     "@types/node": "^25.0.3",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "autocannon": "^7.0.0",
