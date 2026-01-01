@@ -3,6 +3,7 @@ import Router from 'koa-router';
 import { CPEModel } from '@/db/schemas/cpe.schema';
 import jwt from 'jsonwebtoken';
 import { WebSocketManager } from '@/websocket/server';
+import config from '@/config';
 
 const router = new Router({ prefix: '/api/cpes' });
 
@@ -83,10 +84,11 @@ router.post('/register', async (ctx) => {
     );
 
     // WebSocket连接URL
-    const host = ctx.request.host;
-    const protocol = ctx.request.protocol === 'https' ? 'wss' : 'ws';
-    const wsUrl = process.env.WS_URL || `${protocol}://${host}`;
-    const wsConnectionUrl = `${wsUrl}?token=${token}&cpeId=${cpeId}`;
+    // const host = ctx.request.host;
+    // const protocol = ctx.request.protocol === 'https' ? 'wss' : 'ws';
+    // const wsUrl = process.env.WS_URL || `${protocol}://${host}`;
+    // const wsConnectionUrl = `${wsUrl}?token=${token}&cpeId=${cpeId}`;
+    const wsConnectionUrl = `${config.wsUrl}?token=${token}&cpeId=${cpeId}`;
 
     ctx.status = 201;
     ctx.body = {

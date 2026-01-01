@@ -15,6 +15,12 @@ declare namespace NodeJS {
   }
 }
 
+// declare module 'koa' {
+//   interface Context {
+//     wsManager?: import('../src/websocket/server').WebSocketManager;
+//   }
+// }
+
 // 路径别名模块声明，避免TypeScript报错
 declare module '@/utils';
 declare module '@/utils/validator';

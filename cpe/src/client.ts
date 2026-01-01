@@ -15,7 +15,7 @@ const cpeConfig = {
 
   // 服务器配置
   serverUrl: process.env.SERVER_URL || 'http://localhost:3000',
-  wsUrl: process.env.WS_URL || 'ws://localhost:3000',
+  wsUrl: process.env.WS_URL || 'ws://localhost:7547',
 
   // 心跳配置
   heartbeatInterval: parseInt(process.env.HEARTBEAT_INTERVAL || '30'),

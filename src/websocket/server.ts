@@ -14,8 +14,10 @@ interface WebSocketMessage {
 export class WebSocketManager {
   private wss: WebSocketServer;
   private connections: Map<string, WS> = new Map();
+  private server: HttpServer; // 存储HTTP服务器
 
   constructor(server: HttpServer) {
+    this.server = server;
     this.wss = new WebSocketServer({ server });
     this.setupWebSocket();
   }
@@ -210,5 +212,7 @@ export class WebSocketManager {
   public close() {
     this.wss.close();
     this.connections.clear();
+    // 关闭HTTP服务器
+    this.server.close();
   }
 }

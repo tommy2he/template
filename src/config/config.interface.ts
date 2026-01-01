@@ -6,6 +6,10 @@ export interface IConfig {
   appName: string;
   appUrl: string;
 
+  // WebSocket配置
+  wsPort: number;
+  wsUrl: string;
+
   // 日志配置
   logLevel: string;
   logFormat: string;

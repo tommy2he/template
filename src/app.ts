@@ -58,7 +58,7 @@ class App {
         console.log('✅ WebSocket服务器已关闭');
       }
 
-      console.log('⏳ 正在关闭HTTP服务器...');
+      console.log('⏳ 正在关闭北向接口服务器...');
       if (this.server) {
         await new Promise<void>((resolve, reject) => {
           this.server!.close((err) => {
@@ -69,7 +69,7 @@ class App {
             }
           });
         });
-        console.log('✅ HTTP服务器已关闭');
+        console.log('✅ 北向接口服务器已关闭');
       }
 
       console.log('⏳ 正在断开数据库连接...');
@@ -95,25 +95,31 @@ class App {
         validateSwaggerConfig();
       }
 
-      // 3. 创建HTTP服务器
+      // 3. 创建Koa应用服务器（北向接口）
       this.server = createServer(this.app.callback());
 
-      // 4. 创建WebSocket服务器并注入到应用上下文
-      this.wsManager = new WebSocketManager(this.server);
+      // 4. 创建WebSocket服务器（南向接口）
+      const wsServer = createServer(); // 用于WebSocket的HTTP服务器
+      wsServer.listen(config.wsPort, () => {
+        console.log(`🌐 WebSocket服务器监听在 ${config.wsUrl}`);
+      });
+
+      // 5. 创建WebSocket管理器并注入到应用上下文
+      this.wsManager = new WebSocketManager(wsServer);
       this.app.context.wsManager = this.wsManager;
 
-      // 5. 启动服务器监听
+      // 6. 启动Koa应用服务器
       this.server.listen(config.port, () => {
         console.log(`
 🚀  ${config.appName} 启动成功！
 📁  环境: ${config.env}
-📍  地址: http://localhost:${config.port} (${config.appUrl})
+📍  北向接口地址: http://localhost:${config.port} (${config.appUrl})
+📡  南向接口地址: ${config.wsUrl}
 📊  API 前缀: ${config.apiPrefix}/${config.apiVersion}
 📈  日志级别: ${config.logLevel}
 🗄️  数据库: ${config.mongodb.uri.replace(/:[^:]*@/, ':****@')}
-🌐  WebSocket: ws://localhost:${config.port}
 📅  时间: ${new Date().toISOString()}
-        `);
+      `);
 
         // 显示Swagger文档地址
         if (config.enableSwagger) {
@@ -130,6 +136,16 @@ class App {
           console.error(`❌ 端口 ${config.port} 已被占用`);
         } else {
           console.error('❌ 服务器错误:', error);
+        }
+        this.gracefulShutdown(1);
+      });
+
+      // 处理WebSocket服务器错误
+      wsServer.on('error', (error: NodeJS.ErrnoException) => {
+        if (error.code === 'EADDRINUSE') {
+          console.error(`❌ WebSocket端口 ${config.wsPort} 已被占用`);
+        } else {
+          console.error('❌ WebSocket服务器错误:', error);
         }
         this.gracefulShutdown(1);
       });

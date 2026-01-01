@@ -21,6 +21,12 @@ const config: IConfig = {
   appName: process.env.APP_NAME || 'Koa Template App',
   appUrl: process.env.APP_URL || 'http://localhost:3000',
 
+  // WebSocket配置
+  wsPort: parseInt(process.env.WS_PORT || '7547'),
+  wsUrl:
+    process.env.WS_URL ||
+    `ws://localhost:${parseInt(process.env.WS_PORT || '7547')}`,
+
   // 日志配置
   logLevel: process.env.LOG_LEVEL || 'info',
   logFormat: process.env.LOG_FORMAT || 'combined',
@@ -133,6 +139,14 @@ if (config.env === 'production') {
       mongodbUri: config.mongodb.uri,
       suggestion: 'Use a managed MongoDB service or remote database',
     });
+  }
+
+  // 添加新的环境验证
+  if (
+    !process.env.JWT_SECRET ||
+    process.env.JWT_SECRET === 'default_dev_secret_change_in_production'
+  ) {
+    throw new Error('JWT_SECRET must be set in production environment');
   }
 }
 
