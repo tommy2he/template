@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { CPEClient } from './cpe-client';
 import dotenv from 'dotenv';
 import path from 'path';

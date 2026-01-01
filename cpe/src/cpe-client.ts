@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios';
 import WebSocket from 'ws';
 import EventEmitter from 'events';
@@ -146,7 +147,10 @@ export class CPEClient extends EventEmitter {
         `${this.config.serverUrl}/api/cpes/${this.config.cpeId}/heartbeat`,
         {
           status: this.isConnected ? 'connected' : 'offline',
-          metrics: this.simulateMetrics ? this.generateMetrics() : undefined,
+          // metrics: this.simulateMetrics ? this.generateMetrics() : undefined,
+          metrics: this.config.simulateMetrics
+            ? this.generateMetrics()
+            : undefined,
         },
         {
           headers: {
