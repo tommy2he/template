@@ -1,12 +1,19 @@
-import { Server as WebSocketServer } from 'ws';
+/* eslint-disable no-console */
+import { Server as WebSocketServer, WebSocket as WS } from 'ws';
 import { Server as HttpServer } from 'http';
 import { parse } from 'url';
 import jwt from 'jsonwebtoken';
 import { CPEModel } from '../db/schemas/cpe.schema';
 
+// 定义WebSocket消息类型
+interface WebSocketMessage {
+  type: string;
+  [key: string]: any;
+}
+
 export class WebSocketManager {
   private wss: WebSocketServer;
-  private connections: Map<string, WebSocket> = new Map();
+  private connections: Map<string, WS> = new Map();
 
   constructor(server: HttpServer) {
     this.wss = new WebSocketServer({ server });
@@ -14,7 +21,7 @@ export class WebSocketManager {
   }
 
   private setupWebSocket() {
-    this.wss.on('connection', async (ws, request) => {
+    this.wss.on('connection', async (ws: WS, request) => {
       try {
         // 解析查询参数
         const url = parse(request.url || '', true);
@@ -42,7 +49,7 @@ export class WebSocketManager {
           { cpeId },
           {
             connectionStatus: 'connected',
-            wsConnectionId: ws.toString(), // 简化表示
+            wsConnectionId: cpeId, // 使用cpeId作为连接ID
             lastSeen: new Date(),
           },
         );
@@ -53,13 +60,18 @@ export class WebSocketManager {
         console.log(`✅ CPE connected: ${cpeId}`);
 
         // 设置消息处理器
-        ws.on('message', async (data) => {
+        ws.on('message', async (data: Buffer) => {
           await this.handleMessage(cpeId, data.toString());
         });
 
         // 设置关闭处理器
         ws.on('close', async () => {
           await this.handleDisconnection(cpeId);
+        });
+
+        // 错误处理
+        ws.on('error', (error) => {
+          console.error(`WebSocket error for ${cpeId}:`, error);
         });
 
         // 发送欢迎消息
@@ -79,7 +91,7 @@ export class WebSocketManager {
 
   private async handleMessage(cpeId: string, message: string) {
     try {
-      const data = JSON.parse(message);
+      const data: WebSocketMessage = JSON.parse(message);
 
       switch (data.type) {
         case 'heartbeat':
@@ -99,7 +111,8 @@ export class WebSocketManager {
     }
   }
 
-  private async handleHeartbeat(cpeId: string, data: any) {
+  // eslint-disable-next-line
+  private async handleHeartbeat(cpeId: string, data: WebSocketMessage) {
     await CPEModel.findOneAndUpdate(
       { cpeId },
       {
@@ -120,7 +133,7 @@ export class WebSocketManager {
     }
   }
 
-  private async handleStatusUpdate(cpeId: string, data: any) {
+  private async handleStatusUpdate(cpeId: string, data: WebSocketMessage) {
     // 这里可以处理设备状态上报
     console.log(`Status update from ${cpeId}:`, data);
 
@@ -137,7 +150,7 @@ export class WebSocketManager {
     );
   }
 
-  private async handleConfigurationAck(cpeId: string, data: any) {
+  private async handleConfigurationAck(cpeId: string, data: WebSocketMessage) {
     console.log(`Configuration acknowledged by ${cpeId}:`, data);
 
     // 更新配置状态
@@ -167,10 +180,12 @@ export class WebSocketManager {
   }
 
   // 向特定CPE发送消息
-  public async sendToCPE(cpeId: string, message: any) {
+  public async sendToCPE(
+    cpeId: string,
+    message: WebSocketMessage,
+  ): Promise<boolean> {
     const ws = this.connections.get(cpeId);
-    if (ws && ws.readyState === 1) {
-      // WebSocket.OPEN = 1
+    if (ws && ws.readyState === ws.OPEN) {
       ws.send(JSON.stringify(message));
       return true;
     }
@@ -178,9 +193,9 @@ export class WebSocketManager {
   }
 
   // 广播消息给所有CPE
-  public broadcast(message: any) {
+  public broadcast(message: WebSocketMessage) {
     this.connections.forEach((ws) => {
-      if (ws.readyState === 1) {
+      if (ws.readyState === ws.OPEN) {
         ws.send(JSON.stringify(message));
       }
     });

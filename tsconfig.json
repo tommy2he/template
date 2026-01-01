@@ -21,10 +21,19 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@config/*": ["src/config/*"],
       "@middleware/*": ["src/middleware/*"],
       "@routes/*": ["src/routes/*"],
+      "@controllers/*": ["src/routes/controllers/*"],
+      "@api/*": ["src/routes/api/*"],
+      "@web/*": ["src/routes/web/*"],
+      "@db/*": ["src/db/*"],
+      "@models/*": ["src/db/models/*"],
+      "@schemas/*": ["src/db/schemas/*"],
+      "@repositories/*": ["src/db/repositories/*"],
       "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
+      "@websocket/*": ["src/websocket/*"],
+      "@test/*": ["test/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", "types/**/*.d.ts", ".env.*"],

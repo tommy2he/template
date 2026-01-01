@@ -21,3 +21,4 @@ declare module '@/utils/validator';
 declare module '@/config';
 declare module '@/middleware';
 declare module '@/routes';
+declare module '@/websocket';
