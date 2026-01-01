@@ -1,97 +1,92 @@
+// /cpe/src/cpe-client.ts - 支持UDP唤醒的完整CPE客户端
 /* eslint-disable no-console */
-import axios from 'axios';
 import WebSocket from 'ws';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
+import { UDPClient } from './udp-client';
 
-interface CPEClientConfig {
-  deviceId: string;
+export interface CPEClientConfig {
   cpeId: string;
+  deviceId: string;
   manufacturer: string;
   model: string;
-  serverUrl: string;
-  wsUrl: string;
+  acsUrl: string;
+  acsIp: string;
+  acsUdpPort: number;
   heartbeatInterval: number;
   capabilities: string[];
   simulateMetrics: boolean;
-  metricsInterval: number;
-}
-
-interface RegistrationResponse {
-  success: boolean;
-  cpeId: string;
-  token: string;
-  wsConnectionUrl: string;
-  heartbeatInterval: number;
 }
 
 export class CPEClient extends EventEmitter {
   private config: CPEClientConfig;
-  private token: string | null = null;
-  private wsConnectionUrl: string | null = null;
   private ws: WebSocket | null = null;
+  private udpClient: UDPClient;
   private heartbeatTimer: NodeJS.Timeout | null = null;
-  private metricsTimer: NodeJS.Timeout | null = null;
+  private sessionId: string | null = null;
   private isConnected = false;
-  private currentConfiguration: Record<string, any> = {};
-  private pendingConfiguration: Record<string, any> | null = null;
+  private isRegistered = false;
 
   constructor(config: CPEClientConfig) {
     super();
     this.config = config;
+    this.udpClient = new UDPClient(config.acsIp, config.acsUdpPort);
+    this.setupUDPListeners();
   }
 
-  // 注册到主应用
-  async register(): Promise<RegistrationResponse> {
-    console.log('📝 正在注册到主应用...');
+  private setupUDPListeners() {
+    // 监听UDP唤醒消息
+    this.udpClient.on('wakeup', (data: any) => {
+      console.log('🔔 收到ACS唤醒指令，建立WebSocket连接...');
+      this.connectToACS();
+    });
 
-    try {
-      const response = await axios.post(
-        `${this.config.serverUrl}/api/cpes/register`,
-        {
-          deviceId: this.config.deviceId,
-          cpeId: this.config.cpeId,
-          capabilities: this.config.capabilities,
-          metadata: {
-            manufacturer: this.config.manufacturer,
-            model: this.config.model,
-            firmwareVersion: '1.0.0',
-            ipAddress: this.getLocalIP(),
-            macAddress: this.generateMacAddress(),
-          },
-        },
-      );
-
-      if (response.data.success) {
-        this.token = response.data.token;
-        this.wsConnectionUrl = response.data.wsConnectionUrl;
-
-        console.log('✅ 注册成功');
-        console.log(`🔐 Token: ${this.token?.substring(0, 20)}...`);
-        console.log(`📡 WebSocket URL: ${this.wsConnectionUrl}`);
-
-        return response.data;
-      } else {
-        throw new Error('Registration failed');
-      }
-    } catch (error: any) {
-      console.error('❌ 注册失败:', error.message);
-      if (error.response) {
-        console.error('响应数据:', error.response.data);
-      }
-      throw error;
-    }
+    // 监听其他UDP消息
+    this.udpClient.on('message', (message: any) => {
+      console.log('📨 处理UDP消息:', message.type);
+    });
   }
 
-  // 连接WebSocket
-  async connectWebSocket(): Promise<void> {
-    if (!this.token || !this.wsConnectionUrl) {
-      throw new Error('Not registered or missing token');
+  // CPE启动入口
+  public async start(): Promise<void> {
+    console.log('🚀 CPE客户端启动');
+    console.log('='.repeat(50));
+    console.log(`📱 CPE ID: ${this.config.cpeId}`);
+    console.log(`🏭 厂商: ${this.config.manufacturer}`);
+    console.log(`📦 型号: ${this.config.model}`);
+    console.log(`📡 ACS地址: ${this.config.acsUrl}`);
+    console.log('='.repeat(50));
+
+    // 1. 先发送UDP Inform通知ACS
+    console.log('📢 发送UDP Inform消息到ACS...');
+    this.udpClient.sendInform(this.config.cpeId, {
+      manufacturer: this.config.manufacturer,
+      model: this.config.model,
+      capabilities: this.config.capabilities,
+    });
+
+    // 2. 建立WebSocket连接
+    await this.connectToACS();
+
+    // 3. 通过WebSocket发送Inform消息
+    await this.sendInform();
+
+    // 4. 启动心跳
+    this.startHeartbeat();
+
+    console.log('✅ CPE客户端启动完成');
+  }
+
+  // 建立WebSocket连接
+  private async connectToACS(): Promise<void> {
+    if (this.ws && this.isConnected) {
+      console.log('🔗 WebSocket已连接，跳过重复连接');
+      return;
     }
+
+    console.log(`🔗 正在连接ACS: ${this.config.acsUrl}...`);
 
     return new Promise((resolve, reject) => {
-      console.log('🔗 正在连接WebSocket...');
-
-      this.ws = new WebSocket(this.wsConnectionUrl!);
+      this.ws = new WebSocket(this.config.acsUrl);
 
       this.ws.on('open', () => {
         console.log('✅ WebSocket连接已建立');
@@ -100,138 +95,107 @@ export class CPEClient extends EventEmitter {
         resolve();
       });
 
-      this.ws.on('message', (data) => {
+      this.ws.on('message', (data: Buffer) => {
         this.handleWebSocketMessage(data.toString());
       });
 
       this.ws.on('close', (code, reason) => {
         console.log(`🔌 WebSocket连接关闭: ${code} - ${reason}`);
         this.isConnected = false;
+        this.isRegistered = false;
         this.emit('disconnected', { code, reason });
 
         // 尝试重连
         setTimeout(() => {
           if (!this.isConnected) {
             console.log('🔄 尝试重新连接...');
-            this.connectWebSocket().catch(console.error);
+            this.connectToACS().catch(console.error);
           }
         }, 5000);
       });
 
       this.ws.on('error', (error) => {
-        console.error('❌ WebSocket错误:', error.message);
-        this.isConnected = false;
+        console.error('❌ WebSocket连接错误:', error);
         reject(error);
       });
     });
   }
 
-  // 启动心跳
-  startHeartbeat(): void {
-    console.log(`💓 启动心跳，间隔: ${this.config.heartbeatInterval}秒`);
-
-    this.heartbeatTimer = setInterval(async () => {
-      await this.sendHeartbeat();
-    }, this.config.heartbeatInterval * 1000);
-
-    // 立即发送第一次心跳
-    setTimeout(() => this.sendHeartbeat(), 1000);
-  }
-
-  // 发送心跳
-  private async sendHeartbeat(): Promise<void> {
-    if (!this.token) return;
-
-    try {
-      const response = await axios.post(
-        `${this.config.serverUrl}/api/cpes/${this.config.cpeId}/heartbeat`,
-        {
-          status: this.isConnected ? 'connected' : 'offline',
-          // metrics: this.simulateMetrics ? this.generateMetrics() : undefined,
-          metrics: this.config.simulateMetrics
-            ? this.generateMetrics()
-            : undefined,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        },
-      );
-
-      if (response.data.hasPendingConfiguration) {
-        console.log('📥 有待处理的配置更新');
-        await this.fetchPendingConfiguration();
-      }
-
-      this.emit('heartbeat', response.data);
-    } catch (error: any) {
-      console.error('❌ 心跳发送失败:', error.message);
-
-      // 如果心跳失败，可能是token过期，尝试重新注册
-      if (error.response?.status === 401) {
-        console.log('🔐 Token可能过期，尝试重新注册...');
-        await this.register();
-      }
+  // 发送TR-069 Inform消息
+  private async sendInform(): Promise<void> {
+    if (!this.ws || !this.isConnected) {
+      throw new Error('WebSocket未连接');
     }
-  }
 
-  // 启动指标模拟
-  startMetricsSimulation(): void {
-    console.log('📊 启动指标模拟');
+    const sessionId = `sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    this.sessionId = sessionId;
 
-    this.metricsTimer = setInterval(() => {
-      this.reportStatus();
-    }, this.config.metricsInterval * 1000);
+    const informMessage = {
+      type: 'inform',
+      sessionId,
+      cpeId: this.config.cpeId,
+      timestamp: Date.now(),
+      data: {
+        deviceInfo: {
+          manufacturer: this.config.manufacturer,
+          model: this.config.model,
+          serialNumber: this.config.cpeId,
+          softwareVersion: '1.0.0',
+          hardwareVersion: '1.0',
+          oui: this.config.manufacturer.substring(0, 6).toUpperCase(),
+          productClass: this.config.model,
+        },
+        event: '1 BOOT', // BOOT事件
+        parameterList: [
+          'InternetGatewayDevice.DeviceSummary',
+          'InternetGatewayDevice.DeviceInfo',
+          'InternetGatewayDevice.ManagementServer',
+        ],
+      },
+    };
 
-    // 立即上报一次状态
-    setTimeout(() => this.reportStatus(), 2000);
-  }
-
-  // 上报状态
-  private async reportStatus(): Promise<void> {
-    if (!this.isConnected || !this.ws) return;
-
-    const metrics = this.generateMetrics();
-
-    this.ws.send(
-      JSON.stringify({
-        type: 'status',
-        metrics,
-        timestamp: new Date().toISOString(),
-        configuration: this.currentConfiguration,
-      }),
-    );
-
-    this.emit('status', metrics);
+    this.ws.send(JSON.stringify(informMessage));
+    console.log('📨 已发送Inform消息');
   }
 
   // 处理WebSocket消息
   private handleWebSocketMessage(message: string): void {
     try {
       const data = JSON.parse(message);
+      console.log(`📨 收到WebSocket消息: ${data.type}`);
 
       switch (data.type) {
-        case 'welcome':
-          console.log('👋 收到欢迎消息:', data.message);
+        case 'connection_ack':
+          console.log('👋 收到连接确认');
           break;
 
-        case 'heartbeat_ack':
+        case 'informResponse':
+          console.log('✅ Inform消息已确认');
+          this.isRegistered = true;
+          this.emit('registered', data);
+          break;
+
+        case 'heartbeatResponse':
           // console.log('💓 心跳确认');
           break;
 
-        case 'configuration_update':
-          console.log('⚙️ 收到配置更新:', data.configuration);
-          this.handleConfigurationUpdate(data.configuration);
+        case 'setParameterValues':
+          console.log('⚙️ 收到参数设置请求:', data.data);
+          this.handleSetParameterValues(data);
           break;
 
-        case 'disconnect':
-          console.log('🔌 收到断开连接请求:', data.reason);
-          this.shutdown();
+        case 'getParameterValues':
+          console.log('📊 收到参数获取请求');
+          this.handleGetParameterValues(data);
+          break;
+
+        case 'download':
+          console.log('📥 收到下载请求:', data.data?.fileUrl);
+          this.handleDownload(data);
           break;
 
         default:
-          console.log('📨 收到未知消息类型:', data.type);
+          console.warn(`📨 未知消息类型: ${data.type}`);
       }
 
       this.emit('message', data);
@@ -240,100 +204,101 @@ export class CPEClient extends EventEmitter {
     }
   }
 
-  // 处理配置更新
-  private async handleConfigurationUpdate(
-    configuration: Record<string, any>,
-  ): Promise<void> {
-    this.pendingConfiguration = configuration;
+  // 启动心跳
+  private startHeartbeat(): void {
+    console.log(`💓 启动心跳，间隔: ${this.config.heartbeatInterval}秒`);
 
-    // 模拟应用配置的过程
-    console.log('🔧 正在应用配置...');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.heartbeatTimer = setInterval(() => {
+      this.sendHeartbeat();
+    }, this.config.heartbeatInterval * 1000);
 
-    // 更新当前配置
-    this.currentConfiguration = {
-      ...this.currentConfiguration,
-      ...configuration,
+    // 立即发送第一次心跳
+    setTimeout(() => this.sendHeartbeat(), 1000);
+  }
+
+  private sendHeartbeat(): void {
+    if (!this.ws || !this.isConnected) {
+      return;
+    }
+
+    // 同时发送UDP和WebSocket心跳
+    this.udpClient.sendHeartbeat(this.config.cpeId);
+
+    const heartbeatMessage = {
+      type: 'heartbeat',
+      cpeId: this.config.cpeId,
+      sessionId: this.sessionId,
+      timestamp: Date.now(),
+      data: {
+        status: 'alive',
+        uptime: process.uptime(),
+      },
     };
 
-    // 发送确认
+    this.ws.send(JSON.stringify(heartbeatMessage));
+  }
+
+  // 处理参数设置
+  private handleSetParameterValues(data: any): void {
+    const parameters = data.data?.parameters || {};
+
+    // 模拟应用参数
+    console.log('🔧 应用参数:', parameters);
+
+    // 发送响应
     if (this.ws && this.isConnected) {
-      this.ws.send(
-        JSON.stringify({
-          type: 'configuration_ack',
-          configuration: this.currentConfiguration,
-          timestamp: new Date().toISOString(),
-        }),
-      );
-    }
-
-    console.log('✅ 配置已应用');
-    this.pendingConfiguration = null;
-
-    this.emit('configurationUpdated', this.currentConfiguration);
-  }
-
-  // 获取待处理的配置
-  private async fetchPendingConfiguration(): Promise<void> {
-    try {
-      const response = await axios.get(
-        `${this.config.serverUrl}/api/cpes/${this.config.cpeId}`,
-      );
-
-      if (response.data.pendingConfiguration) {
-        console.log('📥 获取到待处理配置');
-        await this.handleConfigurationUpdate(
-          response.data.pendingConfiguration,
-        );
-      }
-    } catch (error) {
-      console.error('❌ 获取配置失败:', error);
+      const response = {
+        type: 'setParameterValuesResponse',
+        sessionId: data.sessionId,
+        status: 0, // 成功
+        timestamp: Date.now(),
+      };
+      this.ws.send(JSON.stringify(response));
     }
   }
 
-  // 生成模拟指标
-  private generateMetrics(): Record<string, any> {
-    return {
-      cpu: {
-        usage: Math.random() * 100,
-        temperature: 40 + Math.random() * 20,
-      },
-      memory: {
-        total: 1024,
-        used: 512 + Math.random() * 256,
-        free: 256 - Math.random() * 128,
-      },
-      network: {
-        up: Math.random() * 1000,
-        down: Math.random() * 1000,
-        connections: Math.floor(Math.random() * 100),
-      },
-      wifi: {
-        clients: Math.floor(Math.random() * 10),
-        signal: -30 - Math.random() * 40,
-      },
+  // 处理参数获取
+  private handleGetParameterValues(data: any): void {
+    // 模拟返回参数值
+    const parameters = {
+      'InternetGatewayDevice.DeviceInfo.Manufacturer': this.config.manufacturer,
+      'InternetGatewayDevice.DeviceInfo.ModelName': this.config.model,
+      'InternetGatewayDevice.DeviceInfo.SoftwareVersion': '1.0.0',
+      'InternetGatewayDevice.ManagementServer.ConnectionRequestURL': `http://${this.config.cpeId}:7547`,
     };
-  }
 
-  // 获取本地IP（模拟）
-  private getLocalIP(): string {
-    return `192.168.1.${Math.floor(Math.random() * 100) + 100}`;
-  }
-
-  // 生成MAC地址（模拟）
-  private generateMacAddress(): string {
-    const hex = '0123456789ABCDEF';
-    let mac = '';
-    for (let i = 0; i < 6; i++) {
-      mac += hex[Math.floor(Math.random() * 16)];
-      mac += hex[Math.floor(Math.random() * 16)];
-      if (i < 5) mac += ':';
+    if (this.ws && this.isConnected) {
+      const response = {
+        type: 'getParameterValuesResponse',
+        sessionId: data.sessionId,
+        parameters,
+        timestamp: Date.now(),
+      };
+      this.ws.send(JSON.stringify(response));
     }
-    return mac;
+  }
+
+  // 处理下载请求
+  private handleDownload(data: any): void {
+    // 模拟下载过程
+    console.log('⏬ 开始下载:', data.data?.fileUrl);
+
+    // 发送下载进度
+    setTimeout(() => {
+      if (this.ws && this.isConnected) {
+        const response = {
+          type: 'downloadResponse',
+          sessionId: data.sessionId,
+          status: 0,
+          timestamp: Date.now(),
+        };
+        this.ws.send(JSON.stringify(response));
+      }
+    }, 2000);
   }
 
   // 关闭客户端
-  async shutdown(): Promise<void> {
+  public async shutdown(): Promise<void> {
     console.log('🛑 正在关闭CPE客户端...');
 
     // 清理定时器
@@ -342,29 +307,28 @@ export class CPEClient extends EventEmitter {
       this.heartbeatTimer = null;
     }
 
-    if (this.metricsTimer) {
-      clearInterval(this.metricsTimer);
-      this.metricsTimer = null;
-    }
-
     // 关闭WebSocket
     if (this.ws) {
       this.ws.close();
       this.ws = null;
     }
 
+    // 关闭UDP客户端
+    this.udpClient.close();
+
     this.isConnected = false;
+    this.isRegistered = false;
 
     console.log('✅ CPE客户端已关闭');
   }
 
   // 获取当前状态
-  getStatus() {
+  public getStatus() {
     return {
-      isConnected: this.isConnected,
       cpeId: this.config.cpeId,
-      currentConfiguration: this.currentConfiguration,
-      pendingConfiguration: this.pendingConfiguration,
+      isConnected: this.isConnected,
+      isRegistered: this.isRegistered,
+      sessionId: this.sessionId,
       lastHeartbeat: new Date().toISOString(),
     };
   }

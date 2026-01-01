@@ -1,153 +1,21 @@
-/* eslint-disable no-console */
+// /src/routes/api/cpes.ts - 管理API
 import Router from 'koa-router';
-import { CPEModel } from '@/db/schemas/cpe.schema';
-import jwt from 'jsonwebtoken';
-import { WebSocketManager } from '@/websocket/server';
-import config from '@/config';
+import { CPEModel } from '../../db/schemas/cpe.schema';
 
 const router = new Router({ prefix: '/api/cpes' });
 
-// 定义请求体类型接口
-interface RegisterCPEBody {
-  deviceId: string;
-  cpeId: string;
-  capabilities?: string[];
-  metadata?: Record<string, any>;
-}
-
-interface HeartbeatBody {
-  status?: string;
-  metrics?: Record<string, any>;
-}
-
-// 为 Koa 上下文添加 wsManager 属性
+// 声明扩展的Context类型
 declare module 'koa' {
   interface Context {
-    wsManager?: WebSocketManager;
+    wsManager?: any;
+    udpServer?: any;
   }
 }
 
-// CPE注册接口
-router.post('/register', async (ctx) => {
-  try {
-    const body = ctx.request.body as RegisterCPEBody;
-    const { deviceId, cpeId, capabilities = [], metadata = {} } = body;
-
-    // 验证必填字段
-    if (!deviceId || !cpeId) {
-      ctx.status = 400;
-      ctx.body = { error: 'deviceId and cpeId are required' };
-      return;
-    }
-
-    // 检查是否已注册
-    let cpe = await CPEModel.findOne({ cpeId });
-
-    if (cpe) {
-      // 更新现有CPE
-      cpe = await CPEModel.findOneAndUpdate(
-        { cpeId },
-        {
-          deviceId,
-          capabilities,
-          metadata,
-          connectionStatus: 'registered',
-          lastSeen: new Date(),
-        },
-        { new: true },
-      );
-    } else {
-      // 创建新CPE
-      cpe = await CPEModel.create({
-        deviceId,
-        cpeId,
-        capabilities,
-        metadata,
-        connectionStatus: 'registered',
-        configuration: {},
-        heartbeatInterval: 30,
-      });
-    }
-
-    // 检查 cpe 是否创建成功
-    if (!cpe) {
-      ctx.status = 500;
-      ctx.body = { error: 'Failed to create or update CPE' };
-      return;
-    }
-
-    // 生成JWT令牌用于WebSocket连接
-    const token = jwt.sign(
-      { cpeId, deviceId },
-      process.env.JWT_SECRET || 'secret',
-      { expiresIn: '7d' },
-    );
-
-    // WebSocket连接URL
-    // const host = ctx.request.host;
-    // const protocol = ctx.request.protocol === 'https' ? 'wss' : 'ws';
-    // const wsUrl = process.env.WS_URL || `${protocol}://${host}`;
-    // const wsConnectionUrl = `${wsUrl}?token=${token}&cpeId=${cpeId}`;
-    const wsConnectionUrl = `${config.wsUrl}?token=${token}&cpeId=${cpeId}`;
-
-    ctx.status = 201;
-    ctx.body = {
-      success: true,
-      cpeId: cpe.cpeId,
-      token,
-      wsConnectionUrl,
-      heartbeatInterval: cpe.heartbeatInterval,
-      message: 'CPE registered successfully',
-    };
-  } catch (error) {
-    console.error('CPE registration error:', error);
-    ctx.status = 500;
-    ctx.body = { error: 'Internal server error' };
-  }
-});
-
-// CPE心跳接口
-router.post('/:cpeId/heartbeat', async (ctx) => {
-  try {
-    const { cpeId } = ctx.params;
-    const body = ctx.request.body as HeartbeatBody;
-    const { status, metrics } = body;
-
-    const cpe = await CPEModel.findOneAndUpdate(
-      { cpeId },
-      {
-        lastHeartbeat: new Date(),
-        lastSeen: new Date(),
-        ...(status && { connectionStatus: status }),
-        ...(metrics && { metadata: { ...metrics } }),
-      },
-      { new: true },
-    );
-
-    if (!cpe) {
-      ctx.status = 404;
-      ctx.body = { error: 'CPE not found' };
-      return;
-    }
-
-    ctx.body = {
-      success: true,
-      cpeId: cpe.cpeId,
-      nextHeartbeatIn: cpe.heartbeatInterval,
-      hasPendingConfiguration: !!cpe.pendingConfiguration,
-      timestamp: new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error('Heartbeat error:', error);
-    ctx.status = 500;
-    ctx.body = { error: 'Internal server error' };
-  }
-});
-
-// 获取CPE列表
+// 获取所有CPE（管理用）
 router.get('/', async (ctx) => {
   try {
-    const { status, page = 1, limit = 20 } = ctx.query;
+    const { page = 1, limit = 20, status } = ctx.query;
 
     const query: any = {};
     if (status) query.connectionStatus = status;
@@ -163,6 +31,7 @@ router.get('/', async (ctx) => {
     ]);
 
     ctx.body = {
+      success: true,
       data: cpes,
       total,
       page: Number(page),
@@ -170,17 +39,16 @@ router.get('/', async (ctx) => {
       totalPages: Math.ceil(total / Number(limit)),
     };
   } catch (error) {
-    console.error('Get CPEs error:', error);
+    console.error('获取CPE列表错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }
 });
 
-// 获取单个CPE
+// 获取单个CPE详情
 router.get('/:cpeId', async (ctx) => {
   try {
     const { cpeId } = ctx.params;
-
     const cpe = await CPEModel.findOne({ cpeId });
 
     if (!cpe) {
@@ -189,25 +57,22 @@ router.get('/:cpeId', async (ctx) => {
       return;
     }
 
-    ctx.body = cpe;
+    ctx.body = {
+      success: true,
+      data: cpe,
+    };
   } catch (error) {
-    console.error('Get CPE error:', error);
+    console.error('获取CPE详情错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }
 });
 
-// 向CPE下发配置
-router.post('/:cpeId/configuration', async (ctx) => {
+// 唤醒CPE（通过UDP）
+router.post('/:cpeId/wakeup', async (ctx) => {
   try {
     const { cpeId } = ctx.params;
-    const configuration = ctx.request.body as Record<string, any>;
-
-    const cpe = await CPEModel.findOneAndUpdate(
-      { cpeId },
-      { pendingConfiguration: configuration },
-      { new: true },
-    );
+    const cpe = await CPEModel.findOne({ cpeId });
 
     if (!cpe) {
       ctx.status = 404;
@@ -215,84 +80,109 @@ router.post('/:cpeId/configuration', async (ctx) => {
       return;
     }
 
-    // 尝试通过WebSocket实时推送配置
-    // 这里需要注入WebSocketManager实例
-    // const wsManager = ctx.wsManager;
-    // 以下修改避开编译器检查
-    const wsManager = (ctx as any).wsManager;
-    if (!wsManager) {
-      console.error('WebSocket manager not available in context');
-      ctx.status = 500;
-      ctx.body = { error: 'Internal server error' };
+    // 如果没有IP地址，无法唤醒
+    if (!cpe.ipAddress) {
+      ctx.status = 400;
+      ctx.body = { error: 'CPE has no IP address' };
       return;
     }
 
-    if (wsManager) {
-      const sent = await wsManager.sendToCPE(cpeId, {
-        type: 'configuration_update',
-        configuration,
+    // 通过UDP服务器发送唤醒包
+    const udpServer = ctx.udpServer;
+    if (udpServer) {
+      udpServer.wakeUpCPE(cpe.ipAddress, cpe.wakeupPort || 7548);
+
+      // 更新最后唤醒时间
+      await CPEModel.updateOne({ cpeId }, { lastWakeupCall: new Date() });
+
+      ctx.body = {
+        success: true,
+        message: `Wakeup signal sent to ${cpe.ipAddress}:${cpe.wakeupPort}`,
         timestamp: new Date().toISOString(),
-      });
-
-      if (sent) {
-        ctx.body = {
-          success: true,
-          message: 'Configuration sent via WebSocket',
-          delivered: true,
-        };
-        return;
-      }
+      };
+    } else {
+      ctx.status = 500;
+      ctx.body = { error: 'UDP server not available' };
     }
-
-    // 如果WebSocket不可用，CPE将在下次心跳时获取配置
-    ctx.body = {
-      success: true,
-      message: 'Configuration queued for next heartbeat',
-      delivered: false,
-    };
   } catch (error) {
-    console.error('Configuration error:', error);
+    console.error('唤醒CPE错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }
 });
 
-// 断开CPE连接（管理端）
-router.post('/:cpeId/disconnect', async (ctx) => {
+// 向CPE下发配置（通过WebSocket）
+router.post('/:cpeId/configuration', async (ctx) => {
   try {
     const { cpeId } = ctx.params;
+    const configuration = ctx.request.body as Record<string, any>;
 
-    // 更新数据库状态
-    await CPEModel.findOneAndUpdate(
-      { cpeId },
-      { connectionStatus: 'offline', wsConnectionId: null },
-    );
-
-    // 通过WebSocket断开连接
-    // const wsManager = ctx.wsManager;
-    // 以下修改避开编译器检查
-    const wsManager = (ctx as any).wsManager;
+    const wsManager = ctx.wsManager;
     if (!wsManager) {
-      console.error('WebSocket manager not available in context');
       ctx.status = 500;
-      ctx.body = { error: 'Internal server error' };
+      ctx.body = { error: 'WebSocket manager not available' };
       return;
     }
 
+    // 发送配置更新消息
+    const sent = wsManager.sendToCPE(cpeId, {
+      type: 'setParameterValues',
+      timestamp: Date.now(),
+      data: {
+        parameters: configuration,
+      },
+    });
+
+    if (sent) {
+      // 保存为待处理配置
+      await CPEModel.updateOne({ cpeId }, { pendingConfig: configuration });
+
+      ctx.body = {
+        success: true,
+        message: 'Configuration sent via WebSocket',
+        delivered: true,
+      };
+    } else {
+      // CPE不在线，保存到待处理配置
+      await CPEModel.updateOne({ cpeId }, { pendingConfig: configuration });
+
+      ctx.body = {
+        success: true,
+        message: 'Configuration queued (CPE offline)',
+        delivered: false,
+      };
+    }
+  } catch (error) {
+    console.error('下发配置错误:', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Internal server error' };
+  }
+});
+
+// 断开CPE连接（管理用）
+router.post('/:cpeId/disconnect', async (ctx) => {
+  try {
+    const { cpeId } = ctx.params;
+    const wsManager = ctx.wsManager;
+
     if (wsManager) {
-      await wsManager.sendToCPE(cpeId, {
+      // 发送断开连接消息
+      wsManager.sendToCPE(cpeId, {
         type: 'disconnect',
-        reason: 'Admin requested',
-        timestamp: new Date().toISOString(),
+        reason: 'Admin request',
+        timestamp: Date.now(),
       });
     }
+
+    // 更新状态
+    await CPEModel.updateOne({ cpeId }, { connectionStatus: 'disconnected' });
 
     ctx.body = {
       success: true,
       message: 'Disconnect request sent',
     };
   } catch (error) {
-    console.error('Disconnect error:', error);
+    console.error('断开连接错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }

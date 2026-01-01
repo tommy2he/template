@@ -37,6 +37,7 @@
     "nosniff",
     "pids",
     "Segoe",
+    "sess",
     "Tahoma",
     "taskkill",
     "testtesttest",
@@ -45,6 +46,7 @@
     "Ubiquiti",
     "UBNT",
     "Verdana",
-    "virtuals"
+    "virtuals",
+    "wakeup"
   ]
 }

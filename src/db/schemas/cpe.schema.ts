@@ -1,74 +1,140 @@
+// /src/db/schemas/cpe.schema.ts - 最终版
 import { Schema, model } from 'mongoose';
 
 export interface ICPE {
-  deviceId: string; // 关联的设备ID
-  cpeId: string; // CPE唯一标识
-  connectionStatus: 'offline' | 'connecting' | 'connected' | 'registered';
-  wsConnectionId?: string; // WebSocket连接ID
-  lastHeartbeat: Date; // 最后心跳时间
-  heartbeatInterval: number; // 心跳间隔(秒)
-  reconnectAttempts: number; // 重连尝试次数
-  lastSeen: Date; // 最后通信时间
-  capabilities: string[]; // 支持的设备能力
-  configuration: Record<string, any>; // 当前配置
-  pendingConfiguration?: Record<string, any>; // 待下发配置
-  metadata: Record<string, any>; // 元数据
+  // 标识信息
+  cpeId: string;
+  deviceId: string;
+  serialNumber?: string;
+  macAddress?: string;
+
+  // 连接状态
+  connectionStatus: 'disconnected' | 'connecting' | 'connected' | 'registered';
+  wsConnectionId?: string;
+  sessionId?: string;
+
+  // TR-069标准信息
+  oui?: string;
+  productClass?: string;
+  softwareVersion?: string;
+  hardwareVersion?: string;
+
+  // 设备信息
+  manufacturer?: string;
+  model?: string;
+  ipAddress?: string;
+
+  // 网络信息
+  capabilities: string[];
+
+  // 配置管理
+  currentConfig: Record<string, any>;
+  pendingConfig?: Record<string, any>;
+  lastConfigUpdate?: Date;
+
+  // 心跳管理
+  lastHeartbeat: Date;
+  heartbeatInterval: number;
+
+  // 唤醒信息
+  lastWakeupCall?: Date;
+  wakeupPort?: number;
+
+  // 元数据
+  metadata: Record<string, any>;
+
+  // 统计信息
+  uptime: number;
+  rebootCount: number;
+  lastBoot?: Date;
+
+  // 时间戳
+  firstSeen: Date;
+  lastSeen: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const cpeSchema = new Schema<ICPE>(
   {
-    deviceId: {
-      type: String,
-      required: true,
-      ref: 'Device',
-      index: true,
-    },
     cpeId: {
       type: String,
       required: true,
       unique: true,
       index: true,
     },
+    deviceId: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    serialNumber: String,
+    macAddress: String,
+
     connectionStatus: {
       type: String,
-      enum: ['offline', 'connecting', 'connected', 'registered'],
-      default: 'offline',
+      enum: ['disconnected', 'connecting', 'connected', 'registered'],
+      default: 'disconnected',
     },
-    wsConnectionId: {
-      type: String,
-      sparse: true,
+    wsConnectionId: String,
+    sessionId: String,
+
+    // TR-069
+    oui: String,
+    productClass: String,
+    softwareVersion: String,
+    hardwareVersion: String,
+
+    manufacturer: String,
+    model: String,
+    ipAddress: String,
+
+    capabilities: [String],
+
+    currentConfig: {
+      type: Schema.Types.Mixed,
+      default: {},
     },
+    pendingConfig: Schema.Types.Mixed,
+    lastConfigUpdate: Date,
+
     lastHeartbeat: {
       type: Date,
       default: Date.now,
     },
     heartbeatInterval: {
       type: Number,
-      default: 30, // 默认30秒
+      default: 30,
     },
-    reconnectAttempts: {
+
+    lastWakeupCall: Date,
+    wakeupPort: {
+      type: Number,
+      default: 7548,
+    },
+
+    metadata: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+
+    uptime: {
       type: Number,
       default: 0,
+    },
+    rebootCount: {
+      type: Number,
+      default: 0,
+    },
+    lastBoot: Date,
+
+    firstSeen: {
+      type: Date,
+      default: Date.now,
     },
     lastSeen: {
       type: Date,
       default: Date.now,
-    },
-    capabilities: [
-      {
-        type: String,
-      },
-    ],
-    configuration: {
-      type: Schema.Types.Mixed,
-      default: {},
-    },
-    pendingConfiguration: {
-      type: Schema.Types.Mixed,
-    },
-    metadata: {
-      type: Schema.Types.Mixed,
-      default: {},
     },
   },
   {
@@ -76,9 +142,10 @@ const cpeSchema = new Schema<ICPE>(
   },
 );
 
-// 索引
-cpeSchema.index({ connectionStatus: 1 });
+// 索引优化
+cpeSchema.index({ connectionStatus: 1, lastSeen: -1 });
+cpeSchema.index({ ipAddress: 1 });
 cpeSchema.index({ lastHeartbeat: 1 });
-cpeSchema.index({ lastSeen: -1 });
+cpeSchema.index({ manufacturer: 1, model: 1 });
 
 export const CPEModel = model<ICPE>('CPE', cpeSchema);

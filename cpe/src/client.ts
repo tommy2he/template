@@ -1,3 +1,4 @@
+// /cpe/src/client.ts - 更新版
 /* eslint-disable no-console */
 import { CPEClient } from './cpe-client';
 import dotenv from 'dotenv';
@@ -13,9 +14,10 @@ const cpeConfig = {
   manufacturer: process.env.CPE_MANUFACTURER || 'TP-Link',
   model: process.env.CPE_MODEL || 'Archer C7',
 
-  // 服务器配置
-  serverUrl: process.env.SERVER_URL || 'http://localhost:3000',
-  wsUrl: process.env.WS_URL || 'ws://localhost:7547',
+  // ACS服务器配置
+  acsUrl: process.env.ACS_WS_URL || 'ws://localhost:7547',
+  acsIp: process.env.ACS_IP || 'localhost',
+  acsUdpPort: parseInt(process.env.ACS_UDP_PORT || '7548'),
 
   // 心跳配置
   heartbeatInterval: parseInt(process.env.HEARTBEAT_INTERVAL || '30'),
@@ -27,38 +29,18 @@ const cpeConfig = {
 
   // 模拟配置
   simulateMetrics: process.env.SIMULATE_METRICS !== 'false',
-  metricsInterval: parseInt(process.env.METRICS_INTERVAL || '60'),
 };
 
 async function main() {
-  console.log('🚀 启动模拟CPE客户端');
-  console.log('='.repeat(50));
-  console.log(`📱 CPE ID: ${cpeConfig.cpeId}`);
-  console.log(`🔗 服务器: ${cpeConfig.serverUrl}`);
-  console.log(`💓 心跳间隔: ${cpeConfig.heartbeatInterval}秒`);
-  console.log(`🔧 设备能力: ${cpeConfig.capabilities.join(', ')}`);
+  console.log('🚀 启动模拟CPE客户端 (支持UDP唤醒)');
   console.log('='.repeat(50));
 
   try {
     // 创建CPE客户端
     const cpeClient = new CPEClient(cpeConfig);
 
-    // 注册到服务器
-    await cpeClient.register();
-
-    // 启动心跳
-    cpeClient.startHeartbeat();
-
-    // 启动WebSocket连接
-    await cpeClient.connectWebSocket();
-
-    // 启动指标模拟（如果启用）
-    if (cpeConfig.simulateMetrics) {
-      cpeClient.startMetricsSimulation();
-    }
-
-    console.log('\n✅ CPE客户端启动成功');
-    console.log('📡 状态: 已注册并连接');
+    // 启动CPE
+    await cpeClient.start();
 
     // 处理关闭信号
     process.on('SIGINT', async () => {
