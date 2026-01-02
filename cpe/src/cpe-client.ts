@@ -88,7 +88,7 @@ export class CPEClient extends EventEmitter {
     console.log('='.repeat(50));
 
     try {
-      // 1. 启动UDP服务器（监听唤醒）
+      // 1. 启动UDP服务器
       console.log('🚀 启动UDP服务器...');
       await this.udpServer.start();
 
@@ -121,7 +121,9 @@ export class CPEClient extends EventEmitter {
     console.log(`🔗 正在连接ACS: ${this.config.acsUrl}...`);
 
     return new Promise((resolve, reject) => {
-      this.ws = new WebSocket(this.config.acsUrl);
+      // 构建连接URL，包含cpeId参数（这是必要的修改）
+      const wsUrl = `${this.config.acsUrl}?cpeId=${encodeURIComponent(this.config.cpeId)}`;
+      this.ws = new WebSocket(wsUrl);
 
       this.ws.on('open', () => {
         console.log('✅ WebSocket连接已建立');
@@ -180,12 +182,14 @@ export class CPEClient extends EventEmitter {
           oui: this.config.manufacturer.substring(0, 6).toUpperCase(),
           productClass: this.config.model,
         },
-        event: '1 BOOT', // BOOT事件
+        event: '1 BOOT',
         parameterList: [
           'InternetGatewayDevice.DeviceSummary',
           'InternetGatewayDevice.DeviceInfo',
           'InternetGatewayDevice.ManagementServer',
         ],
+        udpPort: this.config.cpeUdpPort || 7548,
+        localIp: this.config.cpeIp || '127.0.0.1',
       },
     };
 
@@ -203,32 +207,26 @@ export class CPEClient extends EventEmitter {
         case 'connection_ack':
           console.log('👋 收到连接确认');
           break;
-
         case 'informResponse':
           console.log('✅ Inform消息已确认');
           this.isRegistered = true;
           this.emit('registered', data);
           break;
-
         case 'heartbeatResponse':
           // console.log('💓 心跳确认');
           break;
-
         case 'setParameterValues':
           console.log('⚙️ 收到参数设置请求:', data.data);
           this.handleSetParameterValues(data);
           break;
-
         case 'getParameterValues':
           console.log('📊 收到参数获取请求');
           this.handleGetParameterValues(data);
           break;
-
         case 'download':
           console.log('📥 收到下载请求:', data.data?.fileUrl);
           this.handleDownload(data);
           break;
-
         default:
           console.warn(`📨 未知消息类型: ${data.type}`);
       }
@@ -254,6 +252,10 @@ export class CPEClient extends EventEmitter {
   // 生成模拟的CPE指标
   private generateMetrics(): Record<string, any> {
     return {
+      system: {
+        ip: this.config.cpeIp || '127.0.0.1',
+        udpPort: this.config.cpeUdpPort || 7548,
+      },
       cpu: {
         usage: Math.random() * 100,
         temperature: 40 + Math.random() * 20,
@@ -280,7 +282,6 @@ export class CPEClient extends EventEmitter {
       return;
     }
 
-    // 只通过WebSocket发送心跳，不再发送UDP心跳
     const heartbeatMessage = {
       type: 'heartbeat',
       cpeId: this.config.cpeId,
@@ -289,6 +290,9 @@ export class CPEClient extends EventEmitter {
       data: {
         status: 'alive',
         uptime: process.uptime(),
+        // 添加这两个字段，与Inform消息保持一致
+        udpPort: this.config.cpeUdpPort || 7548,
+        localIp: this.config.cpeIp || '127.0.0.1',
         // 可以添加其他状态信息
         metrics: this.config.simulateMetrics
           ? this.generateMetrics()

@@ -1,18 +1,21 @@
 #!/usr/bin/env node
-
+/* eslint-disable no-console */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { spawn } = require('child_process');
-const path = require('path');
+// const path = require('path');
 
 const count = parseInt(process.argv[2]) || 1;
 const instances = [];
 
 console.log(`🚀 启动 ${count} 个CPE实例`);
 
+// 在循环中添加不同端口
 for (let i = 1; i <= count; i++) {
   const cpeId = `cpe-${i.toString().padStart(3, '0')}`;
   const deviceId = `dev-cpe-${i.toString().padStart(3, '0')}`;
+  const udpPort = 7548 + i; // 每个实例使用不同端口
 
-  console.log(`\n📱 启动实例 ${i}: ${cpeId}`);
+  console.log(`\n📱 启动实例 ${i}: ${cpeId}, UDP端口: ${udpPort}`);
 
   const env = {
     ...process.env,
@@ -20,7 +23,8 @@ for (let i = 1; i <= count; i++) {
     CPE_DEVICE_ID: deviceId,
     CPE_MANUFACTURER: i % 2 === 0 ? 'TP-Link' : 'Cisco',
     CPE_MODEL: i % 2 === 0 ? 'Archer C7' : 'ISR 4000',
-    PORT: 3000 + i, // 防止端口冲突（如果CPE有HTTP服务）
+    CPE_UDP_PORT: udpPort.toString(), // 设置不同的UDP端口
+    PORT: 3000 + i,
   };
 
   const child = spawn('node', ['cpe/src/client.ts'], {
