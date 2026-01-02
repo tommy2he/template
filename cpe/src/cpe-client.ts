@@ -2,25 +2,42 @@
 /* eslint-disable no-console */
 import WebSocket from 'ws';
 import { EventEmitter } from 'events';
-import { UDPClient } from './udp-client';
+import { UDPServer } from './udp-server'; // 改为UDP服务器
 
 export interface CPEClientConfig {
+  // CPE标识信息
   cpeId: string;
   deviceId: string;
   manufacturer: string;
   model: string;
-  acsUrl: string;
-  acsIp: string;
-  acsUdpPort: number;
+
+  // ACS服务器配置（CPE需要连接的服务器）
+  acsUrl: string; // WebSocket地址，如 ws://localhost:7547
+  acsHost: string; // ACS主机地址，如 localhost（用于UDP唤醒包的源地址）
+
+  // CPE本地配置
+  cpeUdpPort: number; // CPE的UDP服务器监听端口，如 7548
+  cpeIp: string; // CPE的IP地址（用于接收UDP唤醒包）
+
+  // 心跳配置
   heartbeatInterval: number;
+
+  // 设备能力
   capabilities: string[];
+
+  // 模拟配置
   simulateMetrics: boolean;
+
+  // 可选的高级配置
+  reconnectInterval?: number;
+  maxReconnectAttempts?: number;
+  udpTimeout?: number;
 }
 
 export class CPEClient extends EventEmitter {
   private config: CPEClientConfig;
   private ws: WebSocket | null = null;
-  private udpClient: UDPClient;
+  private udpServer: UDPServer; // 改为UDP服务器
   private heartbeatTimer: NodeJS.Timeout | null = null;
   private sessionId: string | null = null;
   private isConnected = false;
@@ -29,21 +46,33 @@ export class CPEClient extends EventEmitter {
   constructor(config: CPEClientConfig) {
     super();
     this.config = config;
-    this.udpClient = new UDPClient(config.acsIp, config.acsUdpPort);
+
+    // 创建UDP服务器，监听唤醒消息
+    this.udpServer = new UDPServer(this.config.cpeUdpPort || 7548);
     this.setupUDPListeners();
   }
 
   private setupUDPListeners() {
     // 监听UDP唤醒消息
-    // eslint-disable-next-line
-    this.udpClient.on('wakeup', (data: any) => {
+    this.udpServer.on('wakeup', (message: any) => {
       console.log('🔔 收到ACS唤醒指令，建立WebSocket连接...');
-      this.connectToACS();
+      console.log(`   ACS地址: ${message.acsUrl}`);
+
+      // 如果需要，更新ACS地址
+      if (message.acsUrl && message.acsUrl !== this.config.acsUrl) {
+        console.log(
+          `   ️更新ACS地址: ${this.config.acsUrl} -> ${message.acsUrl}`,
+        );
+        this.config.acsUrl = message.acsUrl;
+      }
+
+      // 建立WebSocket连接
+      this.connectToACS().catch(console.error);
     });
 
-    // 监听其他UDP消息
-    this.udpClient.on('message', (message: any) => {
-      console.log('📨 处理UDP消息:', message.type);
+    // 监听UDP服务器启动
+    this.udpServer.on('listening', () => {
+      console.log(`✅ UDP服务器已启动，等待ACS唤醒...`);
     });
   }
 
@@ -55,26 +84,31 @@ export class CPEClient extends EventEmitter {
     console.log(`🏭 厂商: ${this.config.manufacturer}`);
     console.log(`📦 型号: ${this.config.model}`);
     console.log(`📡 ACS地址: ${this.config.acsUrl}`);
+    console.log(`🎧 UDP监听端口: ${this.config.cpeUdpPort || 7548}`);
     console.log('='.repeat(50));
 
-    // 1. 先发送UDP Inform通知ACS
-    console.log('📢 发送UDP Inform消息到ACS...');
-    this.udpClient.sendInform(this.config.cpeId, {
-      manufacturer: this.config.manufacturer,
-      model: this.config.model,
-      capabilities: this.config.capabilities,
-    });
+    try {
+      // 1. 启动UDP服务器（监听唤醒）
+      console.log('🚀 启动UDP服务器...');
+      await this.udpServer.start();
 
-    // 2. 建立WebSocket连接
-    await this.connectToACS();
+      // 2. 尝试建立WebSocket连接
+      console.log('🔗 尝试连接ACS...');
+      await this.connectToACS();
 
-    // 3. 通过WebSocket发送Inform消息
-    await this.sendInform();
+      // 3. 通过WebSocket发送Inform消息（注册）
+      console.log('📝 发送注册信息...');
+      await this.sendInform();
 
-    // 4. 启动心跳
-    this.startHeartbeat();
+      // 4. 启动心跳
+      console.log('💓 启动心跳...');
+      this.startHeartbeat();
 
-    console.log('✅ CPE客户端启动完成');
+      console.log('✅ CPE客户端启动完成');
+    } catch (error) {
+      console.error('❌ CPE客户端启动失败:', error);
+      throw error;
+    }
   }
 
   // 建立WebSocket连接
@@ -217,14 +251,36 @@ export class CPEClient extends EventEmitter {
     setTimeout(() => this.sendHeartbeat(), 1000);
   }
 
+  // 生成模拟的CPE指标
+  private generateMetrics(): Record<string, any> {
+    return {
+      cpu: {
+        usage: Math.random() * 100,
+        temperature: 40 + Math.random() * 20,
+      },
+      memory: {
+        total: 1024,
+        used: 512 + Math.random() * 256,
+        free: 256 - Math.random() * 128,
+      },
+      network: {
+        up: Math.random() * 1000,
+        down: Math.random() * 1000,
+        connections: Math.floor(Math.random() * 100),
+      },
+      wifi: {
+        clients: Math.floor(Math.random() * 10),
+        signal: -30 - Math.random() * 40,
+      },
+    };
+  }
+
   private sendHeartbeat(): void {
     if (!this.ws || !this.isConnected) {
       return;
     }
 
-    // 同时发送UDP和WebSocket心跳
-    this.udpClient.sendHeartbeat(this.config.cpeId);
-
+    // 只通过WebSocket发送心跳，不再发送UDP心跳
     const heartbeatMessage = {
       type: 'heartbeat',
       cpeId: this.config.cpeId,
@@ -233,10 +289,15 @@ export class CPEClient extends EventEmitter {
       data: {
         status: 'alive',
         uptime: process.uptime(),
+        // 可以添加其他状态信息
+        metrics: this.config.simulateMetrics
+          ? this.generateMetrics()
+          : undefined,
       },
     };
 
     this.ws.send(JSON.stringify(heartbeatMessage));
+    console.log('💓 心跳已发送');
   }
 
   // 处理参数设置
@@ -314,8 +375,8 @@ export class CPEClient extends EventEmitter {
       this.ws = null;
     }
 
-    // 关闭UDP客户端
-    this.udpClient.close();
+    // 关闭UDP服务器
+    await this.udpServer.stop();
 
     this.isConnected = false;
     this.isRegistered = false;

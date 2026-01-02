@@ -16,8 +16,11 @@ const cpeConfig = {
 
   // ACS服务器配置
   acsUrl: process.env.ACS_WS_URL || 'ws://localhost:7547',
-  acsIp: process.env.ACS_IP || 'localhost',
-  acsUdpPort: parseInt(process.env.ACS_UDP_PORT || '7548'),
+  acsHost: process.env.ACS_HOST || 'localhost',
+
+  // CPE本地配置
+  cpeUdpPort: parseInt(process.env.CPE_UDP_PORT || '7548'),
+  cpeIp: process.env.CPE_IP || '127.0.0.1',
 
   // 心跳配置
   heartbeatInterval: parseInt(process.env.HEARTBEAT_INTERVAL || '30'),

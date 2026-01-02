@@ -5,14 +5,14 @@ import config from './config';
 import middleware from './middleware';
 import routes from './routes';
 import db from './db/connection';
-import { UDPServer } from './udp/server'; // 新增
+import { UDPClient } from './udp/client'; // 改为UDP客户端
 import { WebSocketManager } from './websocket/server';
 
 class App {
   private app: Koa;
   private server: Server | null = null;
   private wsManager: WebSocketManager | null = null;
-  private udpServer: UDPServer | null = null; // 新增UDP服务器
+  private udpClient: UDPClient | null = null; // 改为UDP客户端
 
   constructor() {
     this.app = new Koa();
@@ -58,10 +58,11 @@ class App {
         console.log('✅ WebSocket服务器已关闭');
       }
 
-      console.log('⏳ 正在关闭UDP服务器...');
-      if (this.udpServer) {
-        this.udpServer.stop();
-        console.log('✅ UDP服务器已关闭');
+      // 在 gracefulShutdown 方法中修改：
+      console.log('⏳ 正在关闭UDP客户端...');
+      if (this.udpClient) {
+        this.udpClient.close();
+        console.log('✅ UDP客户端已关闭');
       }
 
       console.log('⏳ 正在关闭北向接口服务器...');
@@ -96,9 +97,9 @@ class App {
       console.log('⏳ 正在连接数据库...');
       await db.connect();
 
-      // 2. 创建UDP服务器（7548端口） - 用于CPE发现和唤醒
-      this.udpServer = new UDPServer(7548);
-      this.udpServer.start();
+      // 2. 创建UDP客户端（用于发送唤醒包） - 不再监听端口
+      this.udpClient = new UDPClient();
+      console.log('📢 UDP客户端已创建（用于发送唤醒包）');
 
       // 3. 创建Koa应用服务器（3000端口）
       this.server = createServer(this.app.callback());
@@ -111,9 +112,9 @@ class App {
 
       // 5. 创建WebSocket管理器并注入到应用上下文
       this.wsManager = new WebSocketManager(wsServer);
-      this.wsManager.setUdpServer(this.udpServer); // 注入UDP服务器
+      this.wsManager.setUdpClient(this.udpClient); // 注入UDP客户端
       this.app.context.wsManager = this.wsManager;
-      this.app.context.udpServer = this.udpServer; // 添加UDP服务器到上下文
+      this.app.context.udpClient = this.udpClient; // 添加UDP客户端到上下文
 
       // 6. 启动Koa应用服务器
       this.server.listen(config.port, () => {
@@ -122,7 +123,7 @@ class App {
 📁  环境: ${config.env}
 📍  北向接口地址: http://localhost:${config.port} (${config.appUrl})
 📡  南向接口地址: ${config.wsUrl}
-📢  UDP唤醒端口: 7548
+📢  UDP唤醒端口: 7548 (CPE监听此端口)
 📊  API 前缀: ${config.apiPrefix}/${config.apiVersion}
 📈  日志级别: ${config.logLevel}
 🗄️  数据库: ${config.mongodb.uri.replace(/:[^:]*@/, ':****@')}
@@ -172,8 +173,8 @@ class App {
     return this.wsManager;
   }
 
-  public getUdpServer(): UDPServer | null {
-    return this.udpServer;
+  public getUdpClient(): UDPClient | null {
+    return this.udpClient;
   }
 }
 

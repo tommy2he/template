@@ -13,7 +13,7 @@ import { CPEModel } from '../../db/schemas/cpe.schema';
 // }
 
 interface ExtendedKoaContext {
-  udpServer?: any;
+  udpClient?: any;
   wsManager?: any;
 }
 
@@ -76,6 +76,7 @@ router.get('/:cpeId', async (ctx) => {
 });
 
 // 唤醒CPE（通过UDP）
+// /src/routes/api/cpes.ts - 唤醒端点
 router.post('/:cpeId/wakeup', async (ctx) => {
   try {
     const { cpeId } = ctx.params;
@@ -94,23 +95,46 @@ router.post('/:cpeId/wakeup', async (ctx) => {
       return;
     }
 
-    // 通过UDP服务器发送唤醒包
-    // const udpServer = ctx.udpServer;
-    const udpServer = (ctx as ExtendedKoaContext).udpServer;
-    if (udpServer) {
-      udpServer.wakeUpCPE(cpe.ipAddress, cpe.wakeupPort || 7548);
+    // 通过UDP客户端发送唤醒包
+    const udpClient = (ctx as ExtendedKoaContext).udpClient;
+    if (!udpClient) {
+      ctx.status = 500;
+      ctx.body = { error: 'UDP client not available' };
+      return;
+    }
 
+    const success = await udpClient.wakeUpCPE(
+      cpe.ipAddress,
+      cpe.wakeupPort || 7548,
+      {
+        type: 'wakeup',
+        command: 'connectToACS',
+        acsUrl: 'ws://localhost:7547',
+        timestamp: Date.now(),
+        cpeId,
+      },
+    );
+
+    if (success) {
       // 更新最后唤醒时间
-      await CPEModel.updateOne({ cpeId }, { lastWakeupCall: new Date() });
+      await CPEModel.findOneAndUpdate(
+        { cpeId },
+        { lastWakeupCall: new Date() },
+      );
 
       ctx.body = {
         success: true,
-        message: `Wakeup signal sent to ${cpe.ipAddress}:${cpe.wakeupPort}`,
+        message: `Wakeup signal sent to ${cpe.ipAddress}:${cpe.wakeupPort || 7548}`,
+        delivered: true,
         timestamp: new Date().toISOString(),
       };
     } else {
-      ctx.status = 500;
-      ctx.body = { error: 'UDP server not available' };
+      ctx.body = {
+        success: false,
+        message: 'Failed to send wakeup signal',
+        delivered: false,
+        timestamp: new Date().toISOString(),
+      };
     }
   } catch (error) {
     console.error('唤醒CPE错误:', error);

@@ -6,6 +6,7 @@ import { Server as HttpServer } from 'http';
 import { parse } from 'url';
 import { EventEmitter } from 'events';
 import { CPEModel } from '../db/schemas/cpe.schema';
+import { UDPClient } from '../udp/client';
 
 export interface WebSocketMessage {
   type: string;
@@ -24,7 +25,7 @@ export class WebSocketManager extends EventEmitter {
   private wss: WebSocketServer;
   private connections: Map<string, WS> = new Map();
   private sessions: Map<string, string> = new Map(); // sessionId -> cpeId
-  private udpServer?: any;
+  private udpClient?: UDPClient; // 改为UDP客户端
 
   constructor(server: HttpServer) {
     super();
@@ -32,9 +33,9 @@ export class WebSocketManager extends EventEmitter {
     this.setupWebSocket();
   }
 
-  // 注入UDP服务器实例
-  public setUdpServer(udpServer: any) {
-    this.udpServer = udpServer;
+  // 注入UDP客户端
+  public setUdpClient(udpClient: UDPClient) {
+    this.udpClient = udpClient;
   }
 
   private setupWebSocket() {
@@ -279,7 +280,7 @@ export class WebSocketManager extends EventEmitter {
     return false;
   }
 
-  // 唤醒CPE（通过UDP）
+  // 唤醒CPE（通过UDP客户端发送唤醒包）
   public async wakeCPE(cpeId: string): Promise<boolean> {
     const cpe = await CPEModel.findOne({ cpeId });
     if (!cpe?.ipAddress) {
@@ -287,9 +288,32 @@ export class WebSocketManager extends EventEmitter {
       return false;
     }
 
-    if (this.udpServer) {
-      this.udpServer.wakeUpCPE(cpe.ipAddress, 7548);
-      return true;
+    if (this.udpClient) {
+      // 更新最后唤醒时间
+      await CPEModel.findOneAndUpdate(
+        { cpeId },
+        { lastWakeupCall: new Date() },
+      );
+
+      const success = await this.udpClient.wakeUpCPE(
+        cpe.ipAddress,
+        cpe.wakeupPort || 7548,
+        {
+          type: 'wakeup',
+          command: 'connectToACS',
+          acsUrl: 'ws://localhost:7547',
+          timestamp: Date.now(),
+          cpeId,
+        },
+      );
+
+      if (success) {
+        console.log(
+          `📢 已发送唤醒包到 ${cpe.ipAddress}:${cpe.wakeupPort || 7548}`,
+        );
+      }
+
+      return success;
     }
 
     return false;
