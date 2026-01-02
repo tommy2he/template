@@ -1,31 +1,26 @@
 /* eslint-disable no-console */
-// /src/routes/api/cpes.ts - 使用自定义上下文
+// /src/routes/api/cpes.ts - 管理API
 import Router from 'koa-router';
-import { CPEModel } from '@/db/schemas/cpe.schema';
-import { Context } from 'koa';
-import { WebSocketManager } from '@/websocket/server';
-import { UDPClient } from '@/udp/client';
+import { CPEModel } from '../../db/schemas/cpe.schema';
 
-export interface CustomContext extends Context {
-  wsManager?: WebSocketManager;
-  udpClient?: UDPClient;
+// 删除以下代码，担心正在引发污染
+// 声明扩展的Context类型
+// declare module 'koa' {
+//   interface Context {
+//     wsManager?: any;
+//     udpServer?: any;
+//   }
+// }
+
+interface ExtendedKoaContext {
+  udpClient?: any;
+  wsManager?: any;
 }
-
-// interface CustomContext extends Context {
-//   wsManager?: WebSocketManager;
-//   udpClient?: UDPClient;
-// }
-
-// interface CustomContext {
-//   udpClient?: any;
-//   wsManager?: any;
-// }
 
 const router = new Router({ prefix: '/api/cpes' });
 
 // 获取所有CPE（管理用）
 router.get('/', async (ctx) => {
-  // const customCtx = ctx as CustomContext;
   try {
     const { page = 1, limit = 20, status } = ctx.query;
 
@@ -57,9 +52,32 @@ router.get('/', async (ctx) => {
   }
 });
 
+// 获取单个CPE详情
+router.get('/:cpeId', async (ctx) => {
+  try {
+    const { cpeId } = ctx.params;
+    const cpe = await CPEModel.findOne({ cpeId });
+
+    if (!cpe) {
+      ctx.status = 404;
+      ctx.body = { error: 'CPE not found' };
+      return;
+    }
+
+    ctx.body = {
+      success: true,
+      data: cpe,
+    };
+  } catch (error) {
+    console.error('获取CPE详情错误:', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Internal server error' };
+  }
+});
+
 // 唤醒CPE（通过UDP）
+// /src/routes/api/cpes.ts - 唤醒端点
 router.post('/:cpeId/wakeup', async (ctx) => {
-  const customCtx = ctx as CustomContext;
   try {
     const { cpeId } = ctx.params;
     const cpe = await CPEModel.findOne({ cpeId });
@@ -78,7 +96,7 @@ router.post('/:cpeId/wakeup', async (ctx) => {
     }
 
     // 通过UDP客户端发送唤醒包
-    const udpClient = customCtx.udpClient;
+    const udpClient = (ctx as ExtendedKoaContext).udpClient;
     if (!udpClient) {
       ctx.status = 500;
       ctx.body = { error: 'UDP client not available' };
@@ -127,12 +145,12 @@ router.post('/:cpeId/wakeup', async (ctx) => {
 
 // 向CPE下发配置（通过WebSocket）
 router.post('/:cpeId/configuration', async (ctx) => {
-  const customCtx = ctx as CustomContext;
   try {
     const { cpeId } = ctx.params;
     const configuration = ctx.request.body as Record<string, any>;
 
-    const wsManager = customCtx.wsManager;
+    // const wsManager = ctx.wsManager;
+    const wsManager = (ctx as ExtendedKoaContext).wsManager;
     if (!wsManager) {
       ctx.status = 500;
       ctx.body = { error: 'WebSocket manager not available' };
@@ -176,10 +194,10 @@ router.post('/:cpeId/configuration', async (ctx) => {
 
 // 断开CPE连接（管理用）
 router.post('/:cpeId/disconnect', async (ctx) => {
-  const customCtx = ctx as CustomContext;
   try {
     const { cpeId } = ctx.params;
-    const wsManager = customCtx.wsManager;
+    // const wsManager = ctx.wsManager;
+    const wsManager = (ctx as ExtendedKoaContext).wsManager;
 
     if (wsManager) {
       // 发送断开连接消息
