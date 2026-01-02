@@ -1,16 +1,23 @@
+/* eslint-disable no-console */
 // /src/routes/api/cpes.ts - 管理API
 import Router from 'koa-router';
 import { CPEModel } from '../../db/schemas/cpe.schema';
 
-const router = new Router({ prefix: '/api/cpes' });
-
+// 删除以下代码，担心正在引发污染
 // 声明扩展的Context类型
-declare module 'koa' {
-  interface Context {
-    wsManager?: any;
-    udpServer?: any;
-  }
+// declare module 'koa' {
+//   interface Context {
+//     wsManager?: any;
+//     udpServer?: any;
+//   }
+// }
+
+interface ExtendedKoaContext {
+  udpServer?: any;
+  wsManager?: any;
 }
+
+const router = new Router({ prefix: '/api/cpes' });
 
 // 获取所有CPE（管理用）
 router.get('/', async (ctx) => {
@@ -88,7 +95,8 @@ router.post('/:cpeId/wakeup', async (ctx) => {
     }
 
     // 通过UDP服务器发送唤醒包
-    const udpServer = ctx.udpServer;
+    // const udpServer = ctx.udpServer;
+    const udpServer = (ctx as ExtendedKoaContext).udpServer;
     if (udpServer) {
       udpServer.wakeUpCPE(cpe.ipAddress, cpe.wakeupPort || 7548);
 
@@ -117,7 +125,8 @@ router.post('/:cpeId/configuration', async (ctx) => {
     const { cpeId } = ctx.params;
     const configuration = ctx.request.body as Record<string, any>;
 
-    const wsManager = ctx.wsManager;
+    // const wsManager = ctx.wsManager;
+    const wsManager = (ctx as ExtendedKoaContext).wsManager;
     if (!wsManager) {
       ctx.status = 500;
       ctx.body = { error: 'WebSocket manager not available' };
@@ -163,7 +172,8 @@ router.post('/:cpeId/configuration', async (ctx) => {
 router.post('/:cpeId/disconnect', async (ctx) => {
   try {
     const { cpeId } = ctx.params;
-    const wsManager = ctx.wsManager;
+    // const wsManager = ctx.wsManager;
+    const wsManager = (ctx as ExtendedKoaContext).wsManager;
 
     if (wsManager) {
       // 发送断开连接消息

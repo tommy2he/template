@@ -15,9 +15,17 @@ declare namespace NodeJS {
   }
 }
 
+// 加上以上两句将引发大量编译错误
 // declare module 'koa' {
 //   interface Context {
 //     wsManager?: import('../src/websocket/server').WebSocketManager;
+//   }
+// }
+
+// declare module 'koa' {
+//   interface Context {
+//     wsManager?: any; // WebSocketManager类型
+//     udpServer?: any; // UDPServer类型
 //   }
 // }
 

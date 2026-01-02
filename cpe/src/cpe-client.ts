@@ -35,6 +35,7 @@ export class CPEClient extends EventEmitter {
 
   private setupUDPListeners() {
     // 监听UDP唤醒消息
+    // eslint-disable-next-line
     this.udpClient.on('wakeup', (data: any) => {
       console.log('🔔 收到ACS唤醒指令，建立WebSocket连接...');
       this.connectToACS();

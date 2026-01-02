@@ -13,6 +13,11 @@ export interface WebSocketMessage {
   cpeId?: string;
   timestamp: number;
   data?: any;
+  message?: string;
+  status?: number;
+  parameters?: Record<string, any>;
+  command?: string;
+  reason?: string;
 }
 
 export class WebSocketManager extends EventEmitter {
@@ -183,6 +188,7 @@ export class WebSocketManager extends EventEmitter {
   }
 
   // 心跳处理
+  // eslint-disable-next-line
   private async handleHeartbeat(cpeId: string, data: WebSocketMessage) {
     await CPEModel.findOneAndUpdate(
       { cpeId },
@@ -242,6 +248,7 @@ export class WebSocketManager extends EventEmitter {
     console.log(`📥 CPE ${cpeId} 请求下载:`, data.data?.fileUrl);
   }
 
+  // eslint-disable-next-line
   private async handleUpload(cpeId: string, data: WebSocketMessage) {
     // 实现文件上传逻辑
     console.log(`📤 CPE ${cpeId} 请求上传`);
