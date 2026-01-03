@@ -1,4 +1,5 @@
 // 创建设备集合的迁移脚本
+/* eslint-disable no-console */
 module.exports = {
   async up(db) {
     // 创建设备集合
