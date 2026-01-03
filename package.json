@@ -1,7 +1,7 @@
 {
   "name": "koa_template_app",
-  "version": "1.5.0",
-  "description": "Koa模板应用 - 数据库集成版本",
+  "version": "2.0.0",
+  "description": "Koa模板应用 - 模拟CPE集成版本",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --watch src --ext ts,json --exec ts-node src/index.ts",
@@ -79,6 +79,10 @@
     "db:stop-all": "pwsh -ExecutionPolicy Bypass -File db\\scripts\\db-manage.ps1 stop-all",
     "init:env": "pwsh -ExecutionPolicy Bypass -File scripts\\dev\\init-project.ps1",
     "cpe:dev": "nodemon --watch cpe/src --ext ts --exec ts-node cpe/src/client.ts",
+    "cpe:mode1": "ts-node cpe/src/client.ts mode=1",
+    "cpe:mode2": "ts-node cpe/src/client.ts mode=2 port=8000",
+    "cpe:mode3": "ts-node cpe/src/client.ts mode=3 devid=cpe-test-001",
+    "cpe:batch": "node cpe/scripts/batch-generator.js",
     "cpe:start": "node cpe/dist/client.js",
     "cpe:build": "tsc --project cpe/tsconfig.json",
     "cpe:multi": "node cpe/scripts/start-multiple.js 3",
@@ -112,7 +116,9 @@
     "reset:all": "npm run clean:all && npm run db:stop-all && echo '系统已重置'",
     "reset:dev": "npm run clean:all && npm run db:stop && npm run db:start",
     "status": "echo '服务器状态检查...' && curl -s http://localhost:3000/api/health || echo '服务器未运行'",
-    "cpe:status": "echo 'CPE模拟器状态...' && ps aux | grep 'node.*cpe' | grep -v grep || echo 'CPE未运行'"
+    "cpe:status": "echo 'CPE模拟器状态...' && ps aux | grep 'node.*cpe' | grep -v grep || echo 'CPE未运行'",
+    "cpe:test:inactivity": "cross-env NODE_ENV=test dotenv -e cpe/.env.cpe.test -- ts-node cpe/src/client.ts",
+    "cpe:test:heartbeat": "cross-env HEARTBEAT_INTERVAL=10 ts-node cpe/src/client.ts"
   },
   "keywords": [
     "koa",
