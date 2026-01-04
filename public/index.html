@@ -533,6 +533,28 @@
     </div>
 
     <script>
+      // 添加 CSP 状态检测
+      fetch(window.location.href, { method: 'HEAD' })
+        .then((response) => {
+          const cspHeader = response.headers.get('Content-Security-Policy');
+          if (cspHeader) {
+            document.getElementById('csp-status').textContent = 'CSP已配置';
+            document.getElementById('csp-status').style.color = 'green';
+
+            // 检查是否允许内联脚本
+            if (cspHeader.includes("'unsafe-inline'")) {
+              document.getElementById('csp-status').textContent +=
+                '（允许内联脚本）';
+            }
+          } else {
+            document.getElementById('csp-status').textContent = '无CSP限制';
+            document.getElementById('csp-status').style.color = 'orange';
+          }
+        })
+        .catch(() => {
+          document.getElementById('csp-status').textContent = '检测失败';
+          document.getElementById('csp-status').style.color = 'red';
+        });
       // 初始化页面 - 移除 process 相关代码
       document.addEventListener('DOMContentLoaded', function () {
         console.log('📱 ACS控制面板初始化...');
