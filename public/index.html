@@ -240,6 +240,321 @@
         font-weight: bold;
         color: #8c8c8c;
       }
+      /* 状态刷新相关样式 */
+      .dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .dialog-content {
+        background: white;
+        width: 500px;
+        max-width: 90%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .dialog-body {
+        padding: 20px;
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+
+      .dialog-footer {
+        padding: 15px 20px;
+        background: #f5f5f5;
+        border-top: 1px solid #ddd;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .refresh-mode-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .mode-option {
+        border: 2px solid #e8e8e8;
+        border-radius: 8px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .mode-option:hover {
+        border-color: #1890ff;
+        background: #f0f7ff;
+      }
+
+      .mode-option.selected {
+        border-color: #1890ff;
+        background: #e6f7ff;
+      }
+
+      .mode-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .mode-title {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-left: 10px;
+        flex-grow: 1;
+      }
+
+      .mode-badge {
+        background: #52c41a;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+
+      .mode-badge.warning {
+        background: #faad14;
+      }
+
+      .mode-description {
+        color: #666;
+        font-size: 0.9em;
+        line-height: 1.4;
+        margin: 10px 0;
+      }
+
+      .mode-details {
+        background: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+
+      .status-available {
+        color: #52c41a;
+        font-weight: bold;
+      }
+
+      .status-unavailable {
+        color: #ff4d4f;
+        font-weight: bold;
+      }
+
+      .warning-text {
+        color: #faad14;
+        font-weight: bold;
+      }
+
+      .refresh-summary {
+        background: #f0f7ff;
+        border: 1px solid #91d5ff;
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      .summary-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .summary-label {
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .summary-value {
+        font-weight: bold;
+        color: #1890ff;
+      }
+
+      .summary-note {
+        font-size: 0.85em;
+        color: #666;
+        margin-top: 10px;
+        font-style: italic;
+      }
+
+      /* 刷新历史相关样式 */
+      .history-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .filter-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .filter-controls select,
+      .filter-controls input {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+      }
+
+      .history-stats {
+        display: flex;
+        gap: 15px;
+      }
+
+      .stat-item {
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .stat-item span {
+        font-weight: bold;
+        color: #1890ff;
+      }
+
+      .history-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .history-item {
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 10px;
+        transition: all 0.3s;
+      }
+
+      .history-item:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .history-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .history-item-id {
+        font-family: monospace;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .history-item-status {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+
+      .status-completed {
+        background: #f6ffed;
+        color: #52c41a;
+        border: 1px solid #b7eb8f;
+      }
+
+      .status-running {
+        background: #e6f7ff;
+        color: #1890ff;
+        border: 1px solid #91d5ff;
+      }
+
+      .status-failed {
+        background: #fff1f0;
+        color: #ff4d4f;
+        border: 1px solid #ffa39e;
+      }
+
+      .status-cancelled {
+        background: #fff7e6;
+        color: #faad14;
+        border: 1px solid #ffd591;
+      }
+
+      .history-item-details {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        font-size: 0.85em;
+        margin-top: 10px;
+      }
+
+      .history-detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .history-detail-label {
+        color: #999;
+        margin-bottom: 2px;
+      }
+
+      .history-detail-value {
+        font-weight: bold;
+      }
+
+      .loading-spinner {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+        margin-top: 10px;
+      }
+
+      .btn-view {
+        padding: 4px 8px;
+        background: #1890ff;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        font-size: 0.8em;
+        cursor: pointer;
+      }
+
+      .btn-view:hover {
+        background: #40a9ff;
+      }
+
+      .btn-warning {
+        background: #faad14;
+        color: white;
+      }
+
+      .btn-warning:hover {
+        background: #ffc53d;
+      }
     </style>
   </head>
   <body>
@@ -360,6 +675,13 @@
           <a href="/api/cpes/stats" class="btn btn-secondary">CPE统计</a>
           <button onclick="scanRoutes()" class="btn btn-secondary">
             扫描API
+          </button>
+          <button onclick="showRefreshDialog()" class="btn btn-primary">
+            🔄 CPE状态刷新
+          </button>
+          <!-- 新增的查看刷新历史按钮 -->
+          <button onclick="showRefreshHistory()" class="btn btn-secondary">
+            📜 刷新历史
           </button>
         </div>
       </div>
@@ -531,7 +853,183 @@
         </div>
       </div>
     </div>
+    <!-- 状态刷新对话框（添加在页面底部，script标签之前） -->
+    <div
+      id="status-refresh-dialog"
+      class="dialog-overlay"
+      style="display: none"
+    >
+      <div class="dialog-content">
+        <h3 id="refresh-dialog-title">选择刷新模式</h3>
 
+        <div class="dialog-body">
+          <div class="refresh-mode-options">
+            <div
+              class="mode-option"
+              onclick="selectRefreshMode('normal')"
+              id="mode-normal"
+            >
+              <div class="mode-header">
+                <input
+                  type="radio"
+                  name="refreshMode"
+                  value="normal"
+                  id="radio-normal"
+                  checked
+                />
+                <label for="radio-normal" class="mode-title">Normal模式</label>
+                <span class="mode-badge">推荐</span>
+              </div>
+              <p class="mode-description">
+                智能刷新模式，避免频繁操作<br />
+                <small>• 5分钟内只允许刷新一次</small><br />
+                <small>• 检查设备状态变化</small>
+              </p>
+              <div class="mode-details" id="normal-details">
+                <p>上次刷新: <span id="last-normal-refresh">--</span></p>
+                <p>
+                  状态:
+                  <span id="normal-status" class="status-available"
+                    >可刷新</span
+                  >
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="mode-option"
+              onclick="selectRefreshMode('force')"
+              id="mode-force"
+            >
+              <div class="mode-header">
+                <input
+                  type="radio"
+                  name="refreshMode"
+                  value="force"
+                  id="radio-force"
+                />
+                <label for="radio-force" class="mode-title">Force模式</label>
+                <span class="mode-badge warning">强制</span>
+              </div>
+              <p class="mode-description">
+                强制立即刷新所有设备<br />
+                <small>• 跳过时间限制检查</small><br />
+                <small>• 重新计算所有设备状态</small>
+              </p>
+              <div class="mode-details">
+                <p class="warning-text">⚠️ 此模式可能会影响系统性能</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="refresh-summary"
+            id="refresh-summary"
+            style="display: none"
+          >
+            <h4>刷新摘要</h4>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">模式:</span>
+                <span id="summary-mode" class="summary-value">--</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">总设备:</span>
+                <span id="summary-total" class="summary-value">--</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">预计时间:</span>
+                <span id="summary-estimated" class="summary-value">--</span>
+              </div>
+            </div>
+            <p class="summary-note">点击确认后，系统将启动后台刷新任务。</p>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button onclick="hideStatusRefreshDialog()" class="btn btn-secondary">
+            取消
+          </button>
+          <button
+            onclick="checkRefreshStatus()"
+            class="btn btn-primary"
+            id="check-refresh-btn"
+          >
+            检查状态
+          </button>
+          <button
+            onclick="confirmRefreshTask()"
+            class="btn btn-success"
+            id="confirm-refresh-btn"
+            style="display: none"
+          >
+            开始刷新
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 刷新历史对话框 -->
+    <div
+      id="refresh-history-dialog"
+      class="dialog-overlay"
+      style="display: none"
+    >
+      <div class="dialog-content" style="max-width: 800px">
+        <h3>刷新任务历史</h3>
+
+        <div class="dialog-body">
+          <div class="history-controls">
+            <div class="filter-controls">
+              <select
+                id="history-filter-status"
+                onchange="loadRefreshHistory()"
+              >
+                <option value="">所有状态</option>
+                <option value="completed">已完成</option>
+                <option value="running">运行中</option>
+                <option value="failed">失败</option>
+                <option value="cancelled">已取消</option>
+              </select>
+              <input
+                type="date"
+                id="history-filter-date"
+                onchange="loadRefreshHistory()"
+              />
+              <button onclick="loadRefreshHistory()" class="btn btn-secondary">
+                刷新
+              </button>
+            </div>
+
+            <div class="history-stats">
+              <span class="stat-item"
+                >总任务: <span id="history-total">0</span></span
+              >
+              <span class="stat-item"
+                >成功: <span id="history-success">0</span></span
+              >
+              <span class="stat-item"
+                >失败: <span id="history-failed">0</span></span
+              >
+            </div>
+          </div>
+
+          <div class="history-list" id="history-list">
+            <!-- 任务历史将通过JavaScript动态加载 -->
+            <div class="loading-spinner">加载中...</div>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button onclick="hideRefreshHistory()" class="btn btn-secondary">
+            关闭
+          </button>
+          <button onclick="clearOldRefreshHistory()" class="btn btn-warning">
+            清理旧记录
+          </button>
+        </div>
+      </div>
+    </div>
     <script>
       // 添加 CSP 状态检测
       fetch(window.location.href, { method: 'HEAD' })
@@ -759,6 +1257,510 @@
 
         alert('API路由扫描完成:\n\n' + availableRoutes.join('\n'));
       }
+
+      // 状态刷新相关函数
+      // 状态刷新相关函数
+      async function showRefreshDialog() {
+        // 创建模式选择对话框
+        const mode = await new Promise((resolve) => {
+          const modeSelection = `
+      <div id="mode-dialog" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <div style="
+          background: white;
+          width: 400px;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        ">
+          <h3 style="margin-top: 0;">选择刷新模式</h3>
+          <p>⚠️ 注意：刷新状态会影响所有CPE设备</p>
+          
+          <div style="margin: 20px 0;">
+            <label style="display: block; margin-bottom: 10px;">
+              <input type="radio" name="refreshMode" value="normal" checked>
+              Normal模式（仅在上次刷新5分钟后可用）
+            </label>
+            <label style="display: block;">
+              <input type="radio" name="refreshMode" value="force">
+              Force模式（强制立即刷新）
+            </label>
+          </div>
+          
+          <div style="text-align: right;">
+            <button onclick="cancelModeDialog()" style="
+              padding: 8px 16px;
+              margin-right: 10px;
+              background: #f5f5f5;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            ">
+              取消
+            </button>
+            <button onclick="confirmModeDialog()" style="
+              padding: 8px 16px;
+              background: #1890ff;
+              color: white;
+              border: none;
+              border-radius: 4px;
+            ">
+              开始刷新
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+          document.body.insertAdjacentHTML('beforeend', modeSelection);
+
+          window.cancelModeDialog = () => {
+            document.getElementById('mode-dialog')?.remove();
+            resolve(null);
+          };
+
+          window.confirmModeDialog = () => {
+            const selectedMode = document.querySelector(
+              'input[name="refreshMode"]:checked',
+            )?.value;
+            document.getElementById('mode-dialog')?.remove();
+            resolve(selectedMode);
+          };
+        });
+
+        if (!mode) return;
+
+        try {
+          const response = await fetch('/api/admin/refresh-tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode, operator: 'admin' }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(
+              `刷新任务已启动，任务ID: ${result.data.taskId}\n\n将跳转到进度监控页面。`,
+            );
+            // 跳转到进度监控页面
+            window.location.href = `/refresh-progress.html?taskId=${result.data.taskId}`;
+          } else {
+            alert(`启动失败: ${result.error}`);
+          }
+        } catch (error) {
+          alert(`请求失败: ${error.message}`);
+        }
+      }
+      async function startRefreshTask(mode) {
+        try {
+          const response = await fetch('/api/admin/refresh-tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode, operator: 'admin' }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(
+              `刷新任务已启动，任务ID: ${result.data.taskId}\n\n将跳转到进度监控页面。`,
+            );
+            // 跳转到进度监控页面
+            window.location.href = `/refresh-progress.html?taskId=${result.data.taskId}`;
+          } else {
+            alert(`启动失败: ${result.error}`);
+          }
+        } catch (error) {
+          alert(`请求失败: ${error.message}`);
+        }
+      }
+
+      // ==================== 状态刷新相关功能 ====================
+
+      let selectedRefreshMode = 'normal';
+      let refreshTaskData = null;
+
+      // 显示状态刷新对话框
+      async function showStatusRefreshDialog() {
+        selectedRefreshMode = 'normal';
+
+        // 重置UI
+        document.querySelectorAll('.mode-option').forEach((option) => {
+          option.classList.remove('selected');
+        });
+        document.getElementById('mode-normal').classList.add('selected');
+
+        // 加载最近刷新状态
+        await loadLastRefreshStatus();
+
+        // 显示对话框
+        document.getElementById('status-refresh-dialog').style.display = 'flex';
+
+        // 重置按钮状态
+        document.getElementById('check-refresh-btn').style.display =
+          'inline-block';
+        document.getElementById('confirm-refresh-btn').style.display = 'none';
+        document.getElementById('refresh-summary').style.display = 'none';
+      }
+
+      // 隐藏状态刷新对话框
+      function hideStatusRefreshDialog() {
+        document.getElementById('status-refresh-dialog').style.display = 'none';
+        refreshTaskData = null;
+      }
+
+      // 选择刷新模式
+      function selectRefreshMode(mode) {
+        selectedRefreshMode = mode;
+
+        // 更新UI选择状态
+        document.querySelectorAll('.mode-option').forEach((option) => {
+          option.classList.remove('selected');
+        });
+        document.getElementById('mode-' + mode).classList.add('selected');
+
+        // 更新选中的radio按钮
+        document.getElementById('radio-' + mode).checked = true;
+      }
+
+      // 加载最近刷新状态
+      async function loadLastRefreshStatus() {
+        try {
+          const response = await fetch('/api/admin/refresh-tasks/check');
+          const result = await response.json();
+
+          if (result.success) {
+            const data = result.data;
+
+            if (data.lastRefreshTime) {
+              const lastRefresh = new Date(data.lastRefreshTime);
+              const now = new Date();
+              const diffMinutes = Math.floor((now - lastRefresh) / 60000);
+
+              document.getElementById('last-normal-refresh').textContent =
+                `${diffMinutes} 分钟前 (${lastRefresh.toLocaleString()})`;
+            } else {
+              document.getElementById('last-normal-refresh').textContent =
+                '从未刷新';
+            }
+
+            if (data.canRefresh) {
+              document.getElementById('normal-status').textContent = '可刷新';
+              document.getElementById('normal-status').className =
+                'status-available';
+            } else {
+              document.getElementById('normal-status').textContent =
+                data.message || '不可用';
+              document.getElementById('normal-status').className =
+                'status-unavailable';
+            }
+          }
+        } catch (error) {
+          console.error('加载刷新状态失败:', error);
+          document.getElementById('last-normal-refresh').textContent =
+            '加载失败';
+          document.getElementById('normal-status').textContent = '检查失败';
+          document.getElementById('normal-status').className =
+            'status-unavailable';
+        }
+      }
+
+      // 检查刷新状态
+      async function checkRefreshStatus() {
+        try {
+          // 获取设备总数
+          const statsResponse = await fetch('/api/cpes/stats');
+          const statsResult = await statsResponse.json();
+
+          const totalDevices = statsResult.success ? statsResult.data.total : 0;
+
+          // 根据模式估算时间
+          let estimatedTime = '未知';
+          if (totalDevices > 0) {
+            const batchSize = 100; // 假设批量大小为100
+            const timePerBatch = 2; // 每批预计2秒
+            const batches = Math.ceil(totalDevices / batchSize);
+            const totalSeconds = batches * timePerBatch;
+
+            if (totalSeconds < 60) {
+              estimatedTime = `${totalSeconds} 秒`;
+            } else {
+              estimatedTime = `${Math.ceil(totalSeconds / 60)} 分钟`;
+            }
+          }
+
+          // 更新摘要信息
+          document.getElementById('summary-mode').textContent =
+            selectedRefreshMode === 'normal' ? '普通模式' : '强制模式';
+          document.getElementById('summary-total').textContent = totalDevices;
+          document.getElementById('summary-estimated').textContent =
+            estimatedTime;
+
+          // 显示摘要和确认按钮
+          document.getElementById('refresh-summary').style.display = 'block';
+          document.getElementById('check-refresh-btn').style.display = 'none';
+          document.getElementById('confirm-refresh-btn').style.display =
+            'inline-block';
+        } catch (error) {
+          console.error('检查刷新状态失败:', error);
+          alert(`检查失败: ${error.message}`);
+        }
+      }
+
+      // 确认启动刷新任务
+      async function confirmRefreshTask() {
+        try {
+          const operator = '管理员'; // 这里可以扩展为获取当前登录用户
+
+          const response = await fetch('/api/admin/refresh-tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              mode: selectedRefreshMode,
+              operator: operator,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            const task = result.data;
+
+            // 保存任务数据
+            refreshTaskData = task;
+
+            // 显示成功消息
+            alert(
+              `刷新任务已启动！\n任务ID: ${task.taskId}\n\n将跳转到进度监控页面。`,
+            );
+
+            // 关闭对话框
+            hideStatusRefreshDialog();
+
+            // 跳转到进度监控页面
+            window.location.href = `/refresh-progress.html?taskId=${task.taskId}`;
+          } else {
+            alert(`启动失败: ${result.error || '未知错误'}`);
+          }
+        } catch (error) {
+          console.error('启动刷新任务失败:', error);
+          alert(`请求失败: ${error.message}`);
+        }
+      }
+
+      // ==================== 刷新历史相关功能 ====================
+
+      // 显示刷新历史对话框
+      function showRefreshHistory() {
+        document.getElementById('refresh-history-dialog').style.display =
+          'flex';
+        loadRefreshHistory();
+      }
+
+      // 隐藏刷新历史对话框
+      function hideRefreshHistory() {
+        document.getElementById('refresh-history-dialog').style.display =
+          'none';
+      }
+
+      // 加载刷新历史
+      async function loadRefreshHistory() {
+        const historyList = document.getElementById('history-list');
+        historyList.innerHTML = '<div class="loading-spinner">加载中...</div>';
+
+        try {
+          const statusFilter = document.getElementById(
+            'history-filter-status',
+          ).value;
+          const dateFilter = document.getElementById(
+            'history-filter-date',
+          ).value;
+
+          let url = '/api/admin/refresh-tasks?limit=20';
+          if (statusFilter) {
+            url += `&status=${statusFilter}`;
+          }
+
+          const response = await fetch(url);
+          const result = await response.json();
+
+          if (result.success) {
+            const tasks = result.data.tasks || [];
+            const stats = result.data.stats || {};
+
+            // 更新统计信息
+            document.getElementById('history-total').textContent =
+              stats.total || 0;
+            document.getElementById('history-success').textContent =
+              stats.completed || 0;
+            document.getElementById('history-failed').textContent =
+              stats.failed || 0;
+
+            // 渲染任务列表
+            if (tasks.length === 0) {
+              historyList.innerHTML =
+                '<div class="loading-spinner">暂无刷新任务记录</div>';
+              return;
+            }
+
+            let html = '';
+            tasks.forEach((task) => {
+              const started = new Date(task.startedAt).toLocaleString();
+              const completed = task.completedAt
+                ? new Date(task.completedAt).toLocaleString()
+                : '--';
+              const duration = task.completedAt
+                ? Math.round(
+                    (new Date(task.completedAt) - new Date(task.startedAt)) /
+                      1000,
+                  )
+                : '--';
+
+              html += `
+          <div class="history-item">
+            <div class="history-item-header">
+              <div>
+                <strong>${task.mode === 'force' ? '强制模式' : '普通模式'}</strong>
+                <span class="history-item-id">${task.taskId}</span>
+              </div>
+              <span class="history-item-status status-${task.status}">
+                ${getStatusText(task.status)}
+              </span>
+            </div>
+            
+            <div class="history-item-details">
+              <div class="history-detail-item">
+                <span class="history-detail-label">开始时间</span>
+                <span class="history-detail-value">${started}</span>
+              </div>
+              <div class="history-detail-item">
+                <span class="history-detail-label">完成时间</span>
+                <span class="history-detail-value">${completed}</span>
+              </div>
+              <div class="history-detail-item">
+                <span class="history-detail-label">耗时</span>
+                <span class="history-detail-value">${duration}秒</span>
+              </div>
+              <div class="history-detail-item">
+                <span class="history-detail-label">设备统计</span>
+                <span class="history-detail-value">${task.onlineCount || 0}在线 / ${task.offlineCount || 0}离线</span>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button onclick="viewTaskProgress('${task.taskId}')" class="btn btn-view">
+                查看详情
+              </button>
+              ${
+                task.status === 'running'
+                  ? `
+                <button onclick="cancelTaskFromHistory('${task.taskId}')" class="btn btn-view btn-warning">
+                  取消任务
+                </button>
+              `
+                  : ''
+              }
+            </div>
+          </div>
+        `;
+            });
+
+            historyList.innerHTML = html;
+          } else {
+            historyList.innerHTML = `<div class="loading-spinner">加载失败: ${result.error}</div>`;
+          }
+        } catch (error) {
+          console.error('加载刷新历史失败:', error);
+          historyList.innerHTML = `<div class="loading-spinner">加载失败: ${error.message}</div>`;
+        }
+      }
+
+      // 获取状态文本
+      function getStatusText(status) {
+        const statusMap = {
+          pending: '等待中',
+          running: '运行中',
+          completed: '已完成',
+          failed: '失败',
+          cancelled: '已取消',
+        };
+        return statusMap[status] || status;
+      }
+
+      // 查看任务进度
+      function viewTaskProgress(taskId) {
+        window.location.href = `/refresh-progress.html?taskId=${taskId}`;
+      }
+
+      // 从历史中取消任务
+      async function cancelTaskFromHistory(taskId) {
+        if (!confirm('确定要取消这个任务吗？已经处理的部分将保持当前状态。')) {
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/api/admin/refresh-tasks/${taskId}/cancel`,
+            {
+              method: 'POST',
+            },
+          );
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert('任务已取消');
+            loadRefreshHistory(); // 重新加载历史
+          } else {
+            alert(`取消失败: ${result.error}`);
+          }
+        } catch (error) {
+          alert(`取消请求失败: ${error.message}`);
+        }
+      }
+
+      // 清理旧刷新历史
+      async function clearOldRefreshHistory() {
+        if (!confirm('确定要清理30天前的旧任务记录吗？此操作不可恢复。')) {
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/admin/refresh-tasks/cleanup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ daysToKeep: 30 }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert(`清理完成: ${result.message}`);
+            loadRefreshHistory(); // 重新加载历史
+          } else {
+            alert(`清理失败: ${result.error}`);
+          }
+        } catch (error) {
+          alert(`清理请求失败: ${error.message}`);
+        }
+      }
+
+      // ==================== 辅助函数 ====================
+
+      // 页面加载时初始化
+      document.addEventListener('DOMContentLoaded', function () {
+        // 可以在这里添加初始化代码
+      });
     </script>
   </body>
 </html>

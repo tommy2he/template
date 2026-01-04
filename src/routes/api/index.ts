@@ -7,6 +7,7 @@ import {
 } from '../../middleware/performance';
 import deviceRoutes from './deviceRoutes';
 import { CPEModel } from '../../db/schemas/cpe.schema';
+import adminRoutes from './admin.routes';
 
 const router = new Router();
 
@@ -151,6 +152,9 @@ router.get('/cpes/stats', async (ctx) => {
     ctx.body = { error: 'Internal server error' };
   }
 });
+
+// 挂载管理员路由
+router.use('/admin', adminRoutes.routes(), adminRoutes.allowedMethods());
 
 // 挂载设备路由
 router.use('/devices', deviceRoutes.routes(), deviceRoutes.allowedMethods());

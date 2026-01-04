@@ -9,6 +9,7 @@ export const cspAllowInlineScriptPaths = {
   development: [
     '/', // 主页面
     '/index.html', // 主页
+    '/refresh-progress.html', // 数据库online状态刷新进度
     '/ui.html', // 管理员界面
     '/simple-test.html', // 简单测试页面
     '/detailed-test.html', // 简单测试页面
