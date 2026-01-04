@@ -87,6 +87,42 @@ router.get('/rate-limit-test', async (ctx) => {
 });
 
 // 性能指标端点
+router.get('/performance', getPerformanceMetrics());
+
+// 重置性能指标
+router.post('/performance/reset', resetPerformanceMetrics());
+
+// 详细健康检查
+router.get('/performance/health', async (ctx) => {
+  const memory = process.memoryUsage();
+  const cpus = os.cpus();
+
+  ctx.body = {
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    process: {
+      uptime: process.uptime(),
+      memory: {
+        rss: `${(memory.rss / 1024 / 1024).toFixed(2)} MB`,
+        heapTotal: `${(memory.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+        heapUsed: `${(memory.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+        external: `${(memory.external / 1024 / 1024).toFixed(2)} MB`,
+      },
+      pid: process.pid,
+      version: process.version,
+      platform: process.platform,
+    },
+    system: {
+      cpus: cpus.length,
+      loadAvg: os.loadavg(),
+      freemem: `${(os.freemem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
+      totalmem: `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
+      uptime: os.uptime(),
+    },
+  };
+});
+
+// 添加CPE统计信息路由
 router.get('/cpes/stats', async (ctx) => {
   try {
     const total = await CPEModel.countDocuments({});
@@ -160,74 +196,6 @@ router.get('/cpes/connection-stats', async (ctx) => {
   } catch (error) {
     //eslint-disable-next-line
     console.error('获取连接统计错误:', error);
-    ctx.status = 500;
-    ctx.body = { error: 'Internal server error' };
-  }
-});
-
-// 重置性能指标
-router.post('/performance/reset', resetPerformanceMetrics());
-
-// 详细健康检查
-router.get('/performance/health', async (ctx) => {
-  const memory = process.memoryUsage();
-  const cpus = os.cpus();
-
-  ctx.body = {
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    process: {
-      uptime: process.uptime(),
-      memory: {
-        rss: `${(memory.rss / 1024 / 1024).toFixed(2)} MB`,
-        heapTotal: `${(memory.heapTotal / 1024 / 1024).toFixed(2)} MB`,
-        heapUsed: `${(memory.heapUsed / 1024 / 1024).toFixed(2)} MB`,
-        external: `${(memory.external / 1024 / 1024).toFixed(2)} MB`,
-      },
-      pid: process.pid,
-      version: process.version,
-      platform: process.platform,
-    },
-    system: {
-      cpus: cpus.length,
-      loadAvg: os.loadavg(),
-      freemem: `${(os.freemem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
-      totalmem: `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
-      uptime: os.uptime(),
-    },
-  };
-});
-
-// 添加CPE统计信息路由
-router.get('/cpes/stats', async (ctx) => {
-  try {
-    const total = await CPEModel.countDocuments({});
-    const online = await CPEModel.countDocuments({
-      connectionStatus: { $in: ['connected', 'registered'] },
-    });
-    const offline = await CPEModel.countDocuments({
-      connectionStatus: 'disconnected',
-    });
-
-    // 计算总心跳数
-    const heartbeatStats = await CPEModel.aggregate([
-      { $group: { _id: null, totalHeartbeats: { $sum: '$heartbeatCount' } } },
-    ]);
-
-    ctx.body = {
-      success: true,
-      data: {
-        total,
-        online,
-        offline,
-        totalHeartbeats: heartbeatStats[0]?.totalHeartbeats || 0,
-        onlinePercentage: total > 0 ? Math.round((online / total) * 100) : 0,
-        timestamp: new Date().toISOString(),
-      },
-    };
-  } catch (error) {
-    //eslint-disable-next-line
-    console.error('获取CPE统计错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }
