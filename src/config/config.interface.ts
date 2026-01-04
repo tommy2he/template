@@ -79,4 +79,15 @@ export interface IConfig {
     retentionDays: number;
     endpoints: string[];
   };
+
+  // ========== 2.0版本新增CPE管理配置 ==========
+  cpeManagement: {
+    // 在线状态计算配置
+    onlineTimeout: number; // CPE在线超时时间（毫秒）
+    statusRefreshMode: string; // 状态刷新模式：manual/timed
+    bootThreshold: number; // 启动阈值（毫秒）
+
+    // 批量处理配置
+    refreshBatchSize: number; // 状态刷新批量大小
+  };
 }

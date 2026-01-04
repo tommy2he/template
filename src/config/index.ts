@@ -112,6 +112,17 @@ const config: IConfig = {
       process.env.PERFORMANCE_ENDPOINTS || '/,/api,/api/health,/api/performance'
     ).split(','),
   },
+
+  // ========== 2.0版本新增CPE管理配置 ==========
+  cpeManagement: {
+    // 在线状态计算配置
+    onlineTimeout: parseInt(process.env.CPE_ONLINE_TIMEOUT || '1800000'), // 默认30分钟
+    statusRefreshMode: process.env.CPE_STATUS_REFRESH_MODE || 'manual',
+    bootThreshold: parseInt(process.env.CPE_BOOT_THRESHOLD || '300000'), // 默认5分钟
+
+    // 批量处理配置
+    refreshBatchSize: parseInt(process.env.CPE_REFRESH_BATCH_SIZE || '100'),
+  },
 };
 
 // 环境验证

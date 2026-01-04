@@ -1,6 +1,6 @@
 {
   "name": "koa_template_app",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Koa模板应用 - 模拟CPE集成版本",
   "main": "dist/index.js",
   "scripts": {
@@ -122,7 +122,15 @@
     "status": "echo '服务器状态检查...' && curl -s http://localhost:3000/api/health || echo '服务器未运行'",
     "cpe:status": "echo 'CPE模拟器状态...' && ps aux | grep 'node.*cpe' | grep -v grep || echo 'CPE未运行'",
     "cpe:test:inactivity": "cross-env NODE_ENV=test dotenv -e cpe/.env.cpe.test -- ts-node cpe/src/client.ts",
-    "cpe:test:heartbeat": "cross-env HEARTBEAT_INTERVAL=10 ts-node cpe/src/client.ts"
+    "cpe:test:heartbeat": "cross-env HEARTBEAT_INTERVAL=10 ts-node cpe/src/client.ts",
+    "dev:test-status": "ts-node scripts/dev/ts/test-status-calculator.ts",
+    "dev:test-status:watch": "nodemon --watch src --watch scripts/dev/ts --ext ts --exec npm run dev:test-status",
+    "dev:test-status:small-batch": "cross-env CPE_REFRESH_BATCH_SIZE=5 ts-node scripts/dev/ts/test-status-calculator.ts",
+    "dev:test:1": "ts-node -r tsconfig-paths/register --project tsconfig.json scripts/dev/ts/test-status-quick.ts",
+    "dev:test:2": "ts-node -r tsconfig-paths/register --project tsconfig.json scripts/dev/ts/test-status-calculator.ts",
+    "dev:test:3": "npx ts-node --project tsconfig.json  scripts/dev/ts/test-status-calculator-simple.ts",
+    "dev:test:4": "npx ts-node --project tsconfig.json  scripts/dev/ts/test-status-calculator-easy.ts",
+    "dev:test:5": "npx ts-node --transpile-only scripts/dev/ts/test-status-calculator-easy.ts"
   },
   "keywords": [
     "koa",
@@ -172,6 +180,7 @@
     "@types/koa-ratelimit": "^5.0.5",
     "@types/koa-router": "^7.4.9",
     "@types/koa-static": "^4.0.4",
+    "@types/module-alias": "^2.0.4",
     "@types/mongodb": "^4.0.6",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^25.0.3",
@@ -189,6 +198,7 @@
     "jest-html-reporter": "^4.3.0",
     "koa-helmet": "^9.0.0",
     "loadtest": "^6.0.0",
+    "module-alias": "^2.2.3",
     "mongodb-memory-server": "^11.0.1",
     "nodemon": "^3.1.11",
     "nyc": "^17.1.0",
@@ -196,6 +206,7 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
   }
 }
