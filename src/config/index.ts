@@ -12,6 +12,7 @@ const envFile =
       : '.env';
 
 dotenv.config({ path: path.resolve(process.cwd(), envFile) });
+console.log(`📁 加载环境变量文件: ${envFile}`);
 
 const config: IConfig = {
   // ... 原有的配置对象保持不变

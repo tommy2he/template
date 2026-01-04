@@ -1,0 +1,44 @@
+<!-- 创建 public/simple-test.html -->
+<!doctype html>
+<html>
+  <head>
+    <title>ACS 简单测试</title>
+  </head>
+  <body>
+    <h1>ACS 服务器测试</h1>
+    <div id="result">等待测试...</div>
+
+    <script>
+      console.log('✅ 脚本开始执行');
+
+      // 测试1: 基础JavaScript
+      document.getElementById('result').textContent = 'JavaScript已执行 ✓';
+
+      // 测试2: 异步获取数据
+      async function testFetch() {
+        console.log('🔄 开始测试fetch');
+        try {
+          const response = await fetch('/api/health');
+          const data = await response.json();
+          console.log('✅ API响应:', data);
+          document.getElementById('result').innerHTML +=
+            '<br>API连接成功 ✓ (' + data.status + ')';
+
+          // 测试CPE统计
+          const statsResponse = await fetch('/api/cpes/stats');
+          const statsData = await statsResponse.json();
+          console.log('📊 CPE统计:', statsData);
+          document.getElementById('result').innerHTML +=
+            '<br>CPE统计: ' + statsData.data.total + '台设备 ✓';
+        } catch (error) {
+          console.error('❌ 请求失败:', error);
+          document.getElementById('result').innerHTML +=
+            '<br><span style="color:red">错误: ' + error.message + '</span>';
+        }
+      }
+
+      // 页面加载后执行测试
+      setTimeout(testFetch, 100);
+    </script>
+  </body>
+</html>

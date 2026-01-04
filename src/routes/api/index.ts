@@ -6,6 +6,7 @@ import {
   resetPerformanceMetrics,
 } from '../../middleware/performance';
 import deviceRoutes from './deviceRoutes';
+import { CPEModel } from '../../db/schemas/cpe.schema';
 
 const router = new Router();
 
@@ -115,6 +116,40 @@ router.get('/performance/health', async (ctx) => {
       uptime: os.uptime(),
     },
   };
+});
+
+// 添加CPE统计信息路由
+router.get('/cpes/stats', async (ctx) => {
+  try {
+    const total = await CPEModel.countDocuments({});
+    const online = await CPEModel.countDocuments({
+      connectionStatus: { $in: ['connected', 'registered'] },
+    });
+    const offline = await CPEModel.countDocuments({
+      connectionStatus: 'disconnected',
+    });
+
+    // 计算总心跳数
+    const heartbeatStats = await CPEModel.aggregate([
+      { $group: { _id: null, totalHeartbeats: { $sum: '$heartbeatCount' } } },
+    ]);
+
+    ctx.body = {
+      success: true,
+      data: {
+        total,
+        online,
+        offline,
+        totalHeartbeats: heartbeatStats[0]?.totalHeartbeats || 0,
+        onlinePercentage: total > 0 ? Math.round((online / total) * 100) : 0,
+        timestamp: new Date().toISOString(),
+      },
+    };
+  } catch (error) {
+    console.error('获取CPE统计错误:', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Internal server error' };
+  }
 });
 
 // 挂载设备路由

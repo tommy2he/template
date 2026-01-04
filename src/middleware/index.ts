@@ -18,6 +18,9 @@ import rateLimit from './rateLimit';
 // import { swaggerUISimple as swaggerUI } from './swagger';
 import { swaggerUIOptimized as swaggerUI } from './swagger';
 
+// 导入 CSP 路径配置
+import { getCSPForPath } from '../config/csp-paths';
+
 export default (app: Koa): void => {
   // ========== 1. 性能监控（最外层，测量完整请求时间） ==========
   if (config.env !== 'test') {
@@ -59,23 +62,38 @@ export default (app: Koa): void => {
   }
 
   // ========== 9. 为 Swagger UI 设置专门的 CSP 头 ==========
-  if (config.enableSwagger && config.env !== 'production') {
-    app.use(async (ctx, next) => {
-      if (ctx.path === '/api-docs' || ctx.path.startsWith('/api-docs/')) {
-        // 设置允许 Swagger UI 加载外部资源的 CSP
-        ctx.set(
-          'Content-Security-Policy',
-          "default-src 'self'; " +
-            "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-            "img-src 'self' data: https:; " +
-            "font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-            "connect-src 'self';",
-        );
+  // if (config.enableSwagger && config.env !== 'production') {
+  //   app.use(async (ctx, next) => {
+  //     if (ctx.path === '/api-docs' || ctx.path.startsWith('/api-docs/')) {
+  //       // 设置允许 Swagger UI 加载外部资源的 CSP
+  //       ctx.set(
+  //         'Content-Security-Policy',
+  //         "default-src 'self'; " +
+  //           "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+  //           "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  //           "img-src 'self' data: https:; " +
+  //           "font-src 'self' https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+  //           "connect-src 'self';",
+  //       );
+  //     }
+  //     await next();
+  //   });
+  // }
+
+  // ========== 9. 为特定页面设置专门的 CSP 头 ==========
+  // 统一处理所有需要特殊 CSP 的页面
+  app.use(async (ctx, next) => {
+    const cspPolicy = getCSPForPath(config.env, ctx.path);
+    if (cspPolicy) {
+      ctx.set('Content-Security-Policy', cspPolicy);
+
+      // 开发环境记录日志
+      if (config.env !== 'production') {
+        console.log(`🔄 为 ${ctx.path} 设置特殊 CSP 策略`);
       }
-      await next();
-    });
-  }
+    }
+    await next();
+  });
 
   // ========== 10. Swagger UI（1.3版本） ==========
   if (config.enableSwagger && config.env !== 'production') {

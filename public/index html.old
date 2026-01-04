@@ -533,14 +533,13 @@
     </div>
 
     <script>
-      // 初始化页面 - 移除 process 相关代码
+      // 初始化页面
       document.addEventListener('DOMContentLoaded', function () {
-        console.log('📱 ACS控制面板初始化...');
-
-        // 移除 Node.js 特有的代码，改为固定文本
-        document.getElementById('node-version').textContent = '浏览器中不可用';
+        // 设置版本信息
+        document.getElementById('node-version').textContent =
+          process?.versions?.node || '未知';
         document.getElementById('last-update').textContent =
-          new Date().toLocaleString();
+          new Date().toLocaleDateString();
 
         // 加载系统状态
         loadSystemStatus();
@@ -550,9 +549,7 @@
       });
 
       // 加载系统状态
-      // 加载系统状态函数保持不变（但需要确保没有process引用）
       async function loadSystemStatus() {
-        console.log('🔄 加载系统状态...');
         try {
           // 获取系统健康信息
           const healthRes = await fetch('/api/health');
@@ -565,11 +562,13 @@
             );
           }
 
-          // 获取CPE统计
+          // 获取CPE统计 - 修复这部分
           const cpeRes = await fetch('/api/cpes/stats');
           if (cpeRes.ok) {
             const result = await cpeRes.json();
-            console.log('📊 CPE统计响应:', result);
+
+            // 检查API返回的数据结构
+            console.log('CPE统计响应:', result);
 
             if (result.success && result.data) {
               const data = result.data;
@@ -581,10 +580,21 @@
                 data.offline || 0;
               document.getElementById('heartbeat-count').textContent =
                 data.totalHeartbeats || 0;
+            } else {
+              // console.error('API返回数据格式错误:', result);
             }
+          } else {
+            // console.error('获取CPE统计失败:', cpeRes.status);
+          }
+
+          // 获取WebSocket连接数
+          const wsRes = await fetch('/api/performance/health');
+          if (wsRes.ok) {
+            const wsData = await wsRes.json();
+            // 这里可以添加WebSocket连接数显示
           }
         } catch (error) {
-          console.error('❌ 加载状态失败:', error);
+          console.error('加载状态失败:', error);
         }
       }
 

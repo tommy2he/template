@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-
-// /src/websocket/server.ts - 增强版WebSocket服务器
+// /src/websocket/server.ts - 增强版WebSocket服务器（消息区分处理）
 import { Server as WebSocketServer, WebSocket as WS } from 'ws';
 import { Server as HttpServer } from 'http';
 import { parse } from 'url';
@@ -24,13 +23,28 @@ export interface WebSocketMessage {
       oui?: string;
       productClass?: string;
     };
-    event?: string;
+    event?: string; // 关键字段：区分 "1 BOOT" 等事件
     parameterList?: string[];
+    eventCodes?: string[]; // 可能的事件代码数组
 
     // 心跳消息相关
     status?: string;
     uptime?: number;
     metrics?: Record<string, any>;
+
+    // 流量统计（心跳上报）
+    traffic?: {
+      uploadBytes?: number;
+      downloadBytes?: number;
+      connectionType?: string;
+    };
+
+    // 网络质量信息（心跳上报）
+    network?: {
+      signalStrength?: number;
+      cellId?: string;
+      networkType?: string;
+    };
 
     // 通用字段（IP和端口）
     udpPort?: number;
@@ -103,11 +117,6 @@ export class WebSocketManager extends EventEmitter {
         ws.on('message', async (data: Buffer) => {
           const messageStr = data.toString();
 
-          // 注释掉原始消息打印（保留但注释）
-          // console.log(
-          //   `📨 收到来自 ${cpeId} 的原始消息: ${messageStr.substring(0, 200)}${messageStr.length > 200 ? '...' : ''}`,
-          // );
-
           try {
             const data: WebSocketMessage = JSON.parse(messageStr); // 解析消息
 
@@ -143,7 +152,7 @@ export class WebSocketManager extends EventEmitter {
           console.error(`❌ CPE ${cpeId} WebSocket错误:`, error);
         });
 
-        // 4. 异步更新CPE状态
+        // 4. 异步更新CPE状态为connected
         setTimeout(async () => {
           try {
             await this.updateCPEStatus(
@@ -243,7 +252,7 @@ export class WebSocketManager extends EventEmitter {
     console.log(logMessage);
   }
 
-  // 处理TR-069消息
+  // 处理TR-069消息 - 核心修改点
   private async handleMessage(
     cpeId: string,
     data: WebSocketMessage,
@@ -281,20 +290,53 @@ export class WebSocketManager extends EventEmitter {
     }
   }
 
-  // TR-069 Inform处理
+  // TR-069 Inform处理 - 核心修改点
   private async handleInform(cpeId: string, data: WebSocketMessage) {
     console.log(`📞 处理CPE ${cpeId} 的Inform消息`);
 
-    // 解析设备信息
+    // 检查是否为BOOT事件
+    const eventCode = data.data?.event;
+    const eventCodes = data.data?.eventCodes || [];
+
+    // 判断是否为启动事件：event包含"1 BOOT"或以"1 BOOT"开头的事件代码
+    const isBootEvent =
+      eventCode === '1 BOOT' ||
+      eventCode?.startsWith('1 BOOT') ||
+      eventCodes.includes('1 BOOT') ||
+      eventCodes.some((code) => code.startsWith('1 BOOT'));
+
+    if (isBootEvent) {
+      console.log(
+        `🚀 CPE ${cpeId} 发送启动事件: ${eventCode || eventCodes.join(',')}`,
+      );
+      await this.handleBootEvent(cpeId, data);
+    } else {
+      console.log(
+        `📋 CPE ${cpeId} 发送其他Inform事件: ${eventCode || eventCodes.join(',')}`,
+      );
+      await this.handleInformEvent(cpeId, data);
+    }
+
+    // 发送Inform响应（无论何种Inform事件都需要响应）
+    this.sendToCPE(cpeId, {
+      type: 'informResponse',
+      sessionId: data.sessionId,
+      status: 0,
+      timestamp: Date.now(),
+    });
+  }
+
+  // 处理BOOT事件 - 新增方法
+  private async handleBootEvent(cpeId: string, data: WebSocketMessage) {
+    console.log(`🚀 处理CPE ${cpeId} 的启动事件`);
+
     const deviceInfo = data.data?.deviceInfo || {};
-    // 获取CPE上报的UDP端口（如果消息中有的话）
-    const udpPort = data.data?.udpPort || 7548;
-    // 获取CPE上报的IP地址（如果消息中有的话）
     const reportedIp = data.data?.localIp || data.data?.ipAddress;
+    const udpPort = data.data?.udpPort || 7548;
 
-    // 打印上报的IP和端口信息
-    console.log(`  上报IP: ${reportedIp || '未上报'}, UDP端口: ${udpPort}`);
+    console.log(`   上报IP: ${reportedIp || '未上报'}, UDP端口: ${udpPort}`);
 
+    // 构建更新数据
     const updateData: any = {
       connectionStatus: 'registered',
       manufacturer: deviceInfo.manufacturer,
@@ -305,7 +347,7 @@ export class WebSocketManager extends EventEmitter {
       oui: deviceInfo.oui,
       productClass: deviceInfo.productClass,
       lastSeen: new Date(),
-      firstSeen: new Date(),
+      lastBoot: new Date(), // 记录最后启动时间
       // 设置UDP端口
       wakeupPort: udpPort,
     };
@@ -315,41 +357,84 @@ export class WebSocketManager extends EventEmitter {
       updateData.ipAddress = reportedIp;
     }
 
+    // 递增启动次数
+    const cpe = await CPEModel.findOne({ cpeId });
+    if (cpe) {
+      updateData.bootCount = (cpe.bootCount || 0) + 1;
+    } else {
+      updateData.bootCount = 1; // 第一次启动
+      updateData.firstSeen = new Date();
+    }
+
     await CPEModel.findOneAndUpdate({ cpeId }, updateData, {
       upsert: true,
       new: true,
     });
 
-    // 调用updateCPEStatus来打印状态更新日志
-    // 传递必要的参数：状态为'registered'，上报的IP和UDP端口
-    await this.updateCPEStatus(
-      cpeId,
-      'registered',
-      undefined, // ws参数（不需要）
-      data.sessionId, // sessionId参数
-      undefined, // clientIp参数（使用上报的IP）
-      reportedIp, // reportedIp参数
-      udpPort, // udpPort参数
-    );
+    // 打印启动统计
+    console.log(`📊 CPE ${cpeId} 启动次数: ${updateData.bootCount}`);
 
-    // 发送Inform响应
+    // 发送额外的Boot响应（可选）
     this.sendToCPE(cpeId, {
-      type: 'informResponse',
+      type: 'bootResponse',
       sessionId: data.sessionId,
       status: 0,
       timestamp: Date.now(),
+      message: '启动事件已处理',
+    });
+
+    this.emit('cpeBooted', cpeId, updateData.bootCount);
+  }
+
+  // 处理其他Inform事件 - 新增方法
+  private async handleInformEvent(cpeId: string, data: WebSocketMessage) {
+    console.log(`📋 处理CPE ${cpeId} 的其他Inform事件`);
+
+    const deviceInfo = data.data?.deviceInfo || {};
+    const reportedIp = data.data?.localIp || data.data?.ipAddress;
+    const udpPort = data.data?.udpPort;
+
+    // 只更新必要的信息，不增加bootCount
+    const updateData: any = {
+      connectionStatus: 'registered',
+      lastSeen: new Date(),
+    };
+
+    // 如果有设备信息，更新它们
+    if (deviceInfo.manufacturer)
+      updateData.manufacturer = deviceInfo.manufacturer;
+    if (deviceInfo.model) updateData.model = deviceInfo.model;
+    if (deviceInfo.softwareVersion)
+      updateData.softwareVersion = deviceInfo.softwareVersion;
+    if (reportedIp) updateData.ipAddress = reportedIp;
+    if (udpPort) updateData.wakeupPort = udpPort;
+
+    await CPEModel.findOneAndUpdate({ cpeId }, updateData, {
+      upsert: true,
+      new: true,
     });
   }
 
-  // 心跳处理
-  // eslint-disable-next-line
+  // 心跳处理 - 核心修改点
   private async handleHeartbeat(cpeId: string, data: WebSocketMessage) {
+    console.log(`💓 处理CPE ${cpeId} 的心跳消息`);
+
     const heartbeatData = data.data || {};
+    const trafficData = heartbeatData.traffic;
+    const networkData = heartbeatData.network;
 
     const updateData: any = {
-      lastHeartbeat: new Date(),
       lastSeen: new Date(),
+      lastHeartbeat: new Date(),
     };
+
+    // 递增心跳次数
+    const cpe = await CPEModel.findOne({ cpeId });
+    if (cpe) {
+      updateData.heartbeatCount = (cpe.heartbeatCount || 0) + 1;
+    } else {
+      updateData.heartbeatCount = 1;
+    }
 
     // 如果心跳中包含UDP端口，更新它
     if (heartbeatData.udpPort !== undefined) {
@@ -363,6 +448,52 @@ export class WebSocketManager extends EventEmitter {
       console.log(`🔄 CPE ${cpeId} 心跳上报新IP地址: ${newIp}`);
     }
 
+    // 处理流量统计
+    if (
+      trafficData &&
+      (trafficData.uploadBytes !== undefined ||
+        trafficData.downloadBytes !== undefined)
+    ) {
+      const trafficStat = {
+        timestamp: new Date(),
+        uploadBytes: trafficData.uploadBytes || 0,
+        downloadBytes: trafficData.downloadBytes || 0,
+        connectionType: trafficData.connectionType,
+      };
+
+      // 添加到trafficStats数组（只保留最近100条记录）
+      updateData.$push = {
+        trafficStats: {
+          $each: [trafficStat],
+          $position: 0,
+          $slice: 100, // 只保留最新的100条记录
+        },
+      };
+
+      console.log(
+        `📊 CPE ${cpeId} 上报流量: 上行=${trafficStat.uploadBytes}字节, 下行=${trafficStat.downloadBytes}字节`,
+      );
+    }
+
+    // 处理网络质量信息
+    if (networkData) {
+      if (networkData.signalStrength !== undefined) {
+        updateData.signalStrength = networkData.signalStrength;
+      }
+      if (networkData.cellId !== undefined) {
+        updateData.cellId = networkData.cellId;
+      }
+      if (networkData.networkType !== undefined) {
+        updateData.networkType = networkData.networkType;
+      }
+
+      if (networkData.signalStrength !== undefined) {
+        console.log(
+          `📶 CPE ${cpeId} 信号强度: ${networkData.signalStrength} dBm`,
+        );
+      }
+    }
+
     await CPEModel.findOneAndUpdate({ cpeId }, updateData);
 
     // 发送心跳响应
@@ -370,6 +501,8 @@ export class WebSocketManager extends EventEmitter {
       type: 'heartbeatResponse',
       timestamp: Date.now(),
     });
+
+    this.emit('cpeHeartbeat', cpeId, updateData.heartbeatCount);
   }
 
   private async handleGetParameterValues(
@@ -489,6 +622,27 @@ export class WebSocketManager extends EventEmitter {
 
   public getConnectedCPEs(): string[] {
     return Array.from(this.connections.keys());
+  }
+
+  // 新增方法：获取CPE状态统计
+  public async getCPEStats() {
+    const total = await CPEModel.countDocuments({});
+    const connected = await CPEModel.countDocuments({
+      connectionStatus: 'connected',
+    });
+    const registered = await CPEModel.countDocuments({
+      connectionStatus: 'registered',
+    });
+    const bootCountTotal = await CPEModel.aggregate([
+      { $group: { _id: null, totalBoots: { $sum: '$bootCount' } } },
+    ]);
+
+    return {
+      total,
+      connected,
+      registered,
+      totalBoots: bootCountTotal[0]?.totalBoots || 0,
+    };
   }
 
   public close() {
