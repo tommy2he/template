@@ -1,13 +1,16 @@
 // /routes/api/index.ts - 清理版
 import Router from 'koa-router';
 import os from 'os';
+
 import {
+  //eslint-disable-next-line
   getPerformanceMetrics,
   resetPerformanceMetrics,
 } from '../../middleware/performance';
 import deviceRoutes from './deviceRoutes';
 import { CPEModel } from '../../db/schemas/cpe.schema';
 import adminRoutes from './admin.routes';
+import cpesRoutes from './cpes';
 
 const router = new Router();
 
@@ -84,7 +87,83 @@ router.get('/rate-limit-test', async (ctx) => {
 });
 
 // 性能指标端点
-router.get('/performance', getPerformanceMetrics());
+router.get('/cpes/stats', async (ctx) => {
+  try {
+    const total = await CPEModel.countDocuments({});
+
+    // 修改：使用 onlineStatus 而不是 connectionStatus
+    const online = await CPEModel.countDocuments({
+      onlineStatus: 'online',
+    });
+    const offline = await CPEModel.countDocuments({
+      onlineStatus: 'offline',
+    });
+
+    // 如果有些CPE还没有 onlineStatus（比如新设备），统计它们
+    const withoutStatus = await CPEModel.countDocuments({
+      onlineStatus: { $exists: false },
+    });
+
+    // 计算总心跳数
+    const heartbeatStats = await CPEModel.aggregate([
+      { $group: { _id: null, totalHeartbeats: { $sum: '$heartbeatCount' } } },
+    ]);
+
+    ctx.body = {
+      success: true,
+      data: {
+        total,
+        online,
+        offline,
+        withoutStatus, // 新增：还没有在线状态计算的设备数
+        totalHeartbeats: heartbeatStats[0]?.totalHeartbeats || 0,
+        onlinePercentage: total > 0 ? Math.round((online / total) * 100) : 0,
+        timestamp: new Date().toISOString(),
+      },
+    };
+  } catch (error) {
+    //eslint-disable-next-line
+    console.error('获取CPE统计错误:', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Internal server error' };
+  }
+});
+
+// 新增：获取连接状态统计（调试用）
+router.get('/cpes/connection-stats', async (ctx) => {
+  try {
+    const total = await CPEModel.countDocuments({});
+    const connected = await CPEModel.countDocuments({
+      connectionStatus: 'connected',
+    });
+    const registered = await CPEModel.countDocuments({
+      connectionStatus: 'registered',
+    });
+    const disconnected = await CPEModel.countDocuments({
+      connectionStatus: 'disconnected',
+    });
+    const connecting = await CPEModel.countDocuments({
+      connectionStatus: 'connecting',
+    });
+
+    ctx.body = {
+      success: true,
+      data: {
+        total,
+        connected,
+        registered,
+        disconnected,
+        connecting,
+        timestamp: new Date().toISOString(),
+      },
+    };
+  } catch (error) {
+    //eslint-disable-next-line
+    console.error('获取连接统计错误:', error);
+    ctx.status = 500;
+    ctx.body = { error: 'Internal server error' };
+  }
+});
 
 // 重置性能指标
 router.post('/performance/reset', resetPerformanceMetrics());
@@ -147,6 +226,7 @@ router.get('/cpes/stats', async (ctx) => {
       },
     };
   } catch (error) {
+    //eslint-disable-next-line
     console.error('获取CPE统计错误:', error);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
@@ -158,5 +238,8 @@ router.use('/admin', adminRoutes.routes(), adminRoutes.allowedMethods());
 
 // 挂载设备路由
 router.use('/devices', deviceRoutes.routes(), deviceRoutes.allowedMethods());
+
+// 挂载cpes路由
+router.use('/cpes', cpesRoutes.routes(), cpesRoutes.allowedMethods());
 
 export default router;

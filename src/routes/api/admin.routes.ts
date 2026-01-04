@@ -3,7 +3,8 @@
 import Router from 'koa-router';
 import { statusRefreshService } from '../../services/status-refresh.service';
 
-const router = new Router({ prefix: '/api/admin' });
+// const router = new Router({ prefix: '/api/admin' });
+const router = new Router();
 
 /**
  * 启动状态刷新任务

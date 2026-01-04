@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 // /src/routes/api/cpes.ts - 使用自定义上下文
 import Router from 'koa-router';
-import { CPEModel } from '@/db/schemas/cpe.schema';
+import { CPEModel } from '../../db/schemas/cpe.schema';
 import { Context } from 'koa';
-import { WebSocketManager } from '@/websocket/server';
-import { UDPClient } from '@/udp/client';
+import { WebSocketManager } from '../../websocket/server';
+import { UDPClient } from '../../udp/client';
 
 export interface CustomContext extends Context {
   wsManager?: WebSocketManager;
@@ -21,7 +21,8 @@ export interface CustomContext extends Context {
 //   wsManager?: any;
 // }
 
-const router = new Router({ prefix: '/api/cpes' });
+// const router = new Router({ prefix: '/api/cpes' });
+const router = new Router();
 
 // 获取所有CPE（管理用）
 router.get('/', async (ctx) => {
@@ -30,7 +31,7 @@ router.get('/', async (ctx) => {
     const { page = 1, limit = 20, status } = ctx.query;
 
     const query: any = {};
-    if (status) query.connectionStatus = status;
+    if (status) query.onlineStatus = status;
 
     const skip = (Number(page) - 1) * Number(limit);
 
