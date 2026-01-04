@@ -11,6 +11,7 @@ export const cspAllowInlineScriptPaths = {
     '/index.html', // 主页
     '/ui.html', // 管理员界面
     '/simple-test.html', // 简单测试页面
+    '/detailed-test.html', // 简单测试页面
     '/test.html', // 测试页面
     '/debug.html', // 调试页面
     '/direct-test.html', // 直接测试页面
@@ -18,6 +19,8 @@ export const cspAllowInlineScriptPaths = {
     '/check-headers.html', // 检查响应头页面
     '/test-minimal.html', // 最小测试页面
     '/alert.html', // 弹窗测试页面
+    '/new-page.html', // 新页面
+    '/admin/dashboard', // 管理面板
   ],
   test: [
     // 测试环境允许内联脚本的页面
