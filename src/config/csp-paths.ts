@@ -53,31 +53,68 @@ export const cspAllowExternalPaths = {
 };
 
 // 获取页面应使用的 CSP 策略
+// 修改后的 getCSPForPath 函数
 export function getCSPForPath(env: string, path: string): string | null {
   // 检查是否需要允许 eval（Swagger UI 等）
-  const allowEvalPaths =
-    cspAllowEvalPaths[env as keyof typeof cspAllowEvalPaths] || [];
+  const allowEvalPaths = getEvalPaths(env);
   if (allowEvalPaths.some((p) => path === p || path.startsWith(p))) {
     return getSwaggerUICSP();
   }
 
   // 检查是否需要允许外部资源
-  const allowExternalPaths =
-    cspAllowExternalPaths[env as keyof typeof cspAllowExternalPaths] || [];
+  const allowExternalPaths = getExternalPaths(env);
   if (allowExternalPaths.some((p) => path === p || path.startsWith(p))) {
     return getExternalResourceCSP();
   }
 
   // 检查是否需要允许内联脚本
-  const allowInlinePaths =
-    cspAllowInlineScriptPaths[env as keyof typeof cspAllowInlineScriptPaths] ||
-    [];
+  const allowInlinePaths = getInlinePaths(env);
   if (allowInlinePaths.includes(path)) {
     return getInlineScriptCSP();
   }
 
   // 不需要特殊 CSP
   return null;
+}
+
+// 添加辅助函数来处理类型安全
+function getEvalPaths(env: string): string[] {
+  switch (env) {
+    case 'development':
+      return cspAllowEvalPaths.development;
+    case 'test':
+      return cspAllowEvalPaths.test;
+    case 'production':
+      return cspAllowEvalPaths.production;
+    default:
+      return [];
+  }
+}
+
+function getExternalPaths(env: string): string[] {
+  switch (env) {
+    case 'development':
+      return cspAllowExternalPaths.development;
+    case 'test':
+      return cspAllowExternalPaths.test;
+    case 'production':
+      return cspAllowExternalPaths.production;
+    default:
+      return [];
+  }
+}
+
+function getInlinePaths(env: string): string[] {
+  switch (env) {
+    case 'development':
+      return cspAllowInlineScriptPaths.development;
+    case 'test':
+      return cspAllowInlineScriptPaths.test;
+    case 'production':
+      return cspAllowInlineScriptPaths.production;
+    default:
+      return [];
+  }
 }
 
 // Swagger UI 的 CSP 策略
