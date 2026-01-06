@@ -44,12 +44,12 @@ async function testConnection() {
   // 从配置获取连接字符串
   const appUri = getEnvValue(
     'MONGODB_URI',
-    'mongodb://koa_user:koa_password@localhost:27017/koa_template_dev',
+    'mongodb://koa_user:koa_password@localhost:27018/koa_template_dev',
   );
 
   const adminUri = getEnvValue(
     'MONGODB_ADMIN_URI',
-    'mongodb://admin:secret@localhost:27017/admin',
+    'mongodb://admin:secret@localhost:27018/admin',
   );
 
   const testCases = [

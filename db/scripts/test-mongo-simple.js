@@ -6,7 +6,7 @@ import { MongoClient } from 'mongodb';
 async function testConnection() {
   // 使用默认连接字符串
   const uri =
-    'mongodb://koa_user:koa_password@localhost:27017/koa_template_dev';
+    'mongodb://koa_user:koa_password@localhost:27018/koa_template_dev';
 
   const client = new MongoClient(uri);
 

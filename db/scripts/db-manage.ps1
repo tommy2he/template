@@ -171,7 +171,7 @@ switch ($Command.ToLower()) {
         
         # 执行备份
         Write-Host "正在备份到: $backupDir" -ForegroundColor Gray
-        docker exec koa_mongodb mongodump --uri="mongodb://admin:secret@localhost:27017" --out=/tmp/backup_$timestamp
+        docker exec koa_mongodb mongodump --uri="mongodb://admin:secret@localhost:27018" --out=/tmp/backup_$timestamp
         
         # 复制到主机
         docker cp koa_mongodb:/tmp/backup_$timestamp $backupDir
@@ -221,7 +221,7 @@ switch ($Command.ToLower()) {
             Expand-Archive -Path $backupFile -DestinationPath $tempDir -Force
             
             # 恢复数据库
-            docker exec koa_mongodb mongorestore --uri="mongodb://admin:secret@localhost:27017" --drop $tempDir
+            docker exec koa_mongodb mongorestore --uri="mongodb://admin:secret@localhost:27018" --drop $tempDir
             
             # 清理临时文件
             Remove-Item -Path $tempDir -Recurse -Force
@@ -242,10 +242,10 @@ switch ($Command.ToLower()) {
         Write-Host "📋 数据库连接信息:" -ForegroundColor Cyan
         Write-Host ""
         Write-Host "  应用连接字符串:" -ForegroundColor Gray
-        Write-Host "    mongodb://koa_user:koa_password@localhost:27017/koa_template_dev" -ForegroundColor White
+        Write-Host "    mongodb://koa_user:koa_password@localhost:27018/koa_template_dev" -ForegroundColor White
         Write-Host ""
         Write-Host "  管理员连接字符串:" -ForegroundColor Gray
-        Write-Host "    mongodb://admin:secret@localhost:27017/admin" -ForegroundColor White
+        Write-Host "    mongodb://admin:secret@localhost:27018/admin" -ForegroundColor White
         Write-Host ""
         Write-Host "  数据存储位置:" -ForegroundColor Gray
         Write-Host "    D:\docker\mongodb\data" -ForegroundColor White

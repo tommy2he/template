@@ -91,7 +91,7 @@ describe('Configuration Module', () => {
   it('应该在生产环境中警告本地MongoDB', () => {
     process.env.NODE_ENV = 'production';
     process.env.JWT_SECRET = 'production_secret'; // 避免JWT错误
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/prod_db';
+    process.env.MONGODB_URI = 'mongodb://localhost:27018/prod_db';
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
     require('@/config');

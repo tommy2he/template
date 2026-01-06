@@ -57,7 +57,7 @@ async function runSeeds(options = {}) {
   // 获取连接字符串
   const adminUri = getEnvValue(
     'MONGODB_ADMIN_URI',
-    'mongodb://admin:secret@localhost:27017/admin',
+    'mongodb://admin:secret@localhost:27018/admin',
   );
 
   const client = new MongoClient(adminUri, {
@@ -188,14 +188,20 @@ async function runSeeds(options = {}) {
     console.log(`   设备总数: ${devicesCount}`);
     console.log(`   在线设备: ${onlineDevices}`);
     console.log(`   离线设备: ${offlineDevices}`);
-    console.log(`   在线率: ${devicesCount > 0 ? Math.round((onlineDevices / devicesCount) * 100) : 0}%`);
+    console.log(
+      `   在线率: ${devicesCount > 0 ? Math.round((onlineDevices / devicesCount) * 100) : 0}%`,
+    );
 
     console.log('='.repeat(50));
     console.log('✅ 种子数据执行完成');
     console.log('\n💡 提示:');
     console.log('   查看数据: npm run db:app-shell');
-    console.log('   删除数据: node db/scripts/seed.js --drop --collection=devices');
-    console.log('   只运行特定集合: node db/scripts/seed.js --collection=devices');
+    console.log(
+      '   删除数据: node db/scripts/seed.js --drop --collection=devices',
+    );
+    console.log(
+      '   只运行特定集合: node db/scripts/seed.js --collection=devices',
+    );
   } catch (error) {
     console.error('❌ 种子过程出错:', error.message);
     process.exit(1);
@@ -214,7 +220,9 @@ function parseArgs() {
   };
 
   // 解析 --collection 参数
-  const collectionIndex = args.findIndex(arg => arg.startsWith('--collection='));
+  const collectionIndex = args.findIndex((arg) =>
+    arg.startsWith('--collection='),
+  );
   if (collectionIndex !== -1) {
     options.collection = args[collectionIndex].split('=')[1];
   }
@@ -231,11 +239,21 @@ function parseArgs() {
     console.log('  --help, -h           显示帮助信息');
     console.log('');
     console.log('示例:');
-    console.log('  node db/scripts/seed.js                       # 运行所有种子');
-    console.log('  node db/scripts/seed.js --drop                # 删除并重新插入所有');
-    console.log('  node db/scripts/seed.js --collection=devices  # 只运行设备种子');
-    console.log('  node db/scripts/seed.js --drop --collection=devices # 删除并重新插入设备数据');
-    console.log('  node db/scripts/seed.js --force               # 强制生产环境运行');
+    console.log(
+      '  node db/scripts/seed.js                       # 运行所有种子',
+    );
+    console.log(
+      '  node db/scripts/seed.js --drop                # 删除并重新插入所有',
+    );
+    console.log(
+      '  node db/scripts/seed.js --collection=devices  # 只运行设备种子',
+    );
+    console.log(
+      '  node db/scripts/seed.js --drop --collection=devices # 删除并重新插入设备数据',
+    );
+    console.log(
+      '  node db/scripts/seed.js --force               # 强制生产环境运行',
+    );
     console.log('');
     process.exit(0);
   }

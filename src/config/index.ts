@@ -45,10 +45,10 @@ const config: IConfig = {
   mongodb: {
     uri:
       process.env.MONGODB_URI ||
-      'mongodb://koa_user:koa_password@localhost:27017/koa_template_dev',
+      'mongodb://koa_user:koa_password@localhost:27018/koa_template_dev',
     adminUri:
       process.env.MONGODB_ADMIN_URI ||
-      'mongodb://admin:secret@localhost:27017/admin',
+      'mongodb://admin:secret@localhost:27018/admin',
     options: {
       maxPoolSize: parseInt(process.env.MONGODB_MAX_POOL_SIZE || '10'),
       minPoolSize: parseInt(process.env.MONGODB_MIN_POOL_SIZE || '2'),

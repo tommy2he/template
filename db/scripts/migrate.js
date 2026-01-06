@@ -15,7 +15,7 @@ async function runMigrations() {
   // 获取连接字符串
   const adminUri = getEnvValue(
     'MONGODB_ADMIN_URI',
-    'mongodb://admin:secret@localhost:27017/admin',
+    'mongodb://admin:secret@localhost:27018/admin',
   );
 
   const client = new MongoClient(adminUri, {

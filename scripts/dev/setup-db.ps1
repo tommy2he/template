@@ -120,8 +120,8 @@ Write-Host "`n5. 数据库连接信息:" -ForegroundColor Yellow
 Write-Host ""
 
 # 从环境变量获取连接字符串
-$MongoDBUri = Get-EnvValue -Key "MONGODB_URI" -DefaultValue "mongodb://koa_user:koa_password@localhost:27017/koa_template_dev" -EnvVars $envVars
-$MongoDBAdminUri = Get-EnvValue -Key "MONGODB_ADMIN_URI" -DefaultValue "mongodb://admin:secret@localhost:27017/admin" -EnvVars $envVars
+$MongoDBUri = Get-EnvValue -Key "MONGODB_URI" -DefaultValue "mongodb://koa_user:koa_password@localhost:27018/koa_template_dev" -EnvVars $envVars
+$MongoDBAdminUri = Get-EnvValue -Key "MONGODB_ADMIN_URI" -DefaultValue "mongodb://admin:secret@localhost:27018/admin" -EnvVars $envVars
 
 Write-Host "  应用连接字符串:" -ForegroundColor Gray
 Write-Host "    $MongoDBUri" -ForegroundColor White

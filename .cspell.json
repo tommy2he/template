@@ -5,9 +5,12 @@
     "dist"
   ],
   "words": [
+    "ADMINPASSWORD",
+    "ADMINUSERNAME",
     "APIV",
     "asynciterable",
     "autocannon",
+    "BASICAUTH",
     "bodyparser",
     "chcp",
     "cors",
@@ -26,6 +29,7 @@
     "hihihi",
     "HSTS",
     "ICPE",
+    "INITDB",
     "koa",
     "LASTEXITCODE",
     "loadtest",

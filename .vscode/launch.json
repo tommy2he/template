@@ -15,7 +15,7 @@
         "PORT": "3000",
         "WS_PORT": "7547",
         "UDP_PORT": "7548",
-        "MONGODB_URI": "mongodb://localhost:27017/koa_template_dev",
+        "MONGODB_URI": "mongodb://localhost:27018/koa_template_dev",
         "LOG_LEVEL": "debug"
       }
     },

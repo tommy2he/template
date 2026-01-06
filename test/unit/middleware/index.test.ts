@@ -14,19 +14,19 @@ jest.mock('@/config', () => ({
     // 日志配置
     logLevel: 'info',
     logFormat: 'combined',
-    
+
     // API 配置
     apiPrefix: '/api',
     apiVersion: 'v1',
     apiTimeout: 30000,
-    
+
     // CORS 配置
     corsOrigin: 'http://localhost:3000',
     corsCredentials: true,
 
     // 数据库配置
     mongodb: {
-      uri: 'mongodb://localhost:27017/koa_template_test',
+      uri: 'mongodb://localhost:27018/koa_template_test',
       options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -40,11 +40,11 @@ jest.mock('@/config', () => ({
     // 开发配置
     enableSwagger: false,
     debug: false,
-    
+
     // 其他配置
     uploadMaxSize: 10485760,
     uploadAllowedTypes: ['image/jpeg', 'image/png'],
-    
+
     // 1.3版本新增配置
     rateLimit: {
       enabled: false, // 测试环境禁用
@@ -66,7 +66,7 @@ jest.mock('@/config', () => ({
       description: 'Koa模板应用的API文档',
       version: '1.0.0',
     },
-    
+
     // 1.4版本新增性能监控配置
     performance: {
       enabled: false, // 测试环境禁用
