@@ -3,7 +3,7 @@
 /* eslint-disable-next-line */
 const fetch = require('node-fetch');
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3300';
 
 async function testAPI() {
   console.log('🧪 测试状态刷新API...\n');

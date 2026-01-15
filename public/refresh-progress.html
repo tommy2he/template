@@ -1,600 +1,646 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>状态刷新进度监控</title>
     <style>
-        :root {
-            --primary-color: #1890ff;
-            --secondary-color: #52c41a;
-            --danger-color: #ff4d4f;
-            --warning-color: #faad14;
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
-            --text-color: #262626;
-            --border-color: #d9d9d9;
-        }
+      :root {
+        --primary-color: #1890ff;
+        --secondary-color: #52c41a;
+        --danger-color: #ff4d4f;
+        --warning-color: #faad14;
+        --bg-color: #f5f5f5;
+        --card-bg: #ffffff;
+        --text-color: #262626;
+        --border-color: #d9d9d9;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), #40a9ff);
-            color: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+      .header {
+        background: linear-gradient(135deg, var(--primary-color), #40a9ff);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
 
-        .header h1 {
-            margin: 0;
-            font-size: 2em;
-        }
+      .header h1 {
+        margin: 0;
+        font-size: 2em;
+      }
 
-        .header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-        }
+      .header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+      }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
+      .back-link {
+        display: inline-block;
+        margin-top: 15px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
+      .back-link:hover {
+        text-decoration: underline;
+      }
 
-        .task-info {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+      .task-info {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-        .task-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
+      .task-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
 
-        .info-item {
-            padding: 10px;
-            background: var(--bg-color);
-            border-radius: 4px;
-        }
+      .info-item {
+        padding: 10px;
+        background: var(--bg-color);
+        border-radius: 4px;
+      }
 
-        .info-label {
-            font-weight: bold;
-            color: #8c8c8c;
-            font-size: 0.9em;
-        }
+      .info-label {
+        font-weight: bold;
+        color: #8c8c8c;
+        font-size: 0.9em;
+      }
 
-        .info-value {
-            font-size: 1.1em;
-            margin-top: 5px;
-        }
+      .info-value {
+        font-size: 1.1em;
+        margin-top: 5px;
+      }
 
-        .progress-container {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+      .progress-container {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
 
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: var(--bg-color);
-            border-radius: 15px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
+      .progress-bar {
+        width: 100%;
+        height: 30px;
+        background: var(--bg-color);
+        border-radius: 15px;
+        margin: 20px 0;
+        overflow: hidden;
+        position: relative;
+      }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), #40a9ff);
-            border-radius: 15px;
-            width: 0%;
-            transition: width 0.5s ease-in-out;
-            position: relative;
-        }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), #40a9ff);
+        border-radius: 15px;
+        width: 0%;
+        transition: width 0.5s ease-in-out;
+        position: relative;
+      }
 
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: bold;
-            color: var(--text-color);
-            z-index: 1;
-        }
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        color: var(--text-color);
+        z-index: 1;
+      }
 
-        .stats-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+      .stats-container {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
 
-        .stat-item {
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-        }
+      .stat-item {
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+      }
 
-        .stat-item.online {
-            background: rgba(82, 196, 26, 0.1);
-            border-left: 4px solid var(--secondary-color);
-        }
+      .stat-item.online {
+        background: rgba(82, 196, 26, 0.1);
+        border-left: 4px solid var(--secondary-color);
+      }
 
-        .stat-item.offline {
-            background: rgba(255, 77, 79, 0.1);
-            border-left: 4px solid var(--danger-color);
-        }
+      .stat-item.offline {
+        background: rgba(255, 77, 79, 0.1);
+        border-left: 4px solid var(--danger-color);
+      }
 
-        .stat-item.total {
-            background: rgba(24, 144, 255, 0.1);
-            border-left: 4px solid var(--primary-color);
-        }
+      .stat-item.total {
+        background: rgba(24, 144, 255, 0.1);
+        border-left: 4px solid var(--primary-color);
+      }
 
-        .stat-item.time {
-            background: rgba(250, 173, 20, 0.1);
-            border-left: 4px solid var(--warning-color);
-        }
+      .stat-item.time {
+        background: rgba(250, 173, 20, 0.1);
+        border-left: 4px solid var(--warning-color);
+      }
 
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
+      .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        margin: 10px 0;
+      }
 
-        .stat-label {
-            color: #8c8c8c;
-            font-size: 0.9em;
-        }
+      .stat-label {
+        color: #8c8c8c;
+        font-size: 0.9em;
+      }
 
-        .actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+      .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      }
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
 
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
+      .btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
 
-        .btn-primary:hover {
-            background: #40a9ff;
-        }
+      .btn-primary:hover {
+        background: #40a9ff;
+      }
 
-        .btn-secondary {
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
+      .btn-secondary {
+        background: var(--bg-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+      }
 
-        .btn-secondary:hover {
-            background: #e6f7ff;
-            border-color: var(--primary-color);
-        }
+      .btn-secondary:hover {
+        background: #e6f7ff;
+        border-color: var(--primary-color);
+      }
 
-        .btn-danger {
-            background: var(--danger-color);
-            color: white;
-        }
+      .btn-danger {
+        background: var(--danger-color);
+        color: white;
+      }
 
-        .btn-danger:hover {
-            background: #ff7875;
-        }
+      .btn-danger:hover {
+        background: #ff7875;
+      }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-left: 10px;
-        }
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: bold;
+        margin-left: 10px;
+      }
 
-        .status-pending { background: #d9d9d9; color: #595959; }
-        .status-running { background: #e6f7ff; color: #0050b3; }
-        .status-completed { background: #f6ffed; color: #237804; }
-        .status-failed { background: #fff1f0; color: #a8071a; }
-        .status-cancelled { background: #fff7e6; color: #ad6800; }
+      .status-pending {
+        background: #d9d9d9;
+        color: #595959;
+      }
+      .status-running {
+        background: #e6f7ff;
+        color: #0050b3;
+      }
+      .status-completed {
+        background: #f6ffed;
+        color: #237804;
+      }
+      .status-failed {
+        background: #fff1f0;
+        color: #a8071a;
+      }
+      .status-cancelled {
+        background: #fff7e6;
+        color: #ad6800;
+      }
 
-        .log-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            max-height: 200px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
+      .log-container {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
 
-        .log-entry {
-            padding: 5px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
+      .log-entry {
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
 
-        .log-time {
-            color: #8c8c8c;
-            margin-right: 10px;
-        }
+      .log-time {
+        color: #8c8c8c;
+        margin-right: 10px;
+      }
 
-        .hidden {
-            display: none;
-        }
+      .hidden {
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <h1>🔄 CPE状态刷新进度监控</h1>
-        <p>实时监控状态刷新任务的执行进度</p>
-        <a href="/" class="back-link">← 返回主控制面板</a>
+      <h1>🔄 CPE状态刷新进度监控</h1>
+      <p>实时监控状态刷新任务的执行进度</p>
+      <a href="/" class="back-link">← 返回主控制面板</a>
     </div>
 
     <div class="task-info">
-        <h2>任务信息</h2>
-        <div class="task-info-grid">
-            <div class="info-item">
-                <div class="info-label">任务ID</div>
-                <div class="info-value" id="task-id">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">模式</div>
-                <div class="info-value" id="task-mode">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">状态</div>
-                <div class="info-value" id="task-status">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">开始时间</div>
-                <div class="info-value" id="task-started">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">完成时间</div>
-                <div class="info-value" id="task-completed">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">操作员</div>
-                <div class="info-value" id="task-operator">--</div>
-            </div>
+      <h2>任务信息</h2>
+      <div class="task-info-grid">
+        <div class="info-item">
+          <div class="info-label">任务ID</div>
+          <div class="info-value" id="task-id">--</div>
         </div>
+        <div class="info-item">
+          <div class="info-label">模式</div>
+          <div class="info-value" id="task-mode">--</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">状态</div>
+          <div class="info-value" id="task-status">--</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">开始时间</div>
+          <div class="info-value" id="task-started">--</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">完成时间</div>
+          <div class="info-value" id="task-completed">--</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">操作员</div>
+          <div class="info-value" id="task-operator">--</div>
+        </div>
+      </div>
     </div>
 
     <div class="progress-container">
-        <h2>刷新进度</h2>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-            <div class="progress-text" id="progress-text">0%</div>
-        </div>
-        <div id="progress-details">
-            <p>正在初始化任务...</p>
-        </div>
+      <h2>刷新进度</h2>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+        <div class="progress-text" id="progress-text">0%</div>
+      </div>
+      <div id="progress-details">
+        <p>正在初始化任务...</p>
+      </div>
     </div>
 
     <div class="stats-container">
-        <h2>统计信息</h2>
-        <div class="stats-grid">
-            <div class="stat-item total">
-                <div class="stat-label">总设备数</div>
-                <div class="stat-value" id="total-devices">0</div>
-            </div>
-            <div class="stat-item online">
-                <div class="stat-label">在线设备</div>
-                <div class="stat-value" id="online-devices">0</div>
-            </div>
-            <div class="stat-item offline">
-                <div class="stat-label">离线设备</div>
-                <div class="stat-value" id="offline-devices">0</div>
-            </div>
-            <div class="stat-item time">
-                <div class="stat-label">预估剩余时间</div>
-                <div class="stat-value" id="estimated-time">--</div>
-            </div>
+      <h2>统计信息</h2>
+      <div class="stats-grid">
+        <div class="stat-item total">
+          <div class="stat-label">总设备数</div>
+          <div class="stat-value" id="total-devices">0</div>
         </div>
+        <div class="stat-item online">
+          <div class="stat-label">在线设备</div>
+          <div class="stat-value" id="online-devices">0</div>
+        </div>
+        <div class="stat-item offline">
+          <div class="stat-label">离线设备</div>
+          <div class="stat-value" id="offline-devices">0</div>
+        </div>
+        <div class="stat-item time">
+          <div class="stat-label">预估剩余时间</div>
+          <div class="stat-value" id="estimated-time">--</div>
+        </div>
+      </div>
     </div>
 
     <div class="actions">
-        <button onclick="refreshProgress()" class="btn btn-secondary" id="refresh-btn">
-            🔄 刷新进度
-        </button>
-        <button onclick="cancelTask()" class="btn btn-danger" id="cancel-btn">
-            🛑 取消任务
-        </button>
-        <button onclick="viewInBackground()" class="btn btn-secondary">
-            ⏸️ 在后台继续
-        </button>
+      <button
+        onclick="refreshProgress()"
+        class="btn btn-secondary"
+        id="refresh-btn"
+      >
+        🔄 刷新进度
+      </button>
+      <button onclick="cancelTask()" class="btn btn-danger" id="cancel-btn">
+        🛑 取消任务
+      </button>
+      <button onclick="viewInBackground()" class="btn btn-secondary">
+        ⏸️ 在后台继续
+      </button>
     </div>
 
     <div class="log-container" id="log-container">
-        <h3>任务日志</h3>
-        <div id="log-entries">
-            <div class="log-entry">
-                <span class="log-time" id="current-time"></span>
-                <span>页面加载完成，开始监控任务进度...</span>
-            </div>
+      <h3>任务日志</h3>
+      <div id="log-entries">
+        <div class="log-entry">
+          <span class="log-time" id="current-time"></span>
+          <span>页面加载完成，开始监控任务进度...</span>
         </div>
+      </div>
     </div>
 
     <script>
-        // 获取URL参数
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                taskId: params.get('taskId')
-            };
-        }
+      // 获取URL参数
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          taskId: params.get('taskId'),
+        };
+      }
 
-        // 更新当前时间显示
-        function updateCurrentTime() {
-            const now = new Date();
-            document.getElementById('current-time').textContent = 
-                now.toTimeString().split(' ')[0];
-        }
+      // 更新当前时间显示
+      function updateCurrentTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now
+          .toTimeString()
+          .split(' ')[0];
+      }
 
-        // 添加日志条目
-        function addLogEntry(message) {
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerHTML = `
+      // 添加日志条目
+      function addLogEntry(message) {
+        const now = new Date();
+        const timeStr = now.toTimeString().split(' ')[0];
+
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.innerHTML = `
                 <span class="log-time">${timeStr}</span>
                 <span>${message}</span>
             `;
-            
-            document.getElementById('log-entries').appendChild(logEntry);
-            // 滚动到底部
-            const container = document.getElementById('log-container');
-            container.scrollTop = container.scrollHeight;
+
+        document.getElementById('log-entries').appendChild(logEntry);
+        // 滚动到底部
+        const container = document.getElementById('log-container');
+        container.scrollTop = container.scrollHeight;
+      }
+
+      // 格式化时间
+      function formatTime(dateString) {
+        if (!dateString) return '--';
+        const date = new Date(dateString);
+        return date.toLocaleString('zh-CN');
+      }
+
+      // 格式化时长（秒转为可读格式）
+      function formatDuration(seconds) {
+        if (!seconds || seconds <= 0) return '--';
+
+        if (seconds < 60) {
+          return `${seconds}秒`;
+        } else if (seconds < 3600) {
+          const minutes = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${minutes}分${secs}秒`;
+        } else {
+          const hours = Math.floor(seconds / 3600);
+          const minutes = Math.floor((seconds % 3600) / 60);
+          return `${hours}小时${minutes}分`;
+        }
+      }
+
+      // 获取任务进度
+      async function fetchTaskProgress() {
+        const { taskId } = getUrlParams();
+        if (!taskId) {
+          addLogEntry('错误：未找到任务ID参数');
+          return null;
         }
 
-        // 格式化时间
-        function formatTime(dateString) {
-            if (!dateString) return '--';
-            const date = new Date(dateString);
-            return date.toLocaleString('zh-CN');
+        try {
+          const response = await fetch(`/api/admin/refresh-tasks/${taskId}`);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          const result = await response.json();
+
+          if (result.success) {
+            return result.data;
+          } else {
+            throw new Error(result.error || '获取任务信息失败');
+          }
+        } catch (error) {
+          addLogEntry(`获取任务进度失败: ${error.message}`);
+          return null;
         }
+      }
 
-        // 格式化时长（秒转为可读格式）
-        function formatDuration(seconds) {
-            if (!seconds || seconds <= 0) return '--';
-            
-            if (seconds < 60) {
-                return `${seconds}秒`;
-            } else if (seconds < 3600) {
-                const minutes = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                return `${minutes}分${secs}秒`;
-            } else {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                return `${hours}小时${minutes}分`;
-            }
-        }
+      // 更新UI显示
+      function updateUI(task) {
+        if (!task) return;
 
-        // 获取任务进度
-        async function fetchTaskProgress() {
-            const { taskId } = getUrlParams();
-            if (!taskId) {
-                addLogEntry('错误：未找到任务ID参数');
-                return null;
-            }
+        // 更新任务信息
+        document.getElementById('task-id').textContent = task.taskId;
+        document.getElementById('task-mode').textContent =
+          task.mode === 'force' ? '强制模式' : '普通模式';
+        document.getElementById('task-started').textContent = formatTime(
+          task.startedAt,
+        );
+        document.getElementById('task-completed').textContent = formatTime(
+          task.completedAt,
+        );
+        document.getElementById('task-operator').textContent =
+          task.operator || '系统';
 
-            try {
-                const response = await fetch(`/api/admin/refresh-tasks/${taskId}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const result = await response.json();
-                
-                if (result.success) {
-                    return result.data;
-                } else {
-                    throw new Error(result.error || '获取任务信息失败');
-                }
-            } catch (error) {
-                addLogEntry(`获取任务进度失败: ${error.message}`);
-                return null;
-            }
-        }
+        // 更新状态（带状态徽章）
+        const statusMap = {
+          pending: { text: '等待中', class: 'status-pending' },
+          running: { text: '运行中', class: 'status-running' },
+          completed: { text: '已完成', class: 'status-completed' },
+          failed: { text: '已失败', class: 'status-failed' },
+          cancelled: { text: '已取消', class: 'status-cancelled' },
+        };
 
-        // 更新UI显示
-        function updateUI(task) {
-            if (!task) return;
-
-            // 更新任务信息
-            document.getElementById('task-id').textContent = task.taskId;
-            document.getElementById('task-mode').textContent = task.mode === 'force' ? '强制模式' : '普通模式';
-            document.getElementById('task-started').textContent = formatTime(task.startedAt);
-            document.getElementById('task-completed').textContent = formatTime(task.completedAt);
-            document.getElementById('task-operator').textContent = task.operator || '系统';
-
-            // 更新状态（带状态徽章）
-            const statusMap = {
-                'pending': { text: '等待中', class: 'status-pending' },
-                'running': { text: '运行中', class: 'status-running' },
-                'completed': { text: '已完成', class: 'status-completed' },
-                'failed': { text: '已失败', class: 'status-failed' },
-                'cancelled': { text: '已取消', class: 'status-cancelled' }
-            };
-            
-            const statusInfo = statusMap[task.status] || { text: task.status, class: '' };
-            document.getElementById('task-status').innerHTML = `
+        const statusInfo = statusMap[task.status] || {
+          text: task.status,
+          class: '',
+        };
+        document.getElementById('task-status').innerHTML = `
                 ${statusInfo.text}
                 <span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>
             `;
 
-            // 更新进度条
-            const progress = task.progress || 0;
-            document.getElementById('progress-fill').style.width = `${progress}%`;
-            document.getElementById('progress-text').textContent = `${progress}%`;
+        // 更新进度条
+        const progress = task.progress || 0;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+        document.getElementById('progress-text').textContent = `${progress}%`;
 
-            // 更新进度详情
-            const progressDetails = document.getElementById('progress-details');
-            if (task.status === 'running') {
-                const estimatedTime = formatDuration(task.estimatedTimeRemaining);
-                progressDetails.innerHTML = `
+        // 更新进度详情
+        const progressDetails = document.getElementById('progress-details');
+        if (task.status === 'running') {
+          const estimatedTime = formatDuration(task.estimatedTimeRemaining);
+          progressDetails.innerHTML = `
                     <p>已处理: ${task.processedDevices || 0} / ${task.totalDevices || 0} 个设备</p>
                     <p>预估剩余时间: ${estimatedTime}</p>
-                    <p>处理速度: ${task.totalDevices > 0 ? Math.round(task.processedDevices / (Date.now() - new Date(task.startedAt).getTime()) * 1000 * 60) : 0} 设备/分钟</p>
+                    <p>处理速度: ${task.totalDevices > 0 ? Math.round((task.processedDevices / (Date.now() - new Date(task.startedAt).getTime())) * 1000 * 60) : 0} 设备/分钟</p>
                 `;
-            } else if (task.status === 'completed') {
-                progressDetails.innerHTML = `
+        } else if (task.status === 'completed') {
+          progressDetails.innerHTML = `
                     <p>✅ 任务已完成！</p>
                     <p>总设备: ${task.totalDevices || 0}，在线: ${task.onlineCount || 0}，离线: ${task.offlineCount || 0}</p>
-                    <p>总耗时: ${task.completedAt && task.startedAt ? 
-                        Math.round((new Date(task.completedAt).getTime() - new Date(task.startedAt).getTime()) / 1000) : 0} 秒</p>
+                    <p>总耗时: ${
+                      task.completedAt && task.startedAt
+                        ? Math.round(
+                            (new Date(task.completedAt).getTime() -
+                              new Date(task.startedAt).getTime()) /
+                              1000,
+                          )
+                        : 0
+                    } 秒</p>
                 `;
-            } else if (task.status === 'failed') {
-                progressDetails.innerHTML = `
+        } else if (task.status === 'failed') {
+          progressDetails.innerHTML = `
                     <p>❌ 任务失败: ${task.error || '未知错误'}</p>
                     ${task.errorDetails ? `<p><small>${task.errorDetails}</small></p>` : ''}
                 `;
-            }
-
-            // 更新统计信息
-            document.getElementById('total-devices').textContent = task.totalDevices || 0;
-            document.getElementById('online-devices').textContent = task.onlineCount || 0;
-            document.getElementById('offline-devices').textContent = task.offlineCount || 0;
-            
-            const estimatedTime = task.estimatedTimeRemaining > 0 ? 
-                formatDuration(task.estimatedTimeRemaining) : '--';
-            document.getElementById('estimated-time').textContent = estimatedTime;
-
-            // 更新按钮状态
-            const cancelBtn = document.getElementById('cancel-btn');
-            const refreshBtn = document.getElementById('refresh-btn');
-            
-            if (task.status === 'running') {
-                cancelBtn.disabled = false;
-                cancelBtn.innerHTML = '🛑 取消任务';
-                refreshBtn.innerHTML = '🔄 自动刷新中...';
-                refreshBtn.disabled = true;
-            } else {
-                cancelBtn.disabled = true;
-                cancelBtn.innerHTML = '任务已完成';
-                refreshBtn.disabled = false;
-                refreshBtn.innerHTML = '🔁 重新加载';
-                
-                // 如果是完成状态，5秒后自动跳转
-                if (task.status === 'completed') {
-                    setTimeout(() => {
-                        addLogEntry('任务完成，5秒后自动跳转回主页面...');
-                    }, 1000);
-                    
-                    setTimeout(() => {
-                        window.location.href = '/';
-                    }, 5000);
-                }
-            }
         }
 
-        // 取消任务
-        async function cancelTask() {
-            const { taskId } = getUrlParams();
-            if (!taskId) return;
+        // 更新统计信息
+        document.getElementById('total-devices').textContent =
+          task.totalDevices || 0;
+        document.getElementById('online-devices').textContent =
+          task.onlineCount || 0;
+        document.getElementById('offline-devices').textContent =
+          task.offlineCount || 0;
 
-            if (!confirm('确定要取消这个任务吗？已经处理的部分将保持当前状态。')) {
-                return;
-            }
+        const estimatedTime =
+          task.estimatedTimeRemaining > 0
+            ? formatDuration(task.estimatedTimeRemaining)
+            : '--';
+        document.getElementById('estimated-time').textContent = estimatedTime;
 
-            addLogEntry('正在取消任务...');
+        // 更新按钮状态
+        const cancelBtn = document.getElementById('cancel-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
 
-            try {
-                const response = await fetch(`/api/admin/refresh-tasks/${taskId}/cancel`, {
-                    method: 'POST',
-                });
-                const result = await response.json();
+        if (task.status === 'running') {
+          cancelBtn.disabled = false;
+          cancelBtn.innerHTML = '🛑 取消任务';
+          refreshBtn.innerHTML = '🔄 自动刷新中...';
+          refreshBtn.disabled = true;
+        } else {
+          cancelBtn.disabled = true;
+          cancelBtn.innerHTML = '任务已完成';
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = '🔁 重新加载';
 
-                if (result.success) {
-                    addLogEntry('任务已成功取消');
-                    // 刷新显示
-                    setTimeout(fetchAndUpdateProgress, 1000);
-                } else {
-                    addLogEntry(`取消任务失败: ${result.error}`);
-                }
-            } catch (error) {
-                addLogEntry(`取消任务请求失败: ${error.message}`);
-            }
+          // 如果是完成状态，5秒后自动跳转
+          if (task.status === 'completed') {
+            setTimeout(() => {
+              addLogEntry('任务完成，5秒后自动跳转回主页面...');
+            }, 1000);
+
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 5000);
+          }
+        }
+      }
+
+      // 取消任务
+      async function cancelTask() {
+        const { taskId } = getUrlParams();
+        if (!taskId) return;
+
+        if (!confirm('确定要取消这个任务吗？已经处理的部分将保持当前状态。')) {
+          return;
         }
 
-        // 手动刷新进度
-        async function refreshProgress() {
-            addLogEntry('手动刷新进度...');
-            await fetchAndUpdateProgress();
-        }
+        addLogEntry('正在取消任务...');
 
-        // 在后台继续（返回主页）
-        function viewInBackground() {
-            addLogEntry('任务将在后台继续执行，返回主页面...');
-            window.location.href = '/';
-        }
+        try {
+          const response = await fetch(
+            `/api/admin/refresh-tasks/${taskId}/cancel`,
+            {
+              method: 'POST',
+            },
+          );
+          const result = await response.json();
 
-        // 获取并更新进度
-        async function fetchAndUpdateProgress() {
-            const task = await fetchTaskProgress();
-            updateUI(task);
-            updateCurrentTime();
-            
-            if (task && task.status === 'running') {
-                // 如果任务仍在运行，3秒后自动刷新
-                setTimeout(fetchAndUpdateProgress, 3000);
-            }
+          if (result.success) {
+            addLogEntry('任务已成功取消');
+            // 刷新显示
+            setTimeout(fetchAndUpdateProgress, 1000);
+          } else {
+            addLogEntry(`取消任务失败: ${result.error}`);
+          }
+        } catch (error) {
+          addLogEntry(`取消任务请求失败: ${error.message}`);
         }
+      }
 
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            const { taskId } = getUrlParams();
-            
-            if (!taskId) {
-                addLogEntry('错误：URL中未包含任务ID参数');
-                document.body.innerHTML = `
+      // 手动刷新进度
+      async function refreshProgress() {
+        addLogEntry('手动刷新进度...');
+        await fetchAndUpdateProgress();
+      }
+
+      // 在后台继续（返回主页）
+      function viewInBackground() {
+        addLogEntry('任务将在后台继续执行，返回主页面...');
+        window.location.href = '/';
+      }
+
+      // 获取并更新进度
+      async function fetchAndUpdateProgress() {
+        const task = await fetchTaskProgress();
+        updateUI(task);
+        updateCurrentTime();
+
+        if (task && task.status === 'running') {
+          // 如果任务仍在运行，3秒后自动刷新
+          setTimeout(fetchAndUpdateProgress, 3000);
+        }
+      }
+
+      // 页面加载时初始化
+      document.addEventListener('DOMContentLoaded', function () {
+        const { taskId } = getUrlParams();
+
+        if (!taskId) {
+          addLogEntry('错误：URL中未包含任务ID参数');
+          document.body.innerHTML = `
                     <div class="header">
                         <h1>❌ 错误</h1>
                         <p>未找到任务ID参数</p>
@@ -604,18 +650,18 @@
                         <p>请从主控制面板的"CPE状态刷新"按钮启动刷新任务。</p>
                     </div>
                 `;
-                return;
-            }
+          return;
+        }
 
-            addLogEntry(`开始监控任务: ${taskId}`);
-            updateCurrentTime();
-            
-            // 初始获取进度
-            fetchAndUpdateProgress();
-            
-            // 每30秒更新一次时间显示
-            setInterval(updateCurrentTime, 30000);
-        });
+        addLogEntry(`开始监控任务: ${taskId}`);
+        updateCurrentTime();
+
+        // 初始获取进度
+        fetchAndUpdateProgress();
+
+        // 每30秒更新一次时间显示
+        setInterval(updateCurrentTime, 30000);
+      });
     </script>
-</body>
+  </body>
 </html>

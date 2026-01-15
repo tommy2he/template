@@ -12,6 +12,11 @@ import { CPEModel } from '../../db/schemas/cpe.schema';
 import adminRoutes from './admin.routes';
 import cpesRoutes from './cpes';
 
+// 创建最简单的metrics端点
+import promClient from 'prom-client';
+const register = new promClient.Registry();
+promClient.collectDefaultMetrics({ register });
+
 const router = new Router();
 
 // API根路径
@@ -120,6 +125,21 @@ router.get('/performance/health', async (ctx) => {
       uptime: os.uptime(),
     },
   };
+});
+
+// Prometheus metrics 端点
+router.get('/metrics', async (ctx) => {
+  try {
+    ctx.set('Content-Type', register.contentType);
+    ctx.body = await register.metrics();
+  } catch (error) {
+    ctx.status = 500;
+    if (error instanceof Error) {
+      ctx.body = `Error generating metrics: ${error.message}`;
+    } else {
+      ctx.body = 'Error generating metrics: Unknown error';
+    }
+  }
 });
 
 // 添加CPE统计信息路由

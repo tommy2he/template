@@ -157,7 +157,7 @@ describe('API Integration Tests', () => {
     it('应该处理CORS预检请求', async () => {
       const response = await request(app.callback())
         .options('/api/health')
-        .set('Origin', 'http://localhost:3000')
+        .set('Origin', 'http://localhost:3300')
         .set('Access-Control-Request-Method', 'GET')
         .expect(204);
 

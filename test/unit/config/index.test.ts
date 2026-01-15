@@ -25,7 +25,7 @@ describe('Configuration Module', () => {
     const { isDevelopment, isProduction, isTest } = configModule;
 
     expect(config.env).toBe('development');
-    expect(config.port).toBe(3000);
+    expect(config.port).toBe(3300);
     expect(config.appName).toBe('Koa Template App');
     expect(isDevelopment).toBe(true);
     expect(isProduction).toBe(false);

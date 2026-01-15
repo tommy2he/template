@@ -2,7 +2,7 @@ import axios from 'axios';
 import { describe, it, beforeAll, afterAll, expect } from '@jest/globals';
 
 describe('真正的设备API E2E测试', () => {
-  const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = 'http://localhost:3300';
   const API_URL = `${BASE_URL}/api/devices`;
   const TEST_DEVICE_ID = 'dev-real-e2e-001';
 

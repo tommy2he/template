@@ -24,7 +24,7 @@ for (let i = 1; i <= count; i++) {
     CPE_MANUFACTURER: i % 2 === 0 ? 'TP-Link' : 'Cisco',
     CPE_MODEL: i % 2 === 0 ? 'Archer C7' : 'ISR 4000',
     CPE_UDP_PORT: udpPort.toString(), // 设置不同的UDP端口
-    PORT: 3000 + i,
+    PORT: 3300 + i,
   };
 
   const child = spawn('node', ['cpe/src/client.ts'], {

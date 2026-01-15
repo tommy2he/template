@@ -13,7 +13,7 @@ const execAsync = promisify(exec);
 
 class LoadTest {
   constructor(options = {}) {
-    this.port = options.port || 3000;
+    this.port = options.port || 3300;
     this.server = null;
     this.serverPid = null;
     this.results = [];

@@ -11,7 +11,7 @@ const execAsync = promisify(exec);
 
 class EnhancedLoadTest {
   constructor() {
-    this.port = 3000;
+    this.port = 3300;
     this.server = null;
     this.results = [];
     this.currentInstance = null;

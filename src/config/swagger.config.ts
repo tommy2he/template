@@ -18,7 +18,7 @@ export const swaggerConfig: OpenAPIV3.Document = {
   },
   servers: [
     {
-      url: 'http://localhost:3000',
+      url: 'http://localhost:3300',
       description: '本地开发服务器',
     },
     {
@@ -26,7 +26,7 @@ export const swaggerConfig: OpenAPIV3.Document = {
       description: '通用服务器',
       variables: {
         port: {
-          default: '3000',
+          default: '3300',
           description: '服务器端口',
         },
       },

@@ -90,7 +90,7 @@ describe('Web Routes Integration Tests', () => {
     it('应该设置CORS头', async () => {
       const response = await request(app.callback())
         .get('/')
-        .set('Origin', 'http://localhost:3000')
+        .set('Origin', 'http://localhost:3300')
         .expect(200);
 
       // 使用 .env.test 中的配置值

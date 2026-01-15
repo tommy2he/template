@@ -40,8 +40,8 @@ function spawnCommand(command, args, options = {}) {
 function isAppRunning() {
   try {
     const checkCommand = isWindows
-      ? 'curl -s http://localhost:3000/api/health 2>nul'
-      : 'curl -s http://localhost:3000/api/health > /dev/null 2>&1';
+      ? 'curl -s http://localhost:3300/api/health 2>nul'
+      : 'curl -s http://localhost:3300/api/health > /dev/null 2>&1';
 
     execSync(checkCommand, { stdio: 'pipe' });
     return true;
@@ -58,7 +58,7 @@ function startTestApp() {
     stdio: 'pipe',
     env: {
       ...process.env, // 使用当前环境变量，不覆盖 NODE_ENV
-      PORT: '3000',
+      PORT: '3300',
     },
   });
 }
@@ -97,7 +97,7 @@ function generateReport() {
 E2E 测试报告
 生成时间: ${new Date().toISOString()}
 测试环境: ${process.env.NODE_ENV || '默认环境'}
-应用地址: http://localhost:3000
+应用地址: http://localhost:3300
 操作系统: ${process.platform}
 
 ✅ E2E 测试套件执行完成

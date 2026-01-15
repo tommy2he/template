@@ -114,21 +114,25 @@ class ServerTester {
     console.log(`\n🚀 启动测试服务器 (端口: ${this.port})...`);
 
     return new Promise((resolve, reject) => {
-      this.server = spawn('node', [path.join(__dirname, '../../dist/index.js')], {
-        env: {
-          ...process.env,
-          PORT: this.port.toString(),
-          NODE_ENV: 'production',
-          LOG_LEVEL: 'error',
-          ENABLE_SWAGGER: 'false',
-          JWT_SECRET: 'test_secret_key',
-          RATE_LIMIT_ENABLED: 'false',
-          RATE_LIMIT_WINDOW_MS: '0',
-          RATE_LIMIT_MAX_REQUESTS: '999999',
+      this.server = spawn(
+        'node',
+        [path.join(__dirname, '../../dist/index.js')],
+        {
+          env: {
+            ...process.env,
+            PORT: this.port.toString(),
+            NODE_ENV: 'production',
+            LOG_LEVEL: 'error',
+            ENABLE_SWAGGER: 'false',
+            JWT_SECRET: 'test_secret_key',
+            RATE_LIMIT_ENABLED: 'false',
+            RATE_LIMIT_WINDOW_MS: '0',
+            RATE_LIMIT_MAX_REQUESTS: '999999',
+          },
+          stdio: ['ignore', 'pipe', 'pipe'],
+          shell: true,
         },
-        stdio: ['ignore', 'pipe', 'pipe'],
-        shell: true,
-      });
+      );
 
       // 保存进程PID
       this.serverPid = this.server.pid;

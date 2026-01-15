@@ -8,7 +8,7 @@ console.log('🔍 测试 Swagger UI 配置...');
 
 const options = {
   hostname: 'localhost',
-  port: 3000,
+  port: 3300,
   path: '/api-docs',
   method: 'GET',
   headers: {
@@ -69,7 +69,7 @@ req.on('error', (error) => {
   const checkServer = http.request(
     {
       hostname: 'localhost',
-      port: 3000,
+      port: 3300,
       path: '/',
       method: 'GET',
     },
@@ -92,7 +92,7 @@ req.end();
 console.log('\n🔍 测试 swagger.json...');
 const swaggerJsonOptions = {
   hostname: 'localhost',
-  port: 3000,
+  port: 3300,
   path: '/swagger.json',
   method: 'GET',
 };

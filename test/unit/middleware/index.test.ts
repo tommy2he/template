@@ -7,9 +7,9 @@ jest.mock('@/config', () => ({
   __esModule: true,
   default: {
     env: 'test',
-    port: 3000,
+    port: 3300,
     appName: 'Koa Template App',
-    appUrl: 'http://localhost:3000',
+    appUrl: 'http://localhost:3300',
 
     // 日志配置
     logLevel: 'info',
@@ -21,7 +21,7 @@ jest.mock('@/config', () => ({
     apiTimeout: 30000,
 
     // CORS 配置
-    corsOrigin: 'http://localhost:3000',
+    corsOrigin: 'http://localhost:3300',
     corsCredentials: true,
 
     // 数据库配置
@@ -112,7 +112,7 @@ describe('Middleware Integration', () => {
         .expect(200);
 
       expect(response.headers['access-control-allow-origin']).toBe(
-        'http://localhost:3000',
+        'http://localhost:3300',
       );
     });
 

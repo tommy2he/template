@@ -18,9 +18,9 @@ const config: IConfig = {
   // ... 原有的配置对象保持不变
   // 应用配置
   env: process.env.NODE_ENV || 'development',
-  port: parseInt(process.env.PORT || '3000'),
+  port: parseInt(process.env.PORT || '3300'),
   appName: process.env.APP_NAME || 'Koa Template App',
-  appUrl: process.env.APP_URL || 'http://localhost:3000',
+  appUrl: process.env.APP_URL || 'http://localhost:3300',
 
   // WebSocket配置
   wsPort: parseInt(process.env.WS_PORT || '7547'),
@@ -38,7 +38,7 @@ const config: IConfig = {
   apiTimeout: parseInt(process.env.API_TIMEOUT || '30000'),
 
   // CORS 配置
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3300',
   corsCredentials: process.env.CORS_CREDENTIALS === 'true',
 
   // 数据库配置（已更新 - 与 .env 文件匹配）

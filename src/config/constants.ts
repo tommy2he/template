@@ -29,8 +29,8 @@ export const TEST_CONSTANTS = {
     },
     PORT: {
       TEST: 3001,
-      DEVELOPMENT: 3000,
-      PRODUCTION: process.env.PORT || 3000,
+      DEVELOPMENT: 3300,
+      PRODUCTION: process.env.PORT || 3300,
     },
   },
 
