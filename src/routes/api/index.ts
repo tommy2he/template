@@ -11,11 +11,13 @@ import deviceRoutes from './deviceRoutes';
 import { CPEModel } from '../../db/schemas/cpe.schema';
 import adminRoutes from './admin.routes';
 import cpesRoutes from './cpes';
+import { MetricsExporter } from '../../monitor';
+import { MetricsHelper } from '../../monitor/utils/metrics-helper';
 
-// 创建最简单的metrics端点
-import promClient from 'prom-client';
-const register = new promClient.Registry();
-promClient.collectDefaultMetrics({ register });
+// 试水-创建最简单的metrics端点
+// import promClient from 'prom-client';
+// const register = new promClient.Registry();
+// promClient.collectDefaultMetrics({ register });
 
 const router = new Router();
 
@@ -127,19 +129,72 @@ router.get('/performance/health', async (ctx) => {
   };
 });
 
-// Prometheus metrics 端点
-router.get('/metrics', async (ctx) => {
+// Prometheus metrics端点 - 使用独立监控系统
+// router.get('/prometheus/metrics', async (ctx) => {
+//   ctx.set('Content-Type', MetricsExporter.getContentType());
+//   ctx.body = await MetricsExporter.getMetrics();
+// });
+
+// 测试指标摘要端点
+router.get('/metrics/summary', async (ctx) => {
   try {
-    ctx.set('Content-Type', register.contentType);
-    ctx.body = await register.metrics();
+    const summary = await MetricsHelper.getSummary();
+
+    ctx.body = {
+      success: true,
+      data: summary,
+      timestamp: new Date().toISOString(),
+    };
   } catch (error) {
     ctx.status = 500;
-    if (error instanceof Error) {
-      ctx.body = `Error generating metrics: ${error.message}`;
-    } else {
-      ctx.body = 'Error generating metrics: Unknown error';
-    }
+    ctx.body = {
+      success: false,
+      error: (error as Error).message,
+      timestamp: new Date().toISOString(),
+    };
   }
+});
+
+// Prometheus metrics端点 - 使用独立监控系统
+router.get('/metrics', async (ctx) => {
+  ctx.set('Content-Type', MetricsExporter.getContentType());
+  ctx.body = await MetricsExporter.getMetrics();
+});
+
+// 试水-Prometheus metrics 端点
+// router.get('/metrics', async (ctx) => {
+//   try {
+//     ctx.set('Content-Type', register.contentType);
+//     ctx.body = await register.metrics();
+//   } catch (error) {
+//     ctx.status = 500;
+//     if (error instanceof Error) {
+//       ctx.body = `Error generating metrics: ${error.message}`;
+//     } else {
+//       ctx.body = 'Error generating metrics: Unknown error';
+//     }
+//   }
+// });
+
+// 在 src/routes/api/index.ts 中添加测试路由
+router.get('/test/metrics', async (ctx) => {
+  // 模拟处理时间
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  ctx.body = {
+    message: 'HTTP metrics test endpoint',
+    timestamp: new Date().toISOString(),
+    metrics: 'Check /metrics endpoint for Prometheus data',
+  };
+});
+
+router.get('/test/error', async (ctx) => {
+  // 模拟错误
+  ctx.status = 500;
+  ctx.body = {
+    error: 'Simulated server error',
+    code: 'TEST_ERROR',
+  };
 });
 
 // 添加CPE统计信息路由

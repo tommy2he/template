@@ -6,6 +6,8 @@ import logger from './logger';
 import errorHandler from './errorHandler';
 import cors from './cors';
 import config from '../config';
+// import httpMonitor from '../monitor/collectors/http-collector';
+import { createHTTPMonitoringMiddleware } from '../monitor/collectors/http-collector-enhanced';
 
 // 1.4版本新增性能监控中间件
 import { performanceMonitor } from './performance';
@@ -25,6 +27,28 @@ export default (app: Koa): void => {
   // ========== 1. 性能监控（最外层，测量完整请求时间） ==========
   if (config.env !== 'test') {
     app.use(performanceMonitor());
+  }
+
+  // ========== 1.5 Prometheus HTTP监控 ==========
+  // if (config.env !== 'test') {
+  //   app.use(httpMonitor());
+  // }
+
+  // ========== 1.5 Prometheus HTTP监控 ==========
+  if (config.env !== 'test') {
+    app.use(
+      createHTTPMonitoringMiddleware({
+        logRequests: config.env === 'development',
+        excludedRoutes: [
+          '/metrics',
+          '/api/health',
+          '/api/performance',
+          '/api-docs',
+          '/api-docs/',
+          '/favicon.ico',
+        ],
+      }),
+    );
   }
 
   // ========== 2. 错误处理 ==========
