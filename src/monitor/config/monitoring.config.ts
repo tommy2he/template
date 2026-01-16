@@ -10,6 +10,9 @@ export interface MonitoringConfig {
   };
 }
 
+// 从环境变量获取Prometheus路径，确保所有地方使用同一个配置
+const prometheusPath = process.env.PROMETHEUS_PATH || '/metrics';
+
 export const defaultMonitoringConfig: MonitoringConfig = {
   http: {
     enabled: true,
@@ -17,18 +20,17 @@ export const defaultMonitoringConfig: MonitoringConfig = {
     normalizeRoutes: true,
     logRequests: process.env.NODE_ENV === 'development',
     excludedRoutes: [
-      '/metrics',
+      prometheusPath, // 使用配置的路径，确保一致性
       '/api/health',
       '/api/performance',
       '/api-docs',
-      '/api-docs/',
       '/favicon.ico',
     ],
     includeQueryParams: false,
   },
   prometheus: {
     enabled: process.env.PROMETHEUS_ENABLED !== 'false',
-    path: process.env.PROMETHEUS_PATH || '/metrics',
+    path: prometheusPath, // 使用相同的变量
     port: process.env.PROMETHEUS_PORT
       ? parseInt(process.env.PROMETHEUS_PORT)
       : undefined,

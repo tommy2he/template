@@ -7,6 +7,9 @@ import errorHandler from './errorHandler';
 import cors from './cors';
 import config from '../config';
 
+// 2.2版本导入监控配置
+import { defaultMonitoringConfig } from '../monitor/config/monitoring.config';
+
 // 2.2版本新增 Prometheus HTTP监控
 // import httpMonitor from '../monitor/collectors/http-collector';
 import { createHTTPMonitoringMiddleware } from '../monitor/collectors/http-collector-enhanced';
@@ -41,14 +44,7 @@ export default (app: Koa): void => {
     app.use(
       createHTTPMonitoringMiddleware({
         logRequests: config.env === 'development',
-        excludedRoutes: [
-          '/metrics',
-          '/api/health',
-          '/api/performance',
-          '/api-docs',
-          '/api-docs/',
-          '/favicon.ico',
-        ],
+        excludedRoutes: defaultMonitoringConfig.http.excludedRoutes,
       }),
     );
   }
@@ -140,6 +136,11 @@ export default (app: Koa): void => {
 
   if (config.enableSwagger && config.env !== 'production') {
     console.log(`📖 Swagger UI 地址: http://localhost:${config.port}/api-docs`);
+  }
+  
+  // 打印监控配置信息
+  if (defaultMonitoringConfig.prometheus.enabled) {
+    console.log(`📊 Prometheus metrics 地址: http://localhost:${config.port}${defaultMonitoringConfig.prometheus.path}`);
   }
 };
 
