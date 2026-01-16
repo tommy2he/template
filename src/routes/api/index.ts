@@ -11,8 +11,11 @@ import deviceRoutes from './deviceRoutes';
 import { CPEModel } from '../../db/schemas/cpe.schema';
 import adminRoutes from './admin.routes';
 import cpesRoutes from './cpes';
+
+// 2.2版本新增 - Prometheus监控体系
 import { MetricsExporter } from '../../monitor';
 import { MetricsHelper } from '../../monitor/utils/metrics-helper';
+import { defaultMonitoringConfig } from '../../monitor/config/monitoring.config';
 
 // 试水-创建最简单的metrics端点
 // import promClient from 'prom-client';
@@ -129,6 +132,7 @@ router.get('/performance/health', async (ctx) => {
   };
 });
 
+// 2.2版本新增 - Prometheus监控体系
 // Prometheus metrics端点 - 使用独立监控系统
 // router.get('/prometheus/metrics', async (ctx) => {
 //   ctx.set('Content-Type', MetricsExporter.getContentType());
@@ -155,8 +159,16 @@ router.get('/metrics/summary', async (ctx) => {
   }
 });
 
+// 2.2版本新增prometheus监控
 // Prometheus metrics端点 - 使用独立监控系统
-router.get('/metrics', async (ctx) => {
+// router.get('/metrics', async (ctx) => {
+//   ctx.set('Content-Type', MetricsExporter.getContentType());
+//   ctx.body = await MetricsExporter.getMetrics();
+// });
+
+// 2.2版本新增prometheus监控
+// 路径使用环境变量加载
+router.get(defaultMonitoringConfig.prometheus.path, async (ctx) => {
   ctx.set('Content-Type', MetricsExporter.getContentType());
   ctx.body = await MetricsExporter.getMetrics();
 });

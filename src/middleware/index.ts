@@ -6,6 +6,8 @@ import logger from './logger';
 import errorHandler from './errorHandler';
 import cors from './cors';
 import config from '../config';
+
+// 2.2版本新增 Prometheus HTTP监控
 // import httpMonitor from '../monitor/collectors/http-collector';
 import { createHTTPMonitoringMiddleware } from '../monitor/collectors/http-collector-enhanced';
 
@@ -34,7 +36,7 @@ export default (app: Koa): void => {
   //   app.use(httpMonitor());
   // }
 
-  // ========== 1.5 Prometheus HTTP监控 ==========
+  // ========== 1.5 Prometheus HTTP监控(2.2 版本新增) ==========
   if (config.env !== 'test') {
     app.use(
       createHTTPMonitoringMiddleware({

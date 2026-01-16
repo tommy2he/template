@@ -190,7 +190,7 @@ export class HTTPCollector {
   /**
    * 获取HTTP指标摘要（用于调试）
    */
-  static getSummary() {
+  async getSummary() {
     return {
       requests: (httpMetrics.requests as any).hashMap,
       duration: (httpMetrics.duration as any).hashMap,

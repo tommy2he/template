@@ -24,7 +24,6 @@ export const defaultHTTPCollectorConfig: HTTPCollectorConfig = {
     '/api/performance', // 性能端点
     '/favicon.ico', // 图标
     '/api-docs', // Swagger文档
-    '/api-docs/', // Swagger文档路径
   ],
   includeQueryParams: false,
 };
