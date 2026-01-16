@@ -1,0 +1,79 @@
+{
+  "dashboard": {
+    "title": "Koa Template App监控",
+    "description": "Koa应用性能与业务监控",
+    "tags": ["koa", "prometheus", "monitoring"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP请求率",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[1m])",
+            "legendFormat": "{{method}} {{route}} {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [{ "format": "reqps", "min": 0 }]
+      },
+      {
+        "id": 2,
+        "title": "HTTP请求延迟(秒)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "P95 {{method}} {{route}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [{ "format": "s", "min": 0 }]
+      },
+      {
+        "id": 3,
+        "title": "在线CPE数量",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "cpe_online_total",
+            "refId": "A"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "id": 4,
+        "title": "HTTP响应大小",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+        "targets": [
+          {
+            "expr": "rate(http_response_size_bytes_sum[5m]) / rate(http_response_size_bytes_count[5m])",
+            "legendFormat": "平均大小 {{method}} {{route}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [{ "format": "bytes", "min": 0 }]
+      },
+      {
+        "id": 5,
+        "title": "错误率(5xx)",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~\"5xx\"}[5m]) / rate(http_requests_total[5m])",
+            "legendFormat": "错误率",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [{ "format": "percentunit", "min": 0, "max": 1 }]
+      }
+    ]
+  }
+}

@@ -7,11 +7,15 @@
   "words": [
     "ADMINPASSWORD",
     "ADMINUSERNAME",
+    "alertmanager",
+    "alertmanagers",
+    "alertname",
     "APIV",
     "asynciterable",
     "autocannon",
     "BASICAUTH",
     "bodyparser",
+    "cadvisor",
     "chcp",
     "cors",
     "COVR",
@@ -46,9 +50,12 @@
     "nodemon",
     "nosniff",
     "Orbi",
+    "percentunit",
     "pids",
+    "reqps",
     "Segoe",
     "sess",
+    "smarthost",
     "startport",
     "Tahoma",
     "taskkill",
@@ -60,6 +67,7 @@
     "UICSP",
     "Verdana",
     "virtuals",
-    "wakeup"
+    "wakeup",
+    "yaxes"
   ]
 }
