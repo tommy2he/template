@@ -337,6 +337,10 @@ export class EnhancedHTTPCollector {
 export const defaultHTTPCollector = new EnhancedHTTPCollector();
 
 // 默认导出中间件创建函数
+/**
+ * 创建一个HTTP监控中间件工厂函数
+ * 注意：此函数返回的是真正的Koa中间件函数
+ */
 export const createHTTPMonitoringMiddleware = (
   config?: Partial<HTTPCollectorConfig>,
 ) => {
