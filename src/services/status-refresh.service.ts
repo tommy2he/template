@@ -7,6 +7,8 @@ import {
 } from '../db/schemas/refresh-task.schema';
 import { StatusCalculator } from './status-calculator';
 import config from '../config';
+// import { cpeMetrics } from '../monitor/prometheus/metrics';
+import { cpeMetricsUpdater } from '../monitor/services/cpe-metrics-updater'; // 如果创建了这个服务
 
 export class StatusRefreshService {
   private static instance: StatusRefreshService;
@@ -283,6 +285,10 @@ export class StatusRefreshService {
       task.completedAt = new Date();
       task.estimatedTimeRemaining = 0;
       await task.save();
+
+      // 2.2版本新增：立即更新CPE指标
+      console.log('🔄 任务完成，更新CPE指标...');
+      await cpeMetricsUpdater.updateMetrics(); // 或者直接更新指标
 
       console.log(`✅ 任务 ${taskId} 完成:`);
       console.log(`   总设备: ${totalDevices}`);

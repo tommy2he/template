@@ -29,9 +29,15 @@ export const httpMetrics = {
 
 // CPE业务指标
 export const cpeMetrics = {
-  online: new client.Gauge({
+  onlineTotal: new client.Gauge({
     name: 'cpe_online_total',
-    help: 'Number of online CPE devices',
+    help: 'Total number of online CPE devices',
+    registers: [register],
+  }),
+
+  onlineByModel: new client.Gauge({
+    name: 'cpe_online_by_model',
+    help: 'Number of online CPE devices by manufacturer and model',
     labelNames: ['manufacturer', 'model'] as const,
     registers: [register],
   }),
@@ -42,7 +48,7 @@ export const cpeMetrics = {
     registers: [register],
   }),
 
-  heartbeats: new client.Counter({
+  heartbeats: new client.Gauge({
     name: 'cpe_heartbeats_total',
     help: 'Total heartbeat messages received',
     registers: [register],

@@ -7,6 +7,7 @@ import routes from './routes';
 import db from './db/connection';
 import { UDPClient } from './udp/client'; // 改为UDP客户端
 import { WebSocketManager } from './websocket/server';
+import { cpeMetricsUpdater } from './monitor/services/cpe-metrics-updater';
 
 class App {
   private app: Koa;
@@ -52,6 +53,11 @@ class App {
 
   private async gracefulShutdown(exitCode = 0): Promise<void> {
     try {
+      // 2.2版本增加cpeMetricsUpdater
+      console.log('⏳ 正在关闭CPE指标更新器...');
+      cpeMetricsUpdater.stop(); // 新增：停止指标更新
+      console.log('✅ CPE指标更新器已关闭');
+
       console.log('⏳ 正在关闭WebSocket服务器...');
       if (this.wsManager) {
         this.wsManager.close();
@@ -96,6 +102,12 @@ class App {
       // 1. 先连接数据库
       console.log('⏳ 正在连接数据库...');
       await db.connect();
+
+      // 1.1 启动CPE指标定时更新（放在数据库连接之后）
+      if (config.env !== 'test') {
+        cpeMetricsUpdater.start(60000); // 每60秒更新一次
+        console.log('📊 CPE指标定时更新器已启动');
+      }
 
       // 2. 创建UDP客户端（用于发送唤醒包） - 不再监听端口
       this.udpClient = new UDPClient();

@@ -162,6 +162,76 @@ export class StatusCalculator {
   }
 
   /**
+   * 计算在线CPE数量（基于配置的超时时间）
+   */
+  static async calculateOnlineCount(): Promise<number> {
+    const timeoutMs = config.cpeManagement.onlineTimeout;
+    const cutoffTime = new Date(Date.now() - timeoutMs);
+
+    return await CPEModel.countDocuments({
+      lastSeen: { $gte: cutoffTime },
+    });
+  }
+
+  /**
+   * 获取详细的CPE统计信息
+   */
+  static async getDetailedStats(): Promise<{
+    total: number;
+    online: number;
+    offline: number;
+    onlinePercentage: number;
+    byManufacturer: Array<{
+      manufacturer: string;
+      model: string;
+      count: number;
+    }>;
+  }> {
+    const timeoutMs = config.cpeManagement.onlineTimeout;
+    const cutoffTime = new Date(Date.now() - timeoutMs);
+
+    const total = await CPEModel.countDocuments({});
+    const online = await CPEModel.countDocuments({
+      lastSeen: { $gte: cutoffTime },
+    });
+
+    // 按厂商/型号分组统计
+    const byManufacturer = await CPEModel.aggregate([
+      {
+        $match: {
+          lastSeen: { $gte: cutoffTime },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            manufacturer: { $ifNull: ['$manufacturer', 'unknown'] },
+            model: { $ifNull: ['$model', 'unknown'] },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          manufacturer: '$_id.manufacturer',
+          model: '$_id.model',
+          count: 1,
+          _id: 0,
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    return {
+      total,
+      online,
+      offline: total - online,
+      onlinePercentage: total > 0 ? Math.round((online / total) * 100) : 0,
+      byManufacturer,
+    };
+  }
+
+  /**
    * 获取状态统计
    */
   static async getStatusStats(): Promise<{
