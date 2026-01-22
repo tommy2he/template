@@ -12,30 +12,38 @@ alerting:
             - alertmanager:9093
 
 scrape_configs:
-  - job_name: 'koa_template_app'
-    static_configs:
-      - targets: ['host.docker.internal:3300'] # 本地应用地址
-    scrape_interval: 10s
-    metrics_path: '/api/metrics'
-
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-
-  # Node.js应用指标
+  # 主机级监控 - Node Exporter
   - job_name: 'wsl2_node_exporter'
     static_configs:
       - targets: ['172.29.173.219:9100']
-        # - targets: ['host.docker.internal:9100']
         labels:
-          os: 'linux'
-          environment: 'wsl2'
+          environment: 'development'
           host: 'ubuntu-wsl2'
+          os: 'linux'
+          location: 'wsl2'
+          role: 'host'
+          monitor_type: 'host'
     scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
 
-  # 系统指标（可选）
+  # 容器级监控 - cAdvisor
   - job_name: 'cadvisor'
     static_configs:
-      - targets: ['cadvisor:8080'] # 容器指标
-    scheme: http
+      - targets: ['cadvisor:8080']
+        labels:
+          environment: 'development'
+          role: 'container'
+          monitor_type: 'container'
     scrape_interval: 15s
+
+  # 应用级监控 - Koa应用
+  - job_name: 'koa_template_app'
+    static_configs:
+      - targets: ['host.docker.internal:3300']
+        labels:
+          environment: 'development'
+          app: 'koa_template_app'
+          monitor_type: 'application'
+    scrape_interval: 10s
+    metrics_path: '/api/metrics'
