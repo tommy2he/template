@@ -167,8 +167,8 @@
     {
       "id": 12,
       "title": "",
-      "type": "stat",
-      "gridPos": { "h": 8, "w": 4, "x": 18, "y": 10 },
+      "type": "bargauge",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 10 },
       "targets": [
         {
           "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_avail_bytes{mountpoint=\"/\"}) / 1024 / 1024 / 1024",
@@ -187,34 +187,33 @@
           "decimals": 2,
           "color": {
             "mode": "fixed",
-            "fixedColor": "text"
+            "fixedColor": "#00ff00"
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [{ "color": "text", "value": null }]
+            "steps": [{ "color": "#00ff00", "value": null }]
           },
           "noValue": "0"
         },
         "overrides": []
       },
       "options": {
+        "orientation": "vertical",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "minVizWidth": 0,
+        "valueMode": "color",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 24,
+          "align": "center"
+        },
         "reduceOptions": {
           "values": false,
           "calcs": ["lastNotNull"]
-        },
-        "orientation": "vertical",
-        "textMode": "value_and_name",
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "text": {
-          "titleSize": 12,
-          "valueSize": 16
         }
-      },
-      "pluginVersion": "9.0.0",
-      "transparent": true
+      }
     },
     {
       "id": 102,
