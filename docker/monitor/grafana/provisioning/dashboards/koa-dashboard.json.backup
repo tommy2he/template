@@ -28,166 +28,10 @@
   },
   "panels": [
     {
-      "id": 101,
-      "type": "text",
-      "title": "",
-      "gridPos": { "h": 2, "w": 24, "x": 0, "y": 0 },
-      "options": {
-        "content": "## 🖥️ 主机监控",
-        "mode": "markdown"
-      }
-    },
-    {
-      "id": 8,
-      "title": "CPU使用率",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 2 },
-      "targets": [
-        {
-          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "CPU使用率 {{instance}}",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "thresholds": {
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 70 },
-              { "color": "red", "value": 85 }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
-      }
-    },
-    {
-      "id": 9,
-      "title": "内存使用率",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 2 },
-      "targets": [
-        {
-          "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
-          "legendFormat": "内存使用率",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "thresholds": {
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 70 },
-              { "color": "red", "value": 85 }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
-      }
-    },
-    {
-      "id": 10,
-      "title": "网络流量",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
-      "targets": [
-        {
-          "expr": "rate(node_network_receive_bytes_total[5m])",
-          "legendFormat": "接收 {{device}}",
-          "refId": "A"
-        },
-        {
-          "expr": "rate(node_network_transmit_bytes_total[5m])",
-          "legendFormat": "发送 {{device}}",
-          "refId": "B"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps",
-          "min": 0
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
-      }
-    },
-    {
-      "id": 11,
-      "title": "磁盘使用情况",
-      "type": "stat",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
-      "targets": [
-        {
-          "expr": "node_filesystem_avail_bytes / node_filesystem_size_bytes * 100",
-          "legendFormat": "剩余 {{mountpoint}}",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "thresholds": {
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 20 },
-              { "color": "red", "value": 10 }
-            ]
-          },
-          "mappings": [],
-          "color": {
-            "mode": "thresholds"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "values": false,
-          "calcs": ["lastNotNull"]
-        },
-        "orientation": "horizontal",
-        "textMode": "value_and_name",
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "center"
-      }
-    },
-    {
-      "id": 102,
-      "type": "text",
-      "title": "",
-      "gridPos": { "h": 2, "w": 24, "x": 0, "y": 18 },
-      "options": {
-        "content": "## 🚀 Koa应用监控",
-        "mode": "markdown"
-      }
-    },
-    {
       "id": 1,
       "title": "HTTP请求率",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "expr": "rate(http_requests_total[1m])",
@@ -211,7 +55,7 @@
       "id": 2,
       "title": "HTTP请求延迟(秒)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
@@ -235,7 +79,7 @@
       "id": 4,
       "title": "HTTP响应大小",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "targets": [
         {
           "expr": "rate(http_response_size_bytes_sum[5m]) / rate(http_response_size_bytes_count[5m])",
@@ -259,7 +103,7 @@
       "id": 5,
       "title": "错误率(5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "targets": [
         {
           "expr": "rate(http_requests_total{status=\"5xx\"}[5m]) / rate(http_requests_total[5m])",
@@ -284,7 +128,7 @@
       "id": 3,
       "title": "在线CPE总数",
       "type": "stat",
-      "gridPos": { "h": 10, "w": 6, "x": 0, "y": 36 },
+      "gridPos": { "h": 10, "w": 6, "x": 0, "y": 16 },
       "targets": [
         {
           "expr": "cpe_online_total",
@@ -320,7 +164,7 @@
       "id": 6,
       "title": "CPE分布",
       "type": "stat",
-      "gridPos": { "h": 10, "w": 6, "x": 6, "y": 36 },
+      "gridPos": { "h": 10, "w": 6, "x": 6, "y": 16 },
       "targets": [
         {
           "expr": "count(cpe_online_by_model)",
@@ -357,7 +201,7 @@
       "id": 7,
       "title": "CPE厂商型号详情",
       "type": "table",
-      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 36 },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 16 },
       "targets": [
         {
           "expr": "cpe_online_by_model",
@@ -372,8 +216,7 @@
             "align": "auto",
             "cellOptions": {
               "type": "auto"
-            },
-            "width": 300
+            }
           }
         },
         "overrides": [
@@ -452,42 +295,6 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "exported_app"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "exported_environment"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "monitor_type"
-            },
-            "properties": [
-              {
-                "id": "custom.hidden",
-                "value": true
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "Value"
             },
             "properties": [
@@ -497,7 +304,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 120
+                "value": 80
               },
               {
                 "id": "displayName",
@@ -517,7 +324,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 250
+                "value": 150
               }
             ]
           },
@@ -533,7 +340,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 200
+                "value": 120
               }
             ]
           },
@@ -549,7 +356,7 @@
               },
               {
                 "id": "custom.width",
-                "value": 150
+                "value": 100
               }
             ]
           }
