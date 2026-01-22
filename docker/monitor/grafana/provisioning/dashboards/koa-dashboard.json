@@ -132,13 +132,13 @@
     },
     {
       "id": 11,
-      "title": "磁盘使用情况",
-      "type": "stat",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "title": "磁盘使用率",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 10 },
       "targets": [
         {
-          "expr": "node_filesystem_avail_bytes / node_filesystem_size_bytes * 100",
-          "legendFormat": "剩余 {{mountpoint}}",
+          "expr": "100 * (node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_avail_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"}",
+          "legendFormat": "使用率",
           "refId": "A"
         }
       ],
@@ -150,14 +150,51 @@
           "thresholds": {
             "steps": [
               { "color": "green", "value": null },
-              { "color": "yellow", "value": 20 },
-              { "color": "red", "value": 10 }
+              { "color": "yellow", "value": 70 },
+              { "color": "orange", "value": 85 },
+              { "color": "red", "value": 95 }
             ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      }
+    },
+    {
+      "id": 12,
+      "title": "",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 4, "x": 18, "y": 10 },
+      "targets": [
+        {
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_avail_bytes{mountpoint=\"/\"}) / 1024 / 1024 / 1024",
+          "legendFormat": "已用: {{value}} GB",
+          "refId": "A"
+        },
+        {
+          "expr": "node_filesystem_size_bytes{mountpoint=\"/\"} / 1024 / 1024 / 1024",
+          "legendFormat": "总计: {{value}} GB",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
           },
           "mappings": [],
-          "color": {
-            "mode": "thresholds"
-          }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "text", "value": null }]
+          },
+          "noValue": "0"
         },
         "overrides": []
       },
@@ -166,12 +203,18 @@
           "values": false,
           "calcs": ["lastNotNull"]
         },
-        "orientation": "horizontal",
+        "orientation": "vertical",
         "textMode": "value_and_name",
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "center"
-      }
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "text": {
+          "titleSize": 12,
+          "valueSize": 16
+        }
+      },
+      "pluginVersion": "9.0.0",
+      "transparent": true
     },
     {
       "id": 102,
