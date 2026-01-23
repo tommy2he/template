@@ -32,7 +32,7 @@ scrape_configs:
     scrape_timeout: 10s
     metrics_path: '/metrics'
 
-  # 容器级监控 - cAdvisor
+  # 容器级监控 - cAdvisor（增强版）
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
@@ -40,7 +40,13 @@ scrape_configs:
           environment: 'development'
           role: 'container'
           monitor_type: 'container'
+          component: 'cadvisor'
     scrape_interval: 15s
+    scrape_timeout: 10s
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'container_(cpu|memory|network|fs)_.*'
+        action: keep
 
   # 应用级监控 - Koa应用
   - job_name: 'koa_template_app'
