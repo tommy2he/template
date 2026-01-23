@@ -606,6 +606,41 @@
           "enablePagination": false
         }
       }
+    },
+    {
+      "id": 200,
+      "type": "text",
+      "title": "",
+      "gridPos": { "h": 2, "w": 24, "x": 0, "y": 46 },
+      "options": {
+        "content": "## 🐳 容器监控",
+        "mode": "markdown"
+      }
+    },
+    {
+      "id": 201,
+      "title": "容器CPU使用率",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 48 },
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{image=~\"mongo.*\"}[5m])) by (name) * 100",
+          "legendFormat": "MongoDB",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{image=~\"grafana.*\"}[5m])) by (name) * 100",
+          "legendFormat": "Grafana",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      }
     }
   ]
 }
