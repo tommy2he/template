@@ -1,0 +1,11 @@
+{
+  "name": "callback-demo",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node-gyp rebuild",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-addon-api": "^5.1.0"
+  }
+}
