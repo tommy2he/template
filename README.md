@@ -25,3 +25,6 @@ a simple application utilizing the node.js koa framework, which you can consider
 (6) nodejs-plus-cpp-template
 a simple example of calling c++ code from node.js , you can use this as a foundation to enable your node.js application to utilize C++ code
 
+(7) python-vscode-template
+a script used to automatically generate a python runtime virtual environment and configure vscode
+
