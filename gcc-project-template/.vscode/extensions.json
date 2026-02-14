@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools",
+    "ms-vscode.makefile-tools",
+    "ms-vscode.cpptools-themes",
+    "formulahendry.code-runner",
+    "usernamehw.errorlens",
+    "aaron-bond.better-comments",
+    "codeium.codeium"
+  ]
+}
