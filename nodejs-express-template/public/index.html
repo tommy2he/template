@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node.js 学习项目</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      /* 重置样式 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        margin: 20px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+        color: #4a5568;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #718096;
+        margin-bottom: 10px;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #10b981;
+        margin-right: 8px;
+        box-shadow: 0 0 10px #10b981;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+      }
+
+      .card h2 {
+        color: #4a5568;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card h2 i {
+        color: #667eea;
+      }
+
+      .card ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .card ul li {
+        padding: 8px 0;
+        color: #4a5568;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card ul li:before {
+        content: '✓';
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 25px 0;
+      }
+
+      .btn {
+        padding: 14px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn.secondary {
+        background: #edf2f7;
+        color: #4a5568;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:active {
+        transform: translateY(-1px);
+      }
+
+      #response {
+        margin-top: 25px;
+        padding: 20px;
+        background: #1e293b;
+        color: #e2e8f0;
+        border-radius: 10px;
+        border: 1px solid #475569;
+        min-height: 150px;
+        max-height: 400px;
+        overflow-y: auto;
+        font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+        color: #718096;
+        font-size: 0.9rem;
+      }
+
+      .debug-info {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-top: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .container {
+          padding: 20px;
+          margin: 10px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        #response {
+          padding: 15px;
+          max-height: 300px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .container {
+          padding: 15px;
+        }
+
+        .btn {
+          padding: 12px 15px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-server"></i> Node.js 学习项目</h1>
+        <p class="subtitle">
+          <span class="status-indicator"></span>
+          服务器状态: <span id="serverStatus">已连接</span>
+        </p>
+      </header>
+
+      <div class="card">
+        <h2><i class="fas fa-info-circle"></i> 项目信息</h2>
+        <p>这是一个完整的Node.js开发环境模板，包含：</p>
+        <ul>
+          <li>Express服务器配置</li>
+          <li>中间件使用（CORS、Helmet、Morgan等）</li>
+          <li>RESTful API设计</li>
+          <li>错误处理机制</li>
+          <li>环境变量配置</li>
+          <li>前端-后端交互调试</li>
+          <li>代码质量工具（ESLint + Prettier）</li>
+        </ul>
+        <div class="debug-info">服务器地址: <span id="serverUrl">http://localhost:3000</span></div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-plug"></i> API 测试控制台</h2>
+
+        <div class="actions">
+          <button class="btn primary test-endpoint" data-endpoint="/">
+            <i class="fas fa-home"></i> 根路径
+          </button>
+          <button class="btn primary test-endpoint" data-endpoint="/health">
+            <i class="fas fa-heartbeat"></i> 健康检查
+          </button>
+          <button class="btn primary test-endpoint" data-endpoint="/api/info">
+            <i class="fas fa-info-circle"></i> 服务器信息
+          </button>
+          <button class="btn primary test-endpoint" data-endpoint="/api/example">
+            <i class="fas fa-code"></i> 示例路由
+          </button>
+          <button class="btn secondary" id="testAll"><i class="fas fa-vial"></i> 测试所有</button>
+          <button class="btn secondary" id="clearConsole">
+            <i class="fas fa-broom"></i> 清空控制台
+          </button>
+        </div>
+
+        <div id="response">
+          <p>点击按钮测试API，响应将显示在这里。</p>
+          <p><small>按F12打开开发者工具查看详细日志</small></p>
+        </div>
+      </div>
+
+      <footer>
+        <p><i class="fas fa-shield-alt"></i> 安全配置: CSP已启用 | 外部JavaScript | 响应式设计</p>
+        <p>© 2025 Node.js 学习项目 | VSCode + Node.js + Express</p>
+      </footer>
+    </div>
+
+    <!-- 外部JavaScript文件 -->
+    <script src="/js/app.js"></script>
+  </body>
+</html>

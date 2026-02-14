@@ -1,0 +1,71 @@
+{
+  "Node.js Express Server": {
+    "prefix": "node-server",
+    "body": [
+      "const express = require('express');",
+      "const app = express();",
+      "",
+      "// 中间件",
+      "app.use(express.json());",
+      "app.use(express.urlencoded({ extended: true }));",
+      "",
+      "// 路由",
+      "app.get('/', (req, res) => {",
+      "  res.json({ message: 'Hello World!' });",
+      "});",
+      "",
+      "// 启动服务器",
+      "const PORT = process.env.PORT || 3000;",
+      "app.listen(PORT, () => {",
+      "  console.log(`服务器运行在 http://localhost:${PORT}`);",
+      "});"
+    ],
+    "description": "创建一个基本的 Express 服务器"
+  },
+  "Express Route": {
+    "prefix": "express-route",
+    "body": [
+      "${1|app,router|}.${2|get,post,put,delete,patch|}('${3:/}', async (req, res, next) => {",
+      "  try {",
+      "    const ${4:data} = await ${5:someFunction}();",
+      "    res.status(200).json({",
+      "      success: true,",
+      "      data: ${4:data}",
+      "    });",
+      "  } catch (error) {",
+      "    console.error('路由错误:', error);",
+      "    res.status(500).json({",
+      "      error: error.message,",
+      "      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined",
+      "    });",
+      "  }",
+      "});"
+    ],
+    "description": "创建一个 Express 路由处理器（带错误处理）"
+  },
+  "Jest Test": {
+    "prefix": "jest-test",
+    "body": [
+      "describe('${1:测试描述}', () => {",
+      "  test('${2:具体测试用例}', () => {",
+      "    // Arrange",
+      "    ${3:const input = 'test';}",
+      "",
+      "    // Act",
+      "    ${4:const result = functionToTest(input);}",
+      "",
+      "    // Assert",
+      "    ${5:expect(result).toBe('expected');}",
+      "  });",
+      "});"
+    ],
+    "description": "创建一个Jest测试用例"
+  },
+  "ESLint Disable Comment": {
+    "prefix": "eslint-disable",
+    "body": [
+      "// eslint-disable-next-line ${1:rule-name}"
+    ],
+    "description": "添加ESLint禁用注释"
+  }
+}
