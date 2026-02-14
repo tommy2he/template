@@ -1,0 +1,185 @@
+{
+  // ====== 第一部分：编辑器基础设置 ======
+  "editor.fontSize": 14,
+  "editor.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
+  "editor.lineHeight": 24,
+  "editor.cursorStyle": "line",
+  "editor.cursorBlinking": "blink",
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.renderLineHighlight": "all",
+
+  // ====== 第二部分：代码编辑设置 ======
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // ====== 第三部分：文件设置 ======
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+  "files.associations": {
+    "*.js": "javascript",
+    "*.json": "json",
+    "*.md": "markdown",
+    ".eslintrc": "jsonc",
+    ".prettierrc": "json",
+    "*.env*": "ini"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/Thumbs.db": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  // ====== 第四部分：终端设置 ======
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontFamily": "'Cascadia Code', Consolas",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.shell.windows": "C:\\\\Program Files\\\\Git\\\\bin\\\\bash.exe",
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.rightClickBehavior": "paste",
+
+  // ====== 第五部分：JavaScript/Node.js 特定设置 ======
+  "javascript.suggest.autoImports": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.names": true,
+  "javascript.suggest.paths": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.quoteStyle": "single",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.validate.enable": true,
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // ====== 第六部分：格式化工具设置 ======
+  "prettier.requireConfig": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.printWidth": 100,
+  "prettier.semi": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "prettier.bracketSpacing": true,
+  "prettier.arrowParens": "avoid",
+
+  // ====== 第七部分：语言特定格式化 ======
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on"
+  },
+
+  // ====== 第八部分：扩展特定设置 ======
+  // ESLint 设置
+  "eslint.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.format.enable": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  // 路径智能提示设置
+  "path-intellisense.autoSlashAfterDirectory": true,
+  "path-intellisense.autoTriggerNextSlash": true,
+  "path-intellisense.extensionOnImport": true,
+  "path-intellisense.showHiddenFiles": false,
+
+  // npm 智能提示设置
+  "npm-intellisense.scanDevDependencies": true,
+  "npm-intellisense.scanBuiltinModules": true,
+
+  // GitLens 设置
+  "gitlens.currentLine.enabled": true,
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.codeLens.enabled": false,
+
+  // 拼写检查设置
+  "cSpell.enabled": true,
+  "cSpell.enabledFiletypes": ["javascript", "json", "markdown"],
+  "cSpell.ignorePaths": [
+    "**/node_modules/**",
+    "**/package-lock.json",
+    "**/*.min.js",
+    "**/*.bundle.js"
+  ],
+  "cSpell.words": [
+    "middleware",
+    "nodemon",
+    "eslint",
+    "prettier",
+    "gitlens",
+    "helmet",
+    "morgan",
+    "cpptools",
+    "cors",
+    "esbenp",
+    "Cascadia",
+    "Consolas",
+    "taskkill"
+  ],
+
+  // ====== 第九部分：工作区外观设置 ======
+  "workbench.colorTheme": "Visual Studio Light",
+  "workbench.iconTheme": "vs-minimal",
+  "workbench.startupEditor": "none",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.tree.indent": 16,
+
+  // ====== 第十部分：导航和文件浏览设置 ======
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.compactFolders": true,
+  "explorer.sortOrder": "type",
+  "breadcrumbs.enabled": true,
+  "breadcrumbs.filePath": "on",
+
+  // ====== 第十一部分：窗口和界面设置 ======
+  "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName}",
+  "window.zoomLevel": 0,
+  "window.restoreWindows": "none",
+
+  // ====== 已禁用的扩展（从之前的配置继承） ======
+  "extensions.disabledExtensions": [
+    "ms-vscode.cpptools",
+    "ms-vscode.makefile-tools",
+    "ms-vscode.cpptools-themes"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "pageTitle": "Node.js 模板项目 - 测试报告",
+  "outputPath": "coverage/test-report.html",
+  "includeFailureMsg": true,
+  "includeConsoleLog": true,
+  "theme": "lightTheme"
+}
