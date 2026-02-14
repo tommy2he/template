@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ACS 详细测试</title>
+  </head>
+  <body>
+    <h1>ACS 服务器测试</h1>
+    <div id="log"></div>
+
+    <script>
+      function log(msg) {
+        document.getElementById('log').innerHTML += msg + '<br>';
+        console.log(msg);
+      }
+
+      log('页面加载完成，开始测试...');
+
+      // 测试fetch
+      log('1. 准备调用fetch...');
+      fetch('/api/health')
+        .then((response) => {
+          log('2. 收到响应，状态码: ' + response.status);
+          if (!response.ok) {
+            throw new Error('HTTP状态码: ' + response.status);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          log('3. 解析JSON数据: ' + JSON.stringify(data));
+          log('4. 测试通过，服务器正常。');
+        })
+        .catch((error) => {
+          log('5. 捕获到错误: ' + error.message);
+        });
+
+      log('6. fetch调用已发起（异步）...');
+    </script>
+  </body>
+</html>

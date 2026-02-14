@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist-dev-scripts",
+    "rootDir": "../../../",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": "../../..",
+    "paths": {
+      "@/*": ["src/*"],
+      "@tests/*": ["tests/*"]
+    }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "../../../dist", "../../../dist-dev-scripts"]
+}

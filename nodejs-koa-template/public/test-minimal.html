@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>最小测试页面</title>
+  </head>
+  <body>
+    <h1>最小测试页面</h1>
+    <div id="test">等待测试...</div>
+
+    <script>
+      console.log('✅ 内联脚本开始执行');
+      document.getElementById('test').textContent = '内联脚本已执行 ✓';
+
+      // 测试 fetch
+      fetch('/api/health')
+        .then((r) => r.json())
+        .then((data) => {
+          console.log('✅ API 响应:', data);
+          document.getElementById('test').textContent += '，API连接成功 ✓';
+        })
+        .catch((e) => {
+          console.error('❌ API 错误:', e);
+          document.getElementById('test').textContent += '，API连接失败 ✗';
+        });
+    </script>
+  </body>
+</html>

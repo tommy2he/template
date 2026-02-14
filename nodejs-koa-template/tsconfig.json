@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["es2018", "esnext.asynciterable"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "types": ["node", "jest"],
+    "typeRoots": ["./node_modules/@types", "./types"],
+
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@config/*": ["src/config/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@routes/*": ["src/routes/*"],
+      "@controllers/*": ["src/routes/controllers/*"],
+      "@api/*": ["src/routes/api/*"],
+      "@web/*": ["src/routes/web/*"],
+      "@db/*": ["src/db/*"],
+      "@models/*": ["src/db/models/*"],
+      "@schemas/*": ["src/db/schemas/*"],
+      "@repositories/*": ["src/db/repositories/*"],
+      "@utils/*": ["src/utils/*"],
+      "@websocket/*": ["src/websocket/*"],
+      "@test/*": ["test/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.json", "types/**/*.d.ts", ".env.*"],
+  "exclude": ["node_modules", "dist", "reports"]
+}

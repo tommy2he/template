@@ -1,0 +1,73 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Koa Server (ACS)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.ts",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": "3300",
+        "WS_PORT": "7547",
+        "UDP_PORT": "7548",
+        "MONGODB_URI": "mongodb://localhost:27018/koa_template_dev",
+        "LOG_LEVEL": "debug"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug CPE Client",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/cpe/src/client.ts",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "console": "integratedTerminal",
+      "env": {
+        "CPE_ID": "debug-cpe-001",
+        "CPE_DEVICE_ID": "debug-device-001",
+        "CPE_MANUFACTURER": "TP-Link",
+        "CPE_MODEL": "Archer C7",
+        "ACS_WS_URL": "ws://localhost:7547",
+        "ACS_UDP_PORT": "7548",
+        "HEARTBEAT_INTERVAL": "10"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Multiple CPEs",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/cpe/scripts/start-multiple.js",
+      "args": ["3"],
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Process",
+      "port": 9229,
+      "skipFiles": ["<node_internals>/**"],
+      "restart": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Server + CPE",
+      "configurations": ["Debug Koa Server (ACS)", "Debug CPE Client"],
+      "stopAll": true
+    },
+    {
+      "name": "Full System Debug",
+      "configurations": ["Debug Koa Server (ACS)", "Launch Multiple CPEs"],
+      "stopAll": true
+    }
+  ]
+}

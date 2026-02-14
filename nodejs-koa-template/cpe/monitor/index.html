@@ -1,0 +1,66 @@
+<!-- cpe/monitor/index.html -->
+<!doctype html>
+<html>
+  <head>
+    <title>CPE监控面板</title>
+    <style>
+      .cpe-card {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin: 10px;
+      }
+      .online {
+        background-color: #d4edda;
+      }
+      .offline {
+        background-color: #f8d7da;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CPE监控面板</h1>
+    <div id="cpe-list"></div>
+
+    <script>
+      async function loadCPEs() {
+        const response = await fetch('http://localhost:3300/api/cpes');
+        const data = await response.json();
+
+        const html = data.data
+          .map(
+            (cpe) => `
+        <div class="cpe-card ${cpe.connectionStatus}">
+          <h3>${cpe.cpeId} - ${cpe.connectionStatus}</h3>
+          <p>最后心跳: ${new Date(cpe.lastHeartbeat).toLocaleString()}</p>
+          <p>设备ID: ${cpe.deviceId}</p>
+          <p>能力: ${cpe.capabilities.join(', ')}</p>
+          <button onclick="sendConfig('${cpe.cpeId}')">下发配置</button>
+        </div>
+      `,
+          )
+          .join('');
+
+        document.getElementById('cpe-list').innerHTML = html;
+      }
+
+      async function sendConfig(cpeId) {
+        const config = {
+          timestamp: new Date().toISOString(),
+          message: '配置更新测试',
+        };
+
+        await fetch(`http://localhost:3300/api/cpes/${cpeId}/configuration`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(config),
+        });
+
+        alert(`配置已发送给 ${cpeId}`);
+      }
+
+      // 每5秒刷新一次
+      loadCPEs();
+      setInterval(loadCPEs, 5000);
+    </script>
+  </body>
+</html>
