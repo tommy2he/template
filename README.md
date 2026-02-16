@@ -5,6 +5,8 @@
 
 provide the simplest templates of various development environments that have been set up .
 
+If you are a full-stack developer, you can utilize these templates to swiftly establish a vscode development environment tailored to a specific programming language
+
 # include the following template
 
 (1) c-format-template
@@ -27,4 +29,7 @@ a simple example of calling c++ code from node.js , you can use this as a founda
 
 (7) python-vscode-template
 a script used to automatically generate a python runtime virtual environment and configure vscode
+
+(8) vc2019-vscode-template
+configure the c compilation and debugging environment for vscode , with vs2019's cl tools
 
